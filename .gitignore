@@ -1,0 +1,46 @@
+# Android generated
+bin
+gen
+lint.xml
+
+# IntelliJ IDEA
+.idea
+*.iml
+*.ipr
+*.iws
+classes
+gen-external-apklibs
+
+# Eclipse
+.project
+.classpath
+.settings
+.checkstyle
+
+# Gradle
+.gradle
+build
+out
+
+# Maven
+target
+release.properties
+pom.xml.*
+
+# Ant
+ant.properties
+local.properties
+proguard.cfg
+proguard-project.txt
+
+# Fabric.io
+fabric.properties
+
+# Other
+.DS_Store
+dist
+tmp
+.*/
+
+# Allow .github
+!.github/

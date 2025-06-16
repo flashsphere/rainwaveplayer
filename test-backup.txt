@@ -1,0 +1,4 @@
+Android 12+
+
+1. `adb shell bmgr backupnow com.flashsphere.rainwaveplayer.debug`
+2. `adb shell bmgr restore <TOKEN> com.flashsphere.rainwaveplayer.debug`. Grab token from `adb shell dumpsys backup`

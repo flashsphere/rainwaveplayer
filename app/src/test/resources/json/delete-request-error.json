@@ -1,0 +1,12 @@
+{
+  "delete_request_result": {
+    "code": 200,
+    "success": false,
+    "tl_key": "song_not_requested",
+    "text": "Song not requested."
+  },
+  "api_info": {
+    "exectime": 0.003142118453979492,
+    "time": 1602150369
+  }
+}

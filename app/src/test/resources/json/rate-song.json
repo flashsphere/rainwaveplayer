@@ -1,0 +1,21 @@
+{
+  "rate_result": {
+    "updated_album_ratings": [
+      {
+        "sid": 1,
+        "id": 359,
+        "rating_user": 3.5,
+        "rating_complete": false
+      }
+    ],
+    "song_id": 3470,
+    "rating_user": 3.5,
+    "success": true,
+    "tl_key": "rating_submitted",
+    "text": "Rating submitted."
+  },
+  "api_info": {
+    "exectime": 0.48866701126098633,
+    "time": 1602155098
+  }
+}

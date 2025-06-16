@@ -1,0 +1,43 @@
+{
+  "request_favorited_songs_result": {
+    "success": true,
+    "tl_key": "request_favorited_songs_success",
+    "text": "[[ request_favorited_songs_success ]]"
+  },
+  "requests": [
+    {
+      "id": 30748,
+      "sid": 5,
+      "origin_sid": 1,
+      "order": 32766,
+      "request_id": 8034242,
+      "rating": 4.6,
+      "title": "Iclucian Dance",
+      "length": 183,
+      "cool": false,
+      "cool_end": 1602008252,
+      "good": true,
+      "elec_blocked": true,
+      "elec_blocked_by": "group",
+      "elec_blocked_num": 2,
+      "valid": false,
+      "rating_user": 5.0,
+      "fave": true,
+      "albums": [
+        {
+          "name": "Ys VIII: Lacrimosa of Dana",
+          "id": 3503,
+          "fave": true,
+          "rating": 4.5,
+          "rating_user": 0.0,
+          "rating_complete": null,
+          "art": "\/album_art\/1_3503"
+        }
+      ]
+    }
+  ],
+  "api_info": {
+    "exectime": 0.03878450393676758,
+    "time": 1602152013
+  }
+}

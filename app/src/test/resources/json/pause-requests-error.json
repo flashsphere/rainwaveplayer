@@ -1,0 +1,12 @@
+{
+  "pause_request_queue_result": {
+    "code": 400,
+    "success": false,
+    "tl_key": "invalid_station_id",
+    "text": "Invalid station ID."
+  },
+  "api_info": {
+    "exectime": 0.0004010200500488281,
+    "time": 1602151286
+  }
+}

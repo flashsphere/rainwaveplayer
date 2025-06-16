@@ -1,0 +1,16 @@
+{
+  "all_groups": [
+    {
+      "name": "Darkstalkers",
+      "id": 1794
+    },
+    {
+      "name": "100% Orange Juice",
+      "id": 5333
+    }
+  ],
+  "api_info": {
+    "exectime": 0.007479190826416016,
+    "time": 1601979405
+  }
+}

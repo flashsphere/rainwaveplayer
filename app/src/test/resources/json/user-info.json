@@ -1,0 +1,27 @@
+{
+  "user_info": {
+    "admin": false,
+    "tuned_in": false,
+    "perks": false,
+    "request_position": 3,
+    "request_expires_at": null,
+    "rate_anything": false,
+    "requests_paused": false,
+    "avatar": "\/static\/images4\/user.svg",
+    "new_privmsg": 0,
+    "listen_key": "abcdef",
+    "id": 222,
+    "name": "pramoda",
+    "sid": 1,
+    "lock": false,
+    "lock_in_effect": false,
+    "lock_sid": null,
+    "lock_counter": 0,
+    "voted_entry": null,
+    "listener_id": 6689449
+  },
+  "api_info": {
+    "exectime": 0.002714395523071289,
+    "time": 1602155612
+  }
+}

@@ -1,0 +1,71 @@
+{
+  "stations": [
+    {
+      "id": 1,
+      "name": "Game",
+      "description": "Video game original soundtrack radio.  Vote for the song you want to hear!",
+      "stream": "http:\/\/allrelays.rainwave.cc\/game.mp3?12345:abcdef",
+      "relays": [
+        {
+          "name": "Rainwave (Toronto)",
+          "protocol": "https:\/\/",
+          "hostname": "relay.rainwave.cc",
+          "port": 443
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "name": "OC ReMix",
+      "description": "OverClocked ReMix Radio, the best in video game remixes.  Vote for your favourite remixes!",
+      "stream": "http:\/\/allrelays.rainwave.cc\/ocremix.mp3?12345:abcdef",
+      "relays": [
+        {
+          "name": "Rainwave (Toronto)",
+          "protocol": "https:\/\/",
+          "hostname": "relay.rainwave.cc",
+          "port": null
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "name": "Covers",
+      "description": "Video game official and fan-made remixes, streaming 24\/7.  Vote for your favourite artists!",
+      "stream": "http:\/\/allrelays.rainwave.cc\/covers.mp3?12345:abcdef",
+      "relays": null
+    },
+    {
+      "id": 4,
+      "name": "Chiptunes",
+      "description": "Video game and original chiptune soudtracks, streaming 24\/7.  Vote for the songs you want to hear!",
+      "stream": "http:\/\/allrelays.rainwave.cc\/chiptune.mp3?12345:abcdef",
+      "relays": [
+        {
+          "name": "Rainwave (Toronto)",
+          "protocol": "http:\/\/",
+          "hostname": "relay.rainwave.cc",
+          "port": 443
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "name": "All",
+      "description": "Video game music online radio, including remixes and original soundtracks!  Vote for the songs you want to hear!",
+      "stream": "http:\/\/allrelays.rainwave.cc\/all.mp3?12345:abcdef",
+      "relays": [
+        {
+          "name": "Rainwave (Toronto)",
+          "protocol": "http:\/\/",
+          "hostname": "relay.rainwave.cc",
+          "port": 80
+        }
+      ]
+    }
+  ],
+  "api_info": {
+    "exectime": 0.0030059814453125,
+    "time": 1601972193
+  }
+}

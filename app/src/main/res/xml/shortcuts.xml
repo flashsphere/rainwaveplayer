@@ -1,0 +1,15 @@
+<!-- also update in src/debug/res/xml/shortcuts.xml -->
+<shortcuts xmlns:android="http://schemas.android.com/apk/res/android">
+    <shortcut
+        android:shortcutId="rainwave.shortcut.play"
+        android:enabled="true"
+        android:icon="@drawable/ic_shortcut_play"
+        android:shortcutShortLabel="@string/action_play"
+        android:shortcutLongLabel="@string/action_play">
+        <intent
+            android:action="rainwave.intent.action.PLAY"
+            android:targetPackage="com.flashsphere.rainwaveplayer"
+            android:targetClass="com.flashsphere.rainwaveplayer.view.activity.ShortcutsActivity" />
+    </shortcut>
+    <!-- Specify more shortcuts here. -->
+</shortcuts>

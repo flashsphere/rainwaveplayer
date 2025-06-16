@@ -1,0 +1,88 @@
+{
+  "user_requested_history": [
+    {
+      "id": 2187,
+      "title": "Venus Lighthouse",
+      "album_name": "Golden Sun",
+      "rating": 4.7,
+      "rating_user": null,
+      "fave": true
+    },
+    {
+      "id": 33768,
+      "title": "Theme from Ni no Kuni II",
+      "album_name": "Ni no Kuni II: Revenant Kingdom",
+      "rating": 4.7,
+      "rating_user": 5.0,
+      "fave": false
+    },
+    {
+      "id": 5796,
+      "title": "Vanishing Mirage",
+      "album_name": "Mana Khemia 2",
+      "rating": 4.4,
+      "rating_user": 4.5,
+      "fave": true
+    },
+    {
+      "id": 7447,
+      "title": "Leap the precipice",
+      "album_name": "Eternal Sonata",
+      "rating": 4.6,
+      "rating_user": 5.0,
+      "fave": true
+    },
+    {
+      "id": 1366,
+      "title": "Theme of the Diabolical Box (Orchestral)",
+      "album_name": "Professor Layton and the Diabolical Box",
+      "rating": 4.6,
+      "rating_user": null,
+      "fave": true
+    },
+    {
+      "id": 6054,
+      "title": "Castle Dedede (Gourmet Race)",
+      "album_name": "Kirby's Epic Yarn",
+      "rating": 4.5,
+      "rating_user": 4.5,
+      "fave": true
+    },
+    {
+      "id": 1535,
+      "title": "Mythical Land Serpentina",
+      "album_name": "Zwei!!",
+      "rating": 4.4,
+      "rating_user": 4.5,
+      "fave": true
+    },
+    {
+      "id": 27526,
+      "title": "Battle Theme 1.x",
+      "album_name": "Final Fantasy XIV: A Realm Reborn",
+      "rating": 4.4,
+      "rating_user": null,
+      "fave": true
+    },
+    {
+      "id": 5456,
+      "title": "Space Battle Zone",
+      "album_name": "Star Fox Assault",
+      "rating": 4.5,
+      "rating_user": null,
+      "fave": true
+    },
+    {
+      "id": 2054,
+      "title": "Race Theme 3",
+      "album_name": "Formula Nippon '99",
+      "rating": 4.1,
+      "rating_user": 5.0,
+      "fave": true
+    }
+  ],
+  "api_info": {
+    "exectime": 0.1567080020904541,
+    "time": 1660726229
+  }
+}

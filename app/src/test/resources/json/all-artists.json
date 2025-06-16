@@ -1,0 +1,23 @@
+{
+  "all_artists": [
+    {
+      "name": "Kristofer Maddigan",
+      "id": 25092,
+      "song_count": 21
+    },
+    {
+      "name": "19's Sound Factory",
+      "id": 22962,
+      "song_count": 1
+    },
+    {
+      "name": "2 Mello",
+      "id": 25464,
+      "song_count": 10
+    }
+  ],
+  "api_info": {
+    "exectime": 0.012657880783081055,
+    "time": 1601970503
+  }
+}

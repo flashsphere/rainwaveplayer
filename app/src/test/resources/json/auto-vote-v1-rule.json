@@ -1,0 +1,1 @@
+{"id":1,"conditions":[{"type":"com.flashsphere.rainwaveplayer.autovote.v1.RequestCondition","requestType":"Others"},{"type":"com.flashsphere.rainwaveplayer.autovote.v1.RatingCondition","operator":"Greater","rating":4.2},{"type":"com.flashsphere.rainwaveplayer.autovote.v1.FaveSongCondition"},{"type":"com.flashsphere.rainwaveplayer.autovote.v1.FaveAlbumCondition"}]}

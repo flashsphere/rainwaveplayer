@@ -1,0 +1,102 @@
+{
+  "artist": {
+    "id": 9356,
+    "name": "Daisuke Ishiwatari",
+    "all_songs": {
+      "1": {
+        "354": [
+          {
+            "id": 3420,
+            "sid": 1,
+            "title": "Bullet Dance II",
+            "rating": 4.3,
+            "requestable": true,
+            "length": 260,
+            "cool": true,
+            "cool_end": 1601963770,
+            "url": "http:\/\/vgmdb.net\/album\/41563",
+            "link_text": "Click for More Info",
+            "rating_user": 0.0,
+            "fave": false,
+            "albums": [
+              {
+                "name": "BlazBlue: Chronophantasma",
+                "id": 354
+              }
+            ]
+          },
+          {
+            "id": 3419,
+            "sid": 1,
+            "title": "Black aggression",
+            "rating": 3.9,
+            "requestable": true,
+            "length": 235,
+            "cool": true,
+            "cool_end": 1601963770,
+            "url": "http:\/\/vgmdb.net\/album\/41563",
+            "link_text": "Click for More Info",
+            "rating_user": 0.0,
+            "fave": false,
+            "albums": [
+              {
+                "name": "BlazBlue: Chronophantasma",
+                "id": 354
+              }
+            ]
+          }
+        ],
+        "3508": [
+          {
+            "id": 30794,
+            "sid": 1,
+            "title": "Bump",
+            "rating": 4.0,
+            "requestable": true,
+            "length": 203,
+            "cool": true,
+            "cool_end": 1601988543,
+            "url": "http:\/\/vgmdb.net\/album\/51057",
+            "link_text": "Info @ VGMDB.net",
+            "rating_user": 0.0,
+            "fave": false,
+            "albums": [
+              {
+                "name": "Guilty Gear Xrd",
+                "id": 3508
+              }
+            ]
+          }
+        ],
+        "613": []
+      },
+      "2": {},
+      "3": {},
+      "4": {
+        "2139": [
+          {
+            "id": 17779,
+            "sid": 4,
+            "title": "Ending",
+            "rating": 3.9,
+            "requestable": null,
+            "length": 175,
+            "cool": null,
+            "cool_end": null,
+            "url": null,
+            "link_text": null,
+            "rating_user": 0.0,
+            "fave": false,
+            "albums": [
+              {
+                "name": "Guilty Gear Petit",
+                "id": 2139
+              }
+            ]
+          }
+        ]
+      },
+      "5": {}
+    }
+  }
+}

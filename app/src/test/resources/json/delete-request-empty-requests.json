@@ -1,0 +1,12 @@
+{
+  "delete_request_result": {
+    "success": true,
+    "tl_key": "request_deleted",
+    "text": "[[ request_deleted ]]"
+  },
+  "requests": [],
+  "api_info": {
+    "exectime": 0.01782703399658203,
+    "time": 1602150017
+  }
+}

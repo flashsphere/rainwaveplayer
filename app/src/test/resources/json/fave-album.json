@@ -1,0 +1,14 @@
+{
+  "fave_album_result": {
+    "id": 3763,
+    "fave": true,
+    "sid": 1,
+    "success": true,
+    "tl_key": "fave_success",
+    "text": "Favourited album."
+  },
+  "api_info": {
+    "exectime": 0.0059587955474853516,
+    "time": 1602148905
+  }
+}

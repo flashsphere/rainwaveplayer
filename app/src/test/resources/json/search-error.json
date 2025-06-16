@@ -1,0 +1,12 @@
+{
+  "search_results": {
+    "code": 403,
+    "success": false,
+    "tl_key": "auth_failed",
+    "text": "Authorization failed."
+  },
+  "api_info": {
+    "exectime": 0.002661466598510742,
+    "time": 1602391577
+  }
+}

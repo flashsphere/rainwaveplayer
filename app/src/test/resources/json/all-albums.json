@@ -1,0 +1,41 @@
+{
+  "all_albums": [
+    {
+      "id": 424,
+      "name": "Bayonetta",
+      "rating": 4.0,
+      "cool": false,
+      "cool_lowest": 1601957519,
+      "fave": true,
+      "rating_user": 1.5,
+      "rating_complete": false,
+      "newest_song_time": 1348335636
+    },
+    {
+      "id": 3370,
+      "name": "100% Orange Juice",
+      "rating": 4.0,
+      "cool": true,
+      "cool_lowest": 1601998092,
+      "fave": false,
+      "rating_user": 0.0,
+      "rating_complete": false,
+      "newest_song_time": 1510497523
+    },
+    {
+      "id": 3324,
+      "name": "2",
+      "rating": 3.5,
+      "cool": false,
+      "cool_lowest": 1601790204,
+      "fave": false,
+      "rating_user": 0.0,
+      "rating_complete": false,
+      "newest_song_time": 1497148315
+    }
+  ],
+  "api_info": {
+    "exectime": 0.04914093017578125,
+    "time": 1601968762
+  }
+}

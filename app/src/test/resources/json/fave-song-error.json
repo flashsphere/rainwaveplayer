@@ -1,0 +1,14 @@
+{
+  "fave_song_result": {
+    "argument": "song_id",
+    "reason": "song_id must be a valid song ID.",
+    "code": 400,
+    "success": false,
+    "tl_key": "invalid_argument",
+    "text": "Invalid argument 'song_id': song_id must be a valid song ID."
+  },
+  "api_info": {
+    "exectime": 0.007156848907470703,
+    "time": 1602146911
+  }
+}

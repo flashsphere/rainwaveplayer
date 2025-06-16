@@ -1,0 +1,14 @@
+{
+  "fave_album_result": {
+    "argument": "album_id",
+    "reason": "album_id must be a valid album ID.",
+    "code": 400,
+    "success": false,
+    "tl_key": "invalid_argument",
+    "text": "Invalid argument 'album_id': album_id must be a valid album ID."
+  },
+  "api_info": {
+    "exectime": 0.0011582374572753906,
+    "time": 1602148011
+  }
+}

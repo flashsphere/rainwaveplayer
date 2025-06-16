@@ -1,0 +1,12 @@
+{
+  "request_favorited_songs_result": {
+    "success": true,
+    "tl_key": "request_favorited_songs_success",
+    "text": "[[ request_favorited_songs_success ]]"
+  },
+  "requests": [],
+  "api_info": {
+    "exectime": 0.03878450393676758,
+    "time": 1602152013
+  }
+}

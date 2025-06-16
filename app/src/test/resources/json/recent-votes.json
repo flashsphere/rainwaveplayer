@@ -1,0 +1,88 @@
+{
+  "user_recent_votes": [
+    {
+      "id": 2085,
+      "title": "The Street of Rage",
+      "album_name": "Streets of Rage",
+      "rating": 4.5,
+      "rating_user": 4.0,
+      "fave": true
+    },
+    {
+      "id": 27097,
+      "title": "Lorule Theme",
+      "album_name": "The Legend of Zelda: A Link Between Worlds",
+      "rating": 5.0,
+      "rating_user": null,
+      "fave": null
+    },
+    {
+      "id": 1195,
+      "title": "Booster Forest",
+      "album_name": "Mega Man X8",
+      "rating": 3.7,
+      "rating_user": null,
+      "fave": null
+    },
+    {
+      "id": 3005,
+      "title": "Crystal Tower",
+      "album_name": "Final Fantasy III (PSP)",
+      "rating": 4.3,
+      "rating_user": null,
+      "fave": null
+    },
+    {
+      "id": 4994,
+      "title": "Gold Mine",
+      "album_name": "Wild Guns",
+      "rating": 4.1,
+      "rating_user": null,
+      "fave": null
+    },
+    {
+      "id": 2753,
+      "title": "Invitation to Madness",
+      "album_name": "The Last Story",
+      "rating": 4.2,
+      "rating_user": 4.5,
+      "fave": true
+    },
+    {
+      "id": 355,
+      "title": "Reminiscence",
+      "album_name": "Suikoden II",
+      "rating": 4.3,
+      "rating_user": null,
+      "fave": null
+    },
+    {
+      "id": 3082,
+      "title": "Battle on the Bridge",
+      "album_name": "Final Fantasy Tactics",
+      "rating": 4.7,
+      "rating_user": 4.5,
+      "fave": true
+    },
+    {
+      "id": 4375,
+      "title": "Crucifix Held Close",
+      "album_name": "Castlevania: Portrait of Ruin",
+      "rating": 4.6,
+      "rating_user": 5.0,
+      "fave": true
+    },
+    {
+      "id": 3430,
+      "title": "Spirit of Fire",
+      "album_name": "BlazBlue: Chronophantasma",
+      "rating": 4.2,
+      "rating_user": null,
+      "fave": null
+    }
+  ],
+  "api_info": {
+    "exectime": 0.18933558464050293,
+    "time": 1660725878
+  }
+}

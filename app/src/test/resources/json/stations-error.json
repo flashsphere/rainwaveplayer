@@ -1,0 +1,12 @@
+{
+  "stations": {
+    "code": 403,
+    "success": false,
+    "tl_key": "auth_failed",
+    "text": "Authorization failed."
+  },
+  "api_info": {
+    "exectime": 0.0019161701202392578,
+    "time": 1602143928
+  }
+}

@@ -1,0 +1,1630 @@
+{
+  "user": {
+    "admin": false,
+    "tuned_in": false,
+    "perks": false,
+    "request_position": 3,
+    "request_expires_at": 1601898881,
+    "rate_anything": false,
+    "requests_paused": false,
+    "avatar": "\/static\/images4\/user.svg",
+    "new_privmsg": 0,
+    "listen_key": "abcdef",
+    "id": 222,
+    "name": "pramoda",
+    "sid": 1,
+    "lock": false,
+    "lock_in_effect": false,
+    "lock_sid": null,
+    "lock_counter": 0,
+    "voted_entry": 0,
+    "listener_id": 0
+  },
+  "album_diff": [
+    {
+      "name": "Furi",
+      "added_on": 1511178023,
+      "rating": 4.3,
+      "rating_count": 333,
+      "cool_multiply": 1.0,
+      "cool_override": null,
+      "cool_lowest": 1601985344,
+      "played_last": 0,
+      "fave_count": 0,
+      "vote_count": 0,
+      "song_count": 0,
+      "request_count": 0,
+      "cool": true,
+      "art": "\/album_art\/1_3386",
+      "id": 3386
+    },
+    {
+      "name": "Granblue Fantasy",
+      "added_on": 1450689391,
+      "rating": 4.3,
+      "rating_count": 255,
+      "cool_multiply": 1.0,
+      "cool_override": null,
+      "cool_lowest": 1601898490,
+      "played_last": 0,
+      "fave_count": 0,
+      "vote_count": 0,
+      "song_count": 0,
+      "request_count": 0,
+      "cool": false,
+      "art": "\/album_art\/1_3080",
+      "id": 3080
+    },
+    {
+      "name": "Giana Sisters: Twisted Dreams",
+      "added_on": 1394372854,
+      "rating": 4.2,
+      "rating_count": 446,
+      "cool_multiply": 1.0,
+      "cool_override": null,
+      "cool_lowest": 1601898430,
+      "played_last": 0,
+      "fave_count": 0,
+      "vote_count": 0,
+      "song_count": 0,
+      "request_count": 0,
+      "cool": false,
+      "art": "\/album_art\/1_271",
+      "id": 271
+    }
+  ],
+  "request_line": [
+    {
+      "username": "Laharl",
+      "user_id": 15182,
+      "line_expiry_tune_in": null,
+      "line_expiry_election": 1601898541,
+      "line_wait_start": 1601897379,
+      "line_has_had_valid": false,
+      "song_id": null,
+      "song": null,
+      "skip": false,
+      "position": 1
+    },
+    {
+      "username": "ed01987",
+      "user_id": 111,
+      "line_expiry_tune_in": null,
+      "line_expiry_election": 1601898753,
+      "line_wait_start": 1601897853,
+      "line_has_had_valid": false,
+      "song_id": null,
+      "song": null,
+      "skip": false,
+      "position": 2
+    },
+    {
+      "username": "pramoda",
+      "user_id": 222,
+      "line_expiry_tune_in": 1601898881,
+      "line_expiry_election": null,
+      "line_wait_start": 1601898216,
+      "line_has_had_valid": true,
+      "song_id": null,
+      "skip": false,
+      "position": 3
+    },
+    {
+      "username": "Squirtle129",
+      "user_id": 333,
+      "line_expiry_tune_in": null,
+      "line_expiry_election": null,
+      "line_wait_start": 1601898393,
+      "line_has_had_valid": true,
+      "song_id": 2085,
+      "song": {
+        "id": 2085,
+        "title": "The Street of Rage",
+        "album_name": "Streets of Rage"
+      },
+      "skip": false,
+      "position": 4
+    }
+  ],
+  "requests": [
+    {
+      "id": 6730,
+      "sid": 1,
+      "origin_sid": 1,
+      "order": 32766,
+      "request_id": 8016044,
+      "rating": 4.2,
+      "title": "Border of Life",
+      "length": 116,
+      "cool": false,
+      "cool_end": 1601844649,
+      "good": true,
+      "elec_blocked": false,
+      "elec_blocked_by": "group",
+      "elec_blocked_num": 0,
+      "valid": true,
+      "rating_user": 0.0,
+      "fave": true,
+      "albums": [
+        {
+          "name": "Touhou Youyoumu: Perfect Cherry Blossom",
+          "id": 2274,
+          "fave": null,
+          "rating": 4.2,
+          "rating_user": 4.0,
+          "rating_complete": false,
+          "art": "\/album_art\/1_2274"
+        }
+      ]
+    },
+    {
+      "id": 12736,
+      "sid": 1,
+      "origin_sid": 2,
+      "order": 32766,
+      "request_id": 8016045,
+      "rating": 4.4,
+      "title": "Made in U.S.A.",
+      "length": 102,
+      "cool": false,
+      "cool_end": 1601876795,
+      "good": true,
+      "elec_blocked": false,
+      "elec_blocked_by": "group",
+      "elec_blocked_num": 0,
+      "valid": true,
+      "rating_user": 4.0,
+      "fave": true,
+      "albums": [
+        {
+          "name": "Super Street Fighter II Turbo HD",
+          "id": 1557,
+          "fave": null,
+          "rating": 3.9,
+          "rating_user": 4.0,
+          "rating_complete": false,
+          "art": "\/album_art\/1_1557"
+        }
+      ]
+    }
+  ],
+  "sched_current": {
+    "id": 5569439,
+    "start": 1602031637,
+    "start_actual": 1601898525,
+    "end": 1601898607,
+    "type": "Election",
+    "name": null,
+    "sid": 1,
+    "url": null,
+    "voting_allowed": false,
+    "used": true,
+    "length": 82,
+    "core_event_id": null,
+    "songs": [
+      {
+        "title": "Roll'n Roll'n",
+        "id": 30014,
+        "rating": 4.3,
+        "origin_sid": 1,
+        "link_text": null,
+        "artist_parseable": "[{\"id\": 9361, \"name\": \"Chikayo Fukuda\"}]",
+        "cool": false,
+        "url": null,
+        "elec_blocked": true,
+        "elec_blocked_by": "in_election",
+        "length": 82,
+        "artists": [
+          {
+            "id": 9361,
+            "name": "Chikayo Fukuda",
+            "order": 0
+          }
+        ],
+        "albums": [
+          {
+            "id": 3431,
+            "rating": 4.3,
+            "art": "\/album_art\/1_3431",
+            "name": "Solatorobo",
+            "rating_user": 0,
+            "fave": false,
+            "rating_complete": false
+          }
+        ],
+        "groups": [],
+        "rating_user": 0,
+        "fave": null,
+        "rating_allowed": true,
+        "entry_id": 16399607,
+        "elec_request_user_id": 0,
+        "entry_position": 0,
+        "entry_type": 2,
+        "entry_votes": 1,
+        "elec_request_username": null,
+        "sid": 1,
+        "request_count": 31,
+        "rating_count": 25
+      },
+      {
+        "title": "Ada's Theme",
+        "id": 1073,
+        "rating": 3.7,
+        "origin_sid": 1,
+        "link_text": null,
+        "artist_parseable": "[{\"id\": 9020, \"name\": \"Masami Ueda\"}, {\"id\": 9017, \"name\": \"Shusaku Uchiyama\"}, {\"id\": 9028, \"name\": \"Shun Nishigaki\"}]",
+        "cool": false,
+        "url": null,
+        "elec_blocked": true,
+        "elec_blocked_by": "in_election",
+        "length": 80,
+        "artists": [
+          {
+            "id": 9020,
+            "name": "Masami Ueda",
+            "order": 0
+          },
+          {
+            "id": 9017,
+            "name": "Shusaku Uchiyama",
+            "order": 1
+          },
+          {
+            "id": 9028,
+            "name": "Shun Nishigaki",
+            "order": 2
+          }
+        ],
+        "albums": [
+          {
+            "id": 116,
+            "rating": 3.7,
+            "art": "\/album_art\/1_116",
+            "name": "Resident Evil 2",
+            "rating_user": 0,
+            "fave": false,
+            "rating_complete": false
+          }
+        ],
+        "groups": [
+          {
+            "id": 1799,
+            "name": "Resident Evil"
+          }
+        ],
+        "rating_user": 0,
+        "fave": null,
+        "rating_allowed": false,
+        "entry_id": 16399608,
+        "elec_request_user_id": 0,
+        "entry_position": 1,
+        "entry_type": 2,
+        "entry_votes": 0,
+        "elec_request_username": null,
+        "sid": 1,
+        "request_count": 107,
+        "rating_count": 55
+      },
+      {
+        "title": "Detritus Desert",
+        "id": 27286,
+        "rating": 3.0,
+        "origin_sid": 1,
+        "link_text": null,
+        "artist_parseable": "[{\"id\": 17823, \"name\": \"Yuri Fukuda\"}, {\"id\": 17824, \"name\": \"Takashi Nagasaka\"}]",
+        "cool": false,
+        "url": null,
+        "elec_blocked": true,
+        "elec_blocked_by": "in_election",
+        "length": 86,
+        "artists": [
+          {
+            "id": 17823,
+            "name": "Yuri Fukuda",
+            "order": 0
+          },
+          {
+            "id": 17824,
+            "name": "Takashi Nagasaka",
+            "order": 1
+          }
+        ],
+        "albums": [
+          {
+            "id": 3134,
+            "rating": 3.8,
+            "art": "\/album_art\/1_3134",
+            "name": "Super Monkey Ball: Banana Blitz",
+            "rating_user": 0,
+            "fave": false,
+            "rating_complete": false
+          }
+        ],
+        "groups": [
+          {
+            "id": 3744,
+            "name": "Super Monkey Ball"
+          }
+        ],
+        "rating_user": 0,
+        "fave": null,
+        "rating_allowed": false,
+        "entry_id": 16399609,
+        "elec_request_user_id": 0,
+        "entry_position": 2,
+        "entry_type": 2,
+        "entry_votes": 0,
+        "elec_request_username": null,
+        "sid": 1,
+        "request_count": 12,
+        "rating_count": 27
+      }
+    ]
+  },
+  "sched_next": [
+    {
+      "id": 5569440,
+      "start": 1602031719,
+      "start_actual": null,
+      "end": 1602031825,
+      "type": "Election",
+      "name": null,
+      "sid": 1,
+      "url": null,
+      "voting_allowed": true,
+      "used": false,
+      "length": 106,
+      "core_event_id": null,
+      "songs": [
+        {
+          "title": "Intro\/Panic Puppet Zone - Act 1",
+          "id": 28847,
+          "rating": 4.2,
+          "origin_sid": 1,
+          "link_text": null,
+          "artist_parseable": "[{\"id\": 9436, \"name\": \"Jun Senoue\"}]",
+          "cool": false,
+          "url": null,
+          "elec_blocked": true,
+          "elec_blocked_by": "in_election",
+          "length": 115,
+          "artists": [
+            {
+              "id": 9436,
+              "name": "Jun Senoue",
+              "order": 0
+            }
+          ],
+          "albums": [
+            {
+              "id": 2919,
+              "rating": 4.2,
+              "art": "\/album_art\/1_2919",
+              "name": "Sonic 3D Blast (GEN)",
+              "rating_user": 0,
+              "fave": false,
+              "rating_complete": false
+            }
+          ],
+          "groups": [
+            {
+              "id": 4464,
+              "name": "Sonic (Spin-off)"
+            }
+          ],
+          "rating_user": 0,
+          "fave": null,
+          "rating_allowed": false,
+          "entry_id": 16399610,
+          "elec_request_user_id": 28173,
+          "entry_position": 0,
+          "entry_type": 4,
+          "entry_votes": 1,
+          "elec_request_username": "Squirtle129",
+          "sid": 1,
+          "request_count": 50,
+          "rating_count": 43
+        },
+        {
+          "title": "Rough and Ready",
+          "id": 1294,
+          "rating": 4.0,
+          "origin_sid": 1,
+          "link_text": "Click for More Info",
+          "artist_parseable": "[{\"id\": 2116, \"name\": \"Katsuhiko Suzuki\"}, {\"id\": 9077, \"name\": \"Nazo² Unit\"}]",
+          "cool": false,
+          "url": "http:\/\/vgmdb.net\/album\/3471",
+          "elec_blocked": true,
+          "elec_blocked_by": "in_election",
+          "length": 105,
+          "artists": [
+            {
+              "id": 2116,
+              "name": "Katsuhiko Suzuki",
+              "order": 0
+            },
+            {
+              "id": 9077,
+              "name": "Nazo² Unit",
+              "order": 1
+            }
+          ],
+          "albums": [
+            {
+              "id": 146,
+              "rating": 4.0,
+              "art": "\/album_art\/1_146",
+              "name": "Guardian Heroes",
+              "rating_user": 0,
+              "fave": false,
+              "rating_complete": false
+            }
+          ],
+          "groups": [
+            {
+              "id": 1819,
+              "name": "Guardian Heroes"
+            }
+          ],
+          "rating_user": 0,
+          "fave": null,
+          "rating_allowed": false,
+          "entry_id": 16399611,
+          "elec_request_user_id": 0,
+          "entry_position": 1,
+          "entry_type": 2,
+          "entry_votes": 0,
+          "elec_request_username": null,
+          "sid": 1,
+          "request_count": 83,
+          "rating_count": 43
+        },
+        {
+          "title": "Scrapyard",
+          "id": 24296,
+          "rating": 4.1,
+          "origin_sid": 1,
+          "link_text": null,
+          "artist_parseable": "[{\"id\":2530,\"name\":\"Kazuhiko Uehara\"},{\"id\":13793,\"name\":\"Hideto Inoue\"},{\"id\":2528,\"name\":\"Harumi Ueko\"}]",
+          "cool": false,
+          "url": null,
+          "elec_blocked": true,
+          "elec_blocked_by": "in_election",
+          "length": 100,
+          "artists": [
+            {
+              "id": 2530,
+              "name": "Kazuhiko Uehara",
+              "order": 0
+            },
+            {
+              "id": 13793,
+              "name": "Hideto Inoue",
+              "order": 1
+            },
+            {
+              "id": 2528,
+              "name": "Harumi Ueko",
+              "order": 2
+            }
+          ],
+          "albums": [
+            {
+              "id": 3867,
+              "rating": 3.6,
+              "art": "\/album_art\/1_3867",
+              "name": "Teenage Mutant Ninja Turtles: Tournament Fighters (SNES)",
+              "rating_user": 0,
+              "fave": false,
+              "rating_complete": false
+            }
+          ],
+          "groups": [
+            {
+              "id": 2018,
+              "name": "TMNT"
+            }
+          ],
+          "rating_user": 0,
+          "fave": null,
+          "rating_allowed": false,
+          "entry_id": 16399612,
+          "elec_request_user_id": 0,
+          "entry_position": 2,
+          "entry_type": 2,
+          "entry_votes": 0,
+          "elec_request_username": null,
+          "sid": 1,
+          "request_count": 22,
+          "rating_count": 31
+        }
+      ]
+    },
+    {
+      "id": 5569444,
+      "start": 1602031825,
+      "start_actual": null,
+      "end": 1602032135,
+      "type": "Election",
+      "name": null,
+      "sid": 1,
+      "url": null,
+      "voting_allowed": false,
+      "used": false,
+      "length": 310,
+      "core_event_id": null,
+      "songs": [
+        {
+          "title": "Ike's Resolution",
+          "id": 7513,
+          "rating": 4.1,
+          "origin_sid": 1,
+          "link_text": null,
+          "artist_parseable": "[{\"id\": 9476, \"name\": \"Yuka Tsujiyoko\"}, {\"id\": 9597, \"name\": \"Yoshito Hirano\"}, {\"id\": 9813, \"name\": \"Saki Haruyama\"}, {\"id\": 9814, \"name\": \"Naoko Mitome\"}, {\"id\": 9815, \"name\": \"Atsushi Yoshida\"}, {\"id\": 9816, \"name\": \"Kaneko Teramae\"}]",
+          "cool": false,
+          "url": null,
+          "elec_blocked": true,
+          "elec_blocked_by": "in_election",
+          "length": 318,
+          "artists": [
+            {
+              "id": 9476,
+              "name": "Yuka Tsujiyoko",
+              "order": 0
+            },
+            {
+              "id": 9597,
+              "name": "Yoshito Hirano",
+              "order": 1
+            },
+            {
+              "id": 9813,
+              "name": "Saki Haruyama",
+              "order": 2
+            },
+            {
+              "id": 9814,
+              "name": "Naoko Mitome",
+              "order": 3
+            },
+            {
+              "id": 9815,
+              "name": "Atsushi Yoshida",
+              "order": 4
+            },
+            {
+              "id": 9816,
+              "name": "Kaneko Teramae",
+              "order": 5
+            }
+          ],
+          "albums": [
+            {
+              "id": 775,
+              "rating": 3.9,
+              "art": "\/album_art\/1_775",
+              "name": "Fire Emblem: Path of Radiance",
+              "rating_user": 0,
+              "fave": false,
+              "rating_complete": false
+            }
+          ],
+          "groups": [
+            {
+              "id": 1967,
+              "name": "Fire Emblem"
+            }
+          ],
+          "rating_user": 0,
+          "fave": null,
+          "rating_allowed": false,
+          "entry_id": 16399622,
+          "elec_request_user_id": 0,
+          "entry_position": 0,
+          "entry_type": 2,
+          "entry_votes": 0,
+          "elec_request_username": null,
+          "sid": 1,
+          "request_count": 58,
+          "rating_count": 42
+        },
+        {
+          "title": "Daredevil",
+          "id": 33333,
+          "rating": 4.2,
+          "origin_sid": 1,
+          "link_text": null,
+          "artist_parseable": "[{\"id\": 9181, \"name\": \"Keiki Kobayashi\"}]",
+          "cool": false,
+          "url": null,
+          "elec_blocked": true,
+          "elec_blocked_by": "in_election",
+          "length": 306,
+          "artists": [
+            {
+              "id": 9181,
+              "name": "Keiki Kobayashi",
+              "order": 0
+            }
+          ],
+          "albums": [
+            {
+              "id": 3772,
+              "rating": 4.2,
+              "art": "\/album_art\/1_3772",
+              "name": "Ace Combat 7: Skies Unknown",
+              "rating_user": 0,
+              "fave": false,
+              "rating_complete": false
+            }
+          ],
+          "groups": [
+            {
+              "id": 1835,
+              "name": "Ace Combat"
+            }
+          ],
+          "rating_user": 0,
+          "fave": null,
+          "rating_allowed": false,
+          "entry_id": 16399623,
+          "elec_request_user_id": 0,
+          "entry_position": 1,
+          "entry_type": 2,
+          "entry_votes": 0,
+          "elec_request_username": null,
+          "sid": 1,
+          "request_count": 15,
+          "rating_count": 20
+        },
+        {
+          "title": "More Than Loving",
+          "id": 2146,
+          "rating": 3.4,
+          "origin_sid": 1,
+          "link_text": null,
+          "artist_parseable": "[{\"id\": 9225, \"name\": \"Masahiro Andoh\"}, {\"id\": 9226, \"name\": \"Ted Namba\"}]",
+          "cool": false,
+          "url": null,
+          "elec_blocked": true,
+          "elec_blocked_by": "in_election",
+          "length": 307,
+          "artists": [
+            {
+              "id": 9225,
+              "name": "Masahiro Andoh",
+              "order": 0
+            },
+            {
+              "id": 9226,
+              "name": "Ted Namba",
+              "order": 1
+            }
+          ],
+          "albums": [
+            {
+              "id": 241,
+              "rating": 3.9,
+              "art": "\/album_art\/1_241",
+              "name": "Gran Turismo",
+              "rating_user": 0,
+              "fave": false,
+              "rating_complete": false
+            }
+          ],
+          "groups": [
+            {
+              "id": 1349,
+              "name": "Gran Turismo"
+            }
+          ],
+          "rating_user": 0,
+          "fave": null,
+          "rating_allowed": false,
+          "entry_id": 16399624,
+          "elec_request_user_id": 0,
+          "entry_position": 2,
+          "entry_type": 2,
+          "entry_votes": 0,
+          "elec_request_username": null,
+          "sid": 1,
+          "request_count": 136,
+          "rating_count": 66
+        }
+      ]
+    }
+  ],
+  "sched_history": [
+    {
+      "id": 5569438,
+      "start": 1602031499,
+      "start_actual": 1601898392,
+      "end": 1601898530,
+      "type": "Election",
+      "name": null,
+      "sid": 1,
+      "url": null,
+      "voting_allowed": false,
+      "used": true,
+      "length": 138,
+      "core_event_id": null,
+      "songs": [
+        {
+          "title": "You Are the End",
+          "id": 29654,
+          "rating": 4.5,
+          "origin_sid": 1,
+          "link_text": null,
+          "artist_parseable": "[{\"id\": 25110, \"name\": \"Waveshaper\"}]",
+          "cool": true,
+          "url": null,
+          "elec_blocked": true,
+          "elec_blocked_by": "in_election",
+          "length": 138,
+          "artists": [
+            {
+              "id": 25110,
+              "name": "Waveshaper",
+              "order": 0
+            }
+          ],
+          "albums": [
+            {
+              "id": 3386,
+              "rating": 4.3,
+              "art": "\/album_art\/1_3386",
+              "name": "Furi",
+              "rating_user": 0,
+              "fave": false,
+              "rating_complete": false
+            }
+          ],
+          "groups": [],
+          "rating_user": 0,
+          "fave": null,
+          "rating_allowed": true,
+          "entry_id": 16399604,
+          "elec_request_user_id": 28173,
+          "entry_position": 0,
+          "entry_type": 4,
+          "entry_votes": 3,
+          "elec_request_username": "Squirtle129",
+          "sid": 1,
+          "request_count": 57,
+          "rating_count": 33.0
+        },
+        {
+          "title": "UNLIMITED:SaGa Overture",
+          "id": 23728,
+          "rating": 4.3,
+          "origin_sid": 1,
+          "link_text": null,
+          "artist_parseable": "[{\"id\": 9339, \"name\": \"Masashi Hamauzu\"}]",
+          "cool": false,
+          "url": null,
+          "elec_blocked": true,
+          "elec_blocked_by": "in_election",
+          "length": 144,
+          "artists": [
+            {
+              "id": 9339,
+              "name": "Masashi Hamauzu",
+              "order": 0
+            }
+          ],
+          "albums": [
+            {
+              "id": 825,
+              "rating": 4.0,
+              "art": "\/album_art\/1_825",
+              "name": "Unlimited Saga",
+              "rating_user": 0,
+              "fave": false,
+              "rating_complete": false
+            }
+          ],
+          "groups": [
+            {
+              "id": 1970,
+              "name": "SaGa"
+            }
+          ],
+          "rating_user": 0,
+          "fave": null,
+          "rating_allowed": true,
+          "entry_id": 16399605,
+          "elec_request_user_id": 0,
+          "entry_position": 1,
+          "entry_type": 2,
+          "entry_votes": 0,
+          "elec_request_username": null,
+          "sid": 1,
+          "request_count": 53,
+          "rating_count": 38
+        },
+        {
+          "title": "Mission 2 \/ Mission 4-2",
+          "id": 596,
+          "rating": 3.9,
+          "origin_sid": 1,
+          "link_text": null,
+          "artist_parseable": "[{\"id\": 10401, \"name\": \"Kinuyo Yamashita\"}]",
+          "cool": false,
+          "url": null,
+          "elec_blocked": true,
+          "elec_blocked_by": "in_election",
+          "length": 153,
+          "artists": [
+            {
+              "id": 10401,
+              "name": "Kinuyo Yamashita",
+              "order": 0
+            }
+          ],
+          "albums": [
+            {
+              "id": 65,
+              "rating": 3.8,
+              "art": "\/album_art\/1_65",
+              "name": "Kisou Ryouhei Gunhound",
+              "rating_user": 0,
+              "fave": false,
+              "rating_complete": false
+            }
+          ],
+          "groups": [
+            {
+              "id": 2120,
+              "name": "Kisou Ryouhei Gunhound"
+            }
+          ],
+          "rating_user": 0,
+          "fave": null,
+          "rating_allowed": true,
+          "entry_id": 16399606,
+          "elec_request_user_id": 0,
+          "entry_position": 2,
+          "entry_type": 2,
+          "entry_votes": 0,
+          "elec_request_username": null,
+          "sid": 1,
+          "request_count": 39,
+          "rating_count": 43
+        }
+      ]
+    },
+    {
+      "id": 5569434,
+      "start": 1602031431,
+      "start_actual": 1601898326,
+      "end": 1601898394,
+      "type": "Election",
+      "name": null,
+      "sid": 1,
+      "url": null,
+      "voting_allowed": false,
+      "used": true,
+      "length": 68,
+      "core_event_id": null,
+      "songs": [
+        {
+          "title": "End's Journey",
+          "id": 27411,
+          "rating": 3.7,
+          "origin_sid": 1,
+          "link_text": null,
+          "artist_parseable": "[{\"id\": 17949, \"name\": \"Tomoki Miyoshi\"}]",
+          "cool": true,
+          "url": null,
+          "elec_blocked": true,
+          "elec_blocked_by": "in_election",
+          "length": 68,
+          "artists": [
+            {
+              "id": 17949,
+              "name": "Tomoki Miyoshi",
+              "order": 0
+            }
+          ],
+          "albums": [
+            {
+              "id": 3144,
+              "rating": 4.0,
+              "art": "\/album_art\/1_3144",
+              "name": "I Am Setsuna",
+              "rating_user": 0,
+              "fave": false,
+              "rating_complete": false
+            }
+          ],
+          "groups": [
+            {
+              "id": 3759,
+              "name": "Setsuna"
+            }
+          ],
+          "rating_user": 0,
+          "fave": null,
+          "rating_allowed": true,
+          "entry_id": 16399593,
+          "elec_request_user_id": 0,
+          "entry_position": 0,
+          "entry_type": 2,
+          "entry_votes": 1,
+          "elec_request_username": null,
+          "sid": 1,
+          "request_count": 23,
+          "rating_count": 29.0
+        },
+        {
+          "title": "Hector Steps Out",
+          "id": 2442,
+          "rating": 3.8,
+          "origin_sid": 1,
+          "link_text": null,
+          "artist_parseable": "[{\"id\": 9263, \"name\": \"Peter McConnell\"}]",
+          "cool": false,
+          "url": null,
+          "elec_blocked": true,
+          "elec_blocked_by": "in_election",
+          "length": 55,
+          "artists": [
+            {
+              "id": 9263,
+              "name": "Peter McConnell",
+              "order": 0
+            }
+          ],
+          "albums": [
+            {
+              "id": 267,
+              "rating": 3.7,
+              "art": "\/album_art\/1_267",
+              "name": "Grim Fandango",
+              "rating_user": 0,
+              "fave": false,
+              "rating_complete": false
+            }
+          ],
+          "groups": [
+            {
+              "id": 1318,
+              "name": "Grim Fandango"
+            }
+          ],
+          "rating_user": 0,
+          "fave": null,
+          "rating_allowed": true,
+          "entry_id": 16399594,
+          "elec_request_user_id": 0,
+          "entry_position": 1,
+          "entry_type": 2,
+          "entry_votes": 0,
+          "elec_request_username": null,
+          "sid": 1,
+          "request_count": 114,
+          "rating_count": 55
+        },
+        {
+          "title": "Battle Theme 2 (Red Book)",
+          "id": 25662,
+          "rating": 3.5,
+          "origin_sid": 1,
+          "link_text": null,
+          "artist_parseable": "[{\"id\": 1578, \"name\": \"Tomoyuki Hamada\"}, {\"id\": 16256, \"name\": \"Hiro Takahashi\"}, {\"id\": 16257, \"name\": \"Achilles C. Damigos\"}]",
+          "cool": false,
+          "url": null,
+          "elec_blocked": true,
+          "elec_blocked_by": "in_election",
+          "length": 56,
+          "artists": [
+            {
+              "id": 1578,
+              "name": "Tomoyuki Hamada",
+              "order": 0
+            },
+            {
+              "id": 16256,
+              "name": "Hiro Takahashi",
+              "order": 1
+            },
+            {
+              "id": 16257,
+              "name": "Achilles C. Damigos",
+              "order": 2
+            }
+          ],
+          "albums": [
+            {
+              "id": 2946,
+              "rating": 3.6,
+              "art": "\/album_art\/1_2946",
+              "name": "Shin Megami Tensei: Devil Children Red\/Black Book",
+              "rating_user": 0,
+              "fave": false,
+              "rating_complete": false
+            }
+          ],
+          "groups": [
+            {
+              "id": 1838,
+              "name": "Megami Tensei"
+            }
+          ],
+          "rating_user": 0,
+          "fave": null,
+          "rating_allowed": true,
+          "entry_id": 16399592,
+          "elec_request_user_id": 0,
+          "entry_position": 2,
+          "entry_type": 2,
+          "entry_votes": 0,
+          "elec_request_username": null,
+          "sid": 1,
+          "request_count": 23,
+          "rating_count": 33
+        }
+      ]
+    },
+    {
+      "id": 5569424,
+      "start": 1602031381,
+      "start_actual": 1601898280,
+      "end": 1601898330,
+      "type": "Election",
+      "name": null,
+      "sid": 1,
+      "url": null,
+      "voting_allowed": false,
+      "used": true,
+      "length": 50,
+      "core_event_id": null,
+      "songs": [
+        {
+          "title": "Shop's Jig ~Bagpipe~",
+          "id": 805,
+          "rating": 3.6,
+          "origin_sid": 1,
+          "link_text": null,
+          "artist_parseable": "[{\"id\": 8985, \"name\": \"Ken Nakagawa\"}]",
+          "cool": true,
+          "url": null,
+          "elec_blocked": true,
+          "elec_blocked_by": "in_election",
+          "length": 50,
+          "artists": [
+            {
+              "id": 8985,
+              "name": "Ken Nakagawa",
+              "order": 0
+            }
+          ],
+          "albums": [
+            {
+              "id": 85,
+              "rating": 3.9,
+              "art": "\/album_art\/1_85",
+              "name": "Atelier Rorona",
+              "rating_user": 0,
+              "fave": false,
+              "rating_complete": false
+            }
+          ],
+          "groups": [
+            {
+              "id": 1780,
+              "name": "Atelier"
+            }
+          ],
+          "rating_user": 0,
+          "fave": null,
+          "rating_allowed": true,
+          "entry_id": 16399562,
+          "elec_request_user_id": 0,
+          "entry_position": 0,
+          "entry_type": 2,
+          "entry_votes": 1,
+          "elec_request_username": null,
+          "sid": 1,
+          "request_count": 50,
+          "rating_count": 29.0
+        },
+        {
+          "title": "The Whereabouts of Wit",
+          "id": 6908,
+          "rating": 3.8,
+          "origin_sid": 1,
+          "link_text": null,
+          "artist_parseable": "[{\"id\": 9452, \"name\": \"Shigeki Hayashi\"}]",
+          "cool": false,
+          "url": null,
+          "elec_blocked": true,
+          "elec_blocked_by": "in_election",
+          "length": 60,
+          "artists": [
+            {
+              "id": 9452,
+              "name": "Shigeki Hayashi",
+              "order": 0
+            }
+          ],
+          "albums": [
+            {
+              "id": 720,
+              "rating": 3.9,
+              "art": "\/album_art\/1_720",
+              "name": "Blaze Union",
+              "rating_user": 0,
+              "fave": false,
+              "rating_complete": false
+            }
+          ],
+          "groups": [
+            {
+              "id": 1955,
+              "name": "DeptHeaven"
+            }
+          ],
+          "rating_user": 0,
+          "fave": null,
+          "rating_allowed": true,
+          "entry_id": 16399563,
+          "elec_request_user_id": 0,
+          "entry_position": 1,
+          "entry_type": 2,
+          "entry_votes": 0,
+          "elec_request_username": null,
+          "sid": 1,
+          "request_count": 41,
+          "rating_count": 38
+        },
+        {
+          "title": "Go! Go! Buriki King!!",
+          "id": 6219,
+          "rating": 4.1,
+          "origin_sid": 1,
+          "link_text": "Click for More Info",
+          "artist_parseable": "[{\"id\": 8924, \"name\": \"Yoko Shimomura\"}]",
+          "cool": false,
+          "url": "http:\/\/vgmdb.net\/album\/196",
+          "elec_blocked": true,
+          "elec_blocked_by": "in_election",
+          "length": 58,
+          "artists": [
+            {
+              "id": 8924,
+              "name": "Yoko Shimomura",
+              "order": 0
+            }
+          ],
+          "albums": [
+            {
+              "id": 645,
+              "rating": 4.0,
+              "art": "\/album_art\/1_645",
+              "name": "Live A Live",
+              "rating_user": 0,
+              "fave": false,
+              "rating_complete": false
+            }
+          ],
+          "groups": [
+            {
+              "id": 345,
+              "name": "Live A Live"
+            }
+          ],
+          "rating_user": 0,
+          "fave": null,
+          "rating_allowed": true,
+          "entry_id": 16399564,
+          "elec_request_user_id": 0,
+          "entry_position": 2,
+          "entry_type": 2,
+          "entry_votes": 0,
+          "elec_request_username": null,
+          "sid": 1,
+          "request_count": 47,
+          "rating_count": 41
+        }
+      ]
+    },
+    {
+      "id": 5569420,
+      "start": 1602031255,
+      "start_actual": 1601898157,
+      "end": 1601898283,
+      "type": "Election",
+      "name": null,
+      "sid": 1,
+      "url": null,
+      "voting_allowed": false,
+      "used": true,
+      "length": 126,
+      "core_event_id": null,
+      "songs": [
+        {
+          "title": "Visions",
+          "id": 5672,
+          "rating": 3.9,
+          "origin_sid": 1,
+          "link_text": null,
+          "artist_parseable": "[{\"id\": 9657, \"name\": \"Tsukasa\"}]",
+          "cool": true,
+          "url": null,
+          "elec_blocked": true,
+          "elec_blocked_by": "in_election",
+          "length": 126,
+          "artists": [
+            {
+              "id": 9657,
+              "name": "Tsukasa",
+              "order": 0
+            }
+          ],
+          "albums": [
+            {
+              "id": 583,
+              "rating": 4.0,
+              "art": "\/album_art\/1_583",
+              "name": "Cytus",
+              "rating_user": 0,
+              "fave": false,
+              "rating_complete": false
+            }
+          ],
+          "groups": [
+            {
+              "id": 4504,
+              "name": "Cytus"
+            }
+          ],
+          "rating_user": 0,
+          "fave": null,
+          "rating_allowed": true,
+          "entry_id": 16399550,
+          "elec_request_user_id": 0,
+          "entry_position": 0,
+          "entry_type": 2,
+          "entry_votes": 1,
+          "elec_request_username": null,
+          "sid": 1,
+          "request_count": 87,
+          "rating_count": 37.0
+        },
+        {
+          "title": "The Menace",
+          "id": 259,
+          "rating": 3.9,
+          "origin_sid": 1,
+          "link_text": null,
+          "artist_parseable": "[{\"id\": 8914, \"name\": \"Steve Emney\"}]",
+          "cool": false,
+          "url": null,
+          "elec_blocked": true,
+          "elec_blocked_by": "in_election",
+          "length": 131,
+          "artists": [
+            {
+              "id": 8914,
+              "name": "Steve Emney",
+              "order": 0
+            }
+          ],
+          "albums": [
+            {
+              "id": 29,
+              "rating": 3.9,
+              "art": "\/album_art\/1_29",
+              "name": "Split\/Second",
+              "rating_user": 0,
+              "fave": false,
+              "rating_complete": false
+            }
+          ],
+          "groups": [
+            {
+              "id": 1747,
+              "name": "Split\/Second"
+            }
+          ],
+          "rating_user": 0,
+          "fave": null,
+          "rating_allowed": true,
+          "entry_id": 16399551,
+          "elec_request_user_id": 0,
+          "entry_position": 1,
+          "entry_type": 2,
+          "entry_votes": 0,
+          "elec_request_username": null,
+          "sid": 1,
+          "request_count": 40,
+          "rating_count": 39
+        },
+        {
+          "title": "Lava Trouble Bubble",
+          "id": 4836,
+          "rating": 4.0,
+          "origin_sid": 1,
+          "link_text": null,
+          "artist_parseable": "[{\"id\": 9268, \"name\": \"Machinae Supremacy\"}]",
+          "cool": false,
+          "url": null,
+          "elec_blocked": true,
+          "elec_blocked_by": "in_election",
+          "length": 141,
+          "artists": [
+            {
+              "id": 9268,
+              "name": "Machinae Supremacy",
+              "order": 0
+            }
+          ],
+          "albums": [
+            {
+              "id": 498,
+              "rating": 4.2,
+              "art": "\/album_art\/1_498",
+              "name": "Jets 'n' Guns",
+              "rating_user": 4.5,
+              "fave": false,
+              "rating_complete": false
+            }
+          ],
+          "groups": [
+            {
+              "id": 4532,
+              "name": "Jets'n'Guns"
+            }
+          ],
+          "rating_user": 0,
+          "fave": null,
+          "rating_allowed": true,
+          "entry_id": 16399552,
+          "elec_request_user_id": 0,
+          "entry_position": 2,
+          "entry_type": 2,
+          "entry_votes": 0,
+          "elec_request_username": null,
+          "sid": 1,
+          "request_count": 198,
+          "rating_count": 61
+        }
+      ]
+    },
+    {
+      "id": 5569413,
+      "start": 1602030950,
+      "start_actual": 1601897853,
+      "end": 1601898158,
+      "type": "Election",
+      "name": null,
+      "sid": 1,
+      "url": null,
+      "voting_allowed": false,
+      "used": true,
+      "length": 305,
+      "core_event_id": null,
+      "songs": [
+        {
+          "title": "Innocent Primeval Breaker",
+          "id": 1633,
+          "rating": 4.7,
+          "origin_sid": 1,
+          "link_text": null,
+          "artist_parseable": "[{\"id\": 9138, \"name\": \"Falcom Sound Team jdk\"}]",
+          "cool": true,
+          "url": null,
+          "elec_blocked": true,
+          "elec_blocked_by": "in_election",
+          "length": 305,
+          "artists": [
+            {
+              "id": 9138,
+              "name": "Falcom Sound Team jdk",
+              "order": 0
+            }
+          ],
+          "albums": [
+            {
+              "id": 183,
+              "rating": 4.4,
+              "art": "\/album_art\/1_183",
+              "name": "Ys Seven",
+              "rating_user": 5.0,
+              "fave": true,
+              "rating_complete": false
+            }
+          ],
+          "groups": [
+            {
+              "id": 1829,
+              "name": "Ys"
+            }
+          ],
+          "rating_user": 5.0,
+          "fave": true,
+          "rating_allowed": true,
+          "entry_id": 16399529,
+          "elec_request_user_id": 15182,
+          "entry_position": 0,
+          "entry_type": 4,
+          "entry_votes": 1,
+          "elec_request_username": "Laharl",
+          "sid": 1,
+          "request_count": 683,
+          "rating_count": 101.0
+        },
+        {
+          "title": "(Boss 7) The Justice Ray Part2",
+          "id": 30866,
+          "rating": 4.4,
+          "origin_sid": 1,
+          "link_text": null,
+          "artist_parseable": "[{\"id\": 9221, \"name\": \"Hyakutaro Tsukumo\"}]",
+          "cool": false,
+          "url": null,
+          "elec_blocked": true,
+          "elec_blocked_by": "in_election",
+          "length": 308,
+          "artists": [
+            {
+              "id": 9221,
+              "name": "Hyakutaro Tsukumo",
+              "order": 0
+            }
+          ],
+          "albums": [
+            {
+              "id": 1182,
+              "rating": 4.2,
+              "art": "\/album_art\/1_1182",
+              "name": "Thunder Force V",
+              "rating_user": 0,
+              "fave": false,
+              "rating_complete": false
+            }
+          ],
+          "groups": [
+            {
+              "id": 329,
+              "name": "Thunder Force"
+            }
+          ],
+          "rating_user": 0,
+          "fave": null,
+          "rating_allowed": true,
+          "entry_id": 16399531,
+          "elec_request_user_id": 0,
+          "entry_position": 1,
+          "entry_type": 2,
+          "entry_votes": 0,
+          "elec_request_username": null,
+          "sid": 1,
+          "request_count": 17,
+          "rating_count": 24
+        },
+        {
+          "title": "Baby Universe",
+          "id": 25495,
+          "rating": 4.1,
+          "origin_sid": 1,
+          "link_text": null,
+          "artist_parseable": "[{\"id\": 9175, \"name\": \"Hiroshi Okubo\"}]",
+          "cool": false,
+          "url": null,
+          "elec_blocked": true,
+          "elec_blocked_by": "in_election",
+          "length": 306,
+          "artists": [
+            {
+              "id": 9175,
+              "name": "Hiroshi Okubo",
+              "order": 0
+            }
+          ],
+          "albums": [
+            {
+              "id": 2913,
+              "rating": 4.0,
+              "art": "\/album_art\/1_2913",
+              "name": "We Love Katamari",
+              "rating_user": 0,
+              "fave": false,
+              "rating_complete": false
+            }
+          ],
+          "groups": [
+            {
+              "id": 1852,
+              "name": "Katamari"
+            },
+            {
+              "id": 2542,
+              "name": "Vocal"
+            }
+          ],
+          "rating_user": 0,
+          "fave": null,
+          "rating_allowed": true,
+          "entry_id": 16399530,
+          "elec_request_user_id": 0,
+          "entry_position": 2,
+          "entry_type": 2,
+          "entry_votes": 0,
+          "elec_request_username": null,
+          "sid": 1,
+          "request_count": 222,
+          "rating_count": 77
+        }
+      ]
+    }
+  ],
+  "already_voted": [
+    [
+      5486801,
+      16153656
+    ],
+    [
+      5508929,
+      16219581
+    ],
+    [
+      5563745,
+      16382579
+    ],
+    [
+      5564543,
+      16384968
+    ],
+    [
+      5565070,
+      16386534
+    ],
+    [
+      5568664,
+      16397283
+    ]
+  ],
+  "all_stations_info": {
+    "1": {
+      "title": "Roll'n Roll'n",
+      "album": "Solatorobo",
+      "art": "\/album_art\/1_3431",
+      "event_name": null,
+      "event_type": "Election"
+    },
+    "2": {
+      "title": "The Young Princess Whispers in Your Dream",
+      "album": "Mirror Image: A Link to the Past ReMixed",
+      "art": "\/album_art\/2_3333",
+      "event_name": null,
+      "event_type": "Election"
+    },
+    "3": {
+      "title": "Overworld (ZREO)",
+      "album": "Zelda II: The Adventure of Link",
+      "art": "\/album_art\/a_916",
+      "event_name": null,
+      "event_type": "Election"
+    },
+    "4": {
+      "title": "Fair Wind",
+      "album": "Ganbare! Golf Boys",
+      "art": "\/album_art\/4_1616",
+      "event_name": null,
+      "event_type": "Election"
+    },
+    "5": {
+      "title": "Gliding on a Silver Lining",
+      "album": "Kirby's Dream Land",
+      "art": "\/album_art\/5_1284",
+      "event_name": null,
+      "event_type": "Election"
+    }
+  },
+  "api_info": {
+    "exectime": 0.029296875,
+    "time": 1601898553
+  }
+}

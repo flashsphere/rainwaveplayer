@@ -1,0 +1,61 @@
+{
+  "artists": [
+    {
+      "id": 9015,
+      "name": "nervous_testpilot"
+    }
+  ],
+  "albums": [
+    {
+      "id": 379,
+      "name": "Fittest",
+      "cool": false,
+      "rating": 4.2,
+      "fave": false,
+      "rating_user": 0.0,
+      "rating_complete": false
+    }
+  ],
+  "songs": [
+    {
+      "id": 100,
+      "length": 136,
+      "origin_sid": 1,
+      "title": "Testing Times",
+      "added_on": 1287195450,
+      "url": null,
+      "link_text": null,
+      "rating": 3.7,
+      "requestable": true,
+      "cool": false,
+      "cool_end": 1602355508,
+      "artist_parseable": "[{\"id\": 8896, \"name\": \"David Clynick\"}]",
+      "rating_user": 0.0,
+      "fave": false,
+      "album_name": "Banjo-Kazooie: Nuts & Bolts",
+      "album_id": 11
+    },
+    {
+      "id": 2999,
+      "length": 142,
+      "origin_sid": 1,
+      "title": "Test of the L'Cie",
+      "added_on": 1267426065,
+      "url": null,
+      "link_text": null,
+      "rating": 3.8,
+      "requestable": true,
+      "cool": true,
+      "cool_end": 1602391009,
+      "artist_parseable": "[{\"id\": 9339, \"name\": \"Masashi Hamauzu\"}]",
+      "rating_user": 0.0,
+      "fave": false,
+      "album_name": "Final Fantasy XIII",
+      "album_id": 315
+    }
+  ],
+  "api_info": {
+    "exectime": 0.019289731979370117,
+    "time": 1602380118
+  }
+}

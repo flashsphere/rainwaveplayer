@@ -1,0 +1,12 @@
+{
+  "clear_requests_result": {
+    "code": 400,
+    "success": false,
+    "tl_key": "invalid_station_id",
+    "text": "Invalid station ID."
+  },
+  "api_info": {
+    "exectime": 0.0004611015319824219,
+    "time": 1602149881
+  }
+}

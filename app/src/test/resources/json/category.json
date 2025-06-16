@@ -1,0 +1,76 @@
+{
+  "group": {
+    "name": "Final Fantasy Tactics",
+    "all_songs_for_sid": {
+      "310": [
+        {
+          "id": 2892,
+          "title": "Exceeding The Hill",
+          "rating": 4.2,
+          "requestable": true,
+          "length": 161,
+          "cool": false,
+          "cool_end": 1601964522,
+          "url": null,
+          "link_text": null,
+          "artist_parseable": "[{\"id\": 8920, \"name\": \"Hitoshi Sakimoto\"}]",
+          "rating_user": 0.0,
+          "fave": false,
+          "albums": [
+            {
+              "name": "Final Fantasy Tactics A2",
+              "id": 310
+            }
+          ]
+        },
+        {
+          "id": 2891,
+          "title": "Before And Behind",
+          "rating": 3.9,
+          "requestable": true,
+          "length": 253,
+          "cool": true,
+          "cool_end": 1602066475,
+          "url": null,
+          "link_text": null,
+          "artist_parseable": "[{\"id\": 8920, \"name\": \"Hitoshi Sakimoto\"}]",
+          "rating_user": 0.0,
+          "fave": false,
+          "albums": [
+            {
+              "name": "Final Fantasy Tactics A2",
+              "id": 310
+            }
+          ]
+        }
+      ],
+      "323": [
+        {
+          "id": 3088,
+          "title": "Bland Logo",
+          "rating": 4.4,
+          "requestable": true,
+          "length": 69,
+          "cool": true,
+          "cool_end": 1602011918,
+          "url": null,
+          "link_text": null,
+          "artist_parseable": "[{\"id\": 8920, \"name\": \"Hitoshi Sakimoto\"}]",
+          "rating_user": 0.0,
+          "fave": false,
+          "albums": [
+            {
+              "name": "Final Fantasy Tactics",
+              "id": 323
+            }
+          ]
+        }
+      ]
+    },
+    "id": 3752
+  },
+  "api_info": {
+    "exectime": 0.013692378997802734,
+    "time": 1601985310
+  }
+}

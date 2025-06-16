@@ -1,0 +1,12 @@
+{
+  "rate_result": {
+    "code": 200,
+    "success": false,
+    "tl_key": "cannot_rate_now",
+    "text": "Cannot rate that song at this time."
+  },
+  "api_info": {
+    "exectime": 0.0025632381439208984,
+    "time": 1602154899
+  }
+}

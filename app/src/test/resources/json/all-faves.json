@@ -1,0 +1,98 @@
+{
+  "all_faves": [
+    {
+      "id": 1861,
+      "title": "Megalith-Agnus Dei",
+      "album_id": 205,
+      "album_name": "Ace Combat 04",
+      "rating": 4.4,
+      "rating_user": 4.5,
+      "fave": true
+    },
+    {
+      "id": 31466,
+      "title": "Streak of Black Sorrow",
+      "album_id": 3562,
+      "album_name": "A Certain Magical Virtual-On",
+      "rating": 4.5,
+      "rating_user": 0.0,
+      "fave": true
+    },
+    {
+      "id": 6006,
+      "title": "Filmoa",
+      "album_id": 623,
+      "album_name": "ActRaiser",
+      "rating": 4.7,
+      "rating_user": 5.0,
+      "fave": true
+    },
+    {
+      "id": 7316,
+      "title": "Apollo Justice ~ A New Trial is in Session!",
+      "album_id": 760,
+      "album_name": "Apollo Justice: Ace Attorney",
+      "rating": 4.4,
+      "rating_user": 0.0,
+      "fave": true
+    },
+    {
+      "id": 23680,
+      "title": "Armageddon",
+      "album_id": 2700,
+      "album_name": "Astebreed",
+      "rating": 4.3,
+      "rating_user": 0.0,
+      "fave": true
+    },
+    {
+      "id": 831,
+      "title": "Terminus",
+      "album_id": 87,
+      "album_name": "Atelier Totori",
+      "rating": 4.3,
+      "rating_user": 5.0,
+      "fave": true
+    },
+    {
+      "id": 820,
+      "title": "The Divergent Forest",
+      "album_id": 87,
+      "album_name": "Atelier Totori",
+      "rating": 4.2,
+      "rating_user": 4.0,
+      "fave": true
+    },
+    {
+      "id": 3129,
+      "title": "Outdoor City Theme",
+      "album_id": 326,
+      "album_name": "A Valley Without Wind",
+      "rating": 4.5,
+      "rating_user": 0.0,
+      "fave": true
+    },
+    {
+      "id": 26525,
+      "title": "Dungeon of Dreams",
+      "album_id": 3049,
+      "album_name": "Bean Dreams",
+      "rating": 4.7,
+      "rating_user": 4.5,
+      "fave": true
+    },
+    {
+      "id": 4059,
+      "title": "Conquer! (Wizard's Lair)",
+      "album_id": 416,
+      "album_name": "Bean's Quest",
+      "rating": 4.4,
+      "rating_user": 4.5,
+      "fave": true
+    }
+  ],
+  "api_info": {
+    "exectime": 0.0234682559967041,
+    "time": 1660724100
+  }
+}

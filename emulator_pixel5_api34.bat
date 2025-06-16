@@ -1,0 +1,2 @@
+emulator -avd Pixel_5_API_34 -netdelay none -netspeed full
+exit

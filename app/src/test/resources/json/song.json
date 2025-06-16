@@ -1,0 +1,59 @@
+{
+  "title": "Ada's Theme",
+  "id": 1073,
+  "rating": 3.7,
+  "origin_sid": 1,
+  "link_text": null,
+  "artist_parseable": "[{\"id\": 9020, \"name\": \"Masami Ueda\"}, {\"id\": 9017, \"name\": \"Shusaku Uchiyama\"}, {\"id\": 9028, \"name\": \"Shun Nishigaki\"}]",
+  "cool": false,
+  "url": null,
+  "elec_blocked": true,
+  "elec_blocked_by": "in_election",
+  "length": 80,
+  "artists": [
+    {
+      "id": 9020,
+      "name": "Masami Ueda",
+      "order": 0
+    },
+    {
+      "id": 9017,
+      "name": "Shusaku Uchiyama",
+      "order": 1
+    },
+    {
+      "id": 9028,
+      "name": "Shun Nishigaki",
+      "order": 2
+    }
+  ],
+  "albums": [
+    {
+      "id": 116,
+      "rating": 3.7,
+      "art": "\/album_art\/1_116",
+      "name": "Resident Evil 2",
+      "rating_user": 0,
+      "fave": false,
+      "rating_complete": false
+    }
+  ],
+  "groups": [
+    {
+      "id": 1799,
+      "name": "Resident Evil"
+    }
+  ],
+  "rating_user": 0,
+  "fave": true,
+  "rating_allowed": false,
+  "entry_id": 16399608,
+  "elec_request_user_id": 12345,
+  "entry_position": 1,
+  "entry_type": 2,
+  "entry_votes": 0,
+  "elec_request_username": "John Doe",
+  "sid": 1,
+  "request_count": 107,
+  "rating_count": 55
+}

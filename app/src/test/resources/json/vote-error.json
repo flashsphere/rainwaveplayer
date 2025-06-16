@@ -1,0 +1,13 @@
+{
+  "vote_result": {
+    "elec_id": null,
+    "entry_id": 16438376,
+    "success": false,
+    "tl_key": "cannot_vote_for_this_now",
+    "text": "Cannot vote for that song right now."
+  },
+  "api_info": {
+    "exectime": 0.0032739639282226562,
+    "time": 1602394012
+  }
+}

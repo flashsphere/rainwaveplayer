@@ -1,0 +1,6 @@
+<adaptive-icon xmlns:android="http://schemas.android.com/apk/res/android">
+    <background android:drawable="@color/brandPrimaryDark" />
+    <foreground android:drawable="@drawable/ic_shortcut_play_layer_list" />
+
+    <monochrome android:drawable="@drawable/ic_shortcut_play_layer_list" />
+</adaptive-icon>

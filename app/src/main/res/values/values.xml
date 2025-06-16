@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <item name="action_media_button" type="id" />
+    <item name="playback_notification_id" type="id" />
+    <item name="playback_notification_content_request_code" type="id" />
+    <item name="vote_song_notification_content_request_code" type="id" />
+    <item name="favorite_song_request_code" type="id" />
+    <item name="sleep_timer_request_code" type="id" />
+    <item name="start_main_activity_request_code" type="id" />
+    <item name="start_playback_activity_request_code" type="id" />
+</resources>

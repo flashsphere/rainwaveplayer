@@ -1,0 +1,12 @@
+{
+  "request_favorited_songs_result": {
+    "code": 200,
+    "success": false,
+    "tl_key": "too_many_requests",
+    "text": "Your queue is full."
+  },
+  "api_info": {
+    "exectime": 0.0025641918182373047,
+    "time": 1602152475
+  }
+}

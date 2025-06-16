@@ -1,0 +1,14 @@
+{
+  "fave_song_result": {
+    "id": 25475,
+    "fave": true,
+    "sid": 1,
+    "success": true,
+    "tl_key": "fave_success",
+    "text": "Favourited song."
+  },
+  "api_info": {
+    "exectime": 0.008127689361572266,
+    "time": 1602147685
+  }
+}

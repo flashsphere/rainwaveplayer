@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Media Router button -->
+    <style name="AppTheme.MediaRouteTheme" parent="@style/Theme.MediaRouter">
+        <item name="mediaRouteButtonStyle">@style/AppTheme.MediaRouteButtonStyle</item>
+        <item name="mediaRouteControlPanelThemeOverlay">@style/ThemeOverlay.MediaRouter.Light</item>
+    </style>
+    <style name="AppTheme.MediaRouteButtonStyle" parent="@style/Widget.MediaRouter.MediaRouteButton">
+        <item name="mediaRouteButtonTint">@color/md_theme_onSurface</item>
+    </style>
+</resources>

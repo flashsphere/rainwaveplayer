@@ -1,0 +1,13 @@
+{
+  "vote_result": {
+    "elec_id": 5582556,
+    "entry_id": 16438373,
+    "success": true,
+    "tl_key": "vote_submitted",
+    "text": "Vote Submitted"
+  },
+  "api_info": {
+    "exectime": 0.3033173084259033,
+    "time": 1602394103
+  }
+}

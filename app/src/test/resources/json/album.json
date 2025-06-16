@@ -1,0 +1,26 @@
+{
+  "album": {
+    "name": ".hack\/\/G.U.",
+    "rating": 3.9,
+    "rating_count": 533,
+    "cool": true,
+    "art": "\/album_art\/1_3763",
+    "songs": [
+    ],
+    "rating_histogram": {
+      "1.0": 5,
+      "1.5": 7,
+      "2.0": 18,
+      "2.5": 33,
+      "3.0": 110,
+      "3.5": 108,
+      "4.0": 136,
+      "4.5": 57,
+      "5.0": 48,
+      "None": 29
+    },
+    "id": 3763,
+    "rating_user": 1.5,
+    "fave": true
+  }
+}
