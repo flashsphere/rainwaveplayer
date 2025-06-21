@@ -21,6 +21,8 @@ import androidx.core.content.ContextCompat
 import androidx.core.content.IntentCompat
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
+import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.ServiceLifecycleDispatcher
 import androidx.media.MediaBrowserServiceCompat
 import androidx.media.utils.MediaConstants.BROWSER_SERVICE_EXTRAS_KEY_SEARCH_SUPPORTED
 import androidx.media.utils.MediaConstants.DESCRIPTION_EXTRAS_KEY_CONTENT_STYLE_BROWSABLE
@@ -48,6 +50,7 @@ import com.flashsphere.rainwaveplayer.model.song.Song
 import com.flashsphere.rainwaveplayer.model.station.Station
 import com.flashsphere.rainwaveplayer.model.stationInfo.InfoErrorResponse
 import com.flashsphere.rainwaveplayer.model.stationInfo.InfoResponse
+import com.flashsphere.rainwaveplayer.okhttp.NetworkManager
 import com.flashsphere.rainwaveplayer.playback.LocalPlayback
 import com.flashsphere.rainwaveplayer.playback.Playback
 import com.flashsphere.rainwaveplayer.receiver.FavoriteSongIntentHandler
@@ -94,7 +97,7 @@ import javax.inject.Named
 import kotlin.time.Duration.Companion.seconds
 
 @AndroidEntryPoint
-class MediaService : MediaBrowserServiceCompat(), Playback.Callback {
+class MediaService : MediaBrowserServiceCompat(), Playback.Callback, LifecycleOwner {
 
     @Inject
     lateinit var stationRepository: StationRepository
@@ -136,6 +139,9 @@ class MediaService : MediaBrowserServiceCompat(), Playback.Callback {
     @Inject
     lateinit var castReceiverContextHolder: CastReceiverContextHolder
 
+    @Inject
+    lateinit var networkManager: NetworkManager
+
     private lateinit var serviceScope: CoroutineScope
     private lateinit var notificationManager: NotificationManagerCompat
     private lateinit var playback: Playback
@@ -160,14 +166,21 @@ class MediaService : MediaBrowserServiceCompat(), Playback.Callback {
 
     private var currentStation: Station? = null
 
+    private val dispatcher = ServiceLifecycleDispatcher(this)
     private val handler = Handler(Looper.getMainLooper())
     private val stopPlaybackRunnable = Runnable { processStopRequest() }
 
     val mediaSession get() = mediaSessionHelper.getMediaSession()
 
+    override val lifecycle
+        get() = dispatcher.lifecycle
+
     override fun onCreate() {
         Timber.d("onCreate")
+        dispatcher.onServicePreSuperOnCreate()
         super.onCreate()
+
+        lifecycle.addObserver(networkManager)
 
         serviceScope = CoroutineScope(coroutineDispatchers.main + SupervisorJob() + coroutineExceptionHandler)
         notificationManager = NotificationManagerCompat.from(this)
@@ -181,7 +194,7 @@ class MediaService : MediaBrowserServiceCompat(), Playback.Callback {
         voteSongIntentHandler = VoteSongIntentHandler(serviceScope, voteSongDelegate, analytics)
 
         playback = LocalPlayback(this, serviceScope, stationRepository, okHttpClient,
-            dataStore)
+            dataStore, networkManager)
         playback.setCallback(this)
 
         sessionToken = mediaSessionHelper.getMediaSession().sessionToken
@@ -195,14 +208,15 @@ class MediaService : MediaBrowserServiceCompat(), Playback.Callback {
 
         serviceScope.cancel()
 
+        dispatcher.onServicePreSuperOnDestroy()
         super.onDestroy()
     }
 
     override fun onGetRoot(clientPackageName: String, clientUid: Int, rootHints: Bundle?): BrowserRoot? {
         Timber.d("onGetRoot clientPackageName=%s; clientUid=%d; rootHints=%s", clientPackageName, clientUid, rootHints)
-        val isSuggestedRequest = rootHints?.getBoolean(BrowserRoot.EXTRA_SUGGESTED) ?: false
-        val isOfflineRequest = rootHints?.getBoolean(BrowserRoot.EXTRA_OFFLINE) ?: false
-        val isRecentRequest = rootHints?.getBoolean(BrowserRoot.EXTRA_RECENT) ?: false
+        val isSuggestedRequest = rootHints?.getBoolean(BrowserRoot.EXTRA_SUGGESTED) == true
+        val isOfflineRequest = rootHints?.getBoolean(BrowserRoot.EXTRA_OFFLINE) == true
+        val isRecentRequest = rootHints?.getBoolean(BrowserRoot.EXTRA_RECENT) == true
 
         val browserRootPath = if (ALLOWED_RECENT_PACKAGES.contains(clientPackageName) && isRecentRequest) {
             return null
@@ -272,6 +286,7 @@ class MediaService : MediaBrowserServiceCompat(), Playback.Callback {
     }
 
     override fun onBind(intent: Intent?): IBinder? {
+        dispatcher.onServicePreSuperOnBind()
         Timber.d("onBind action = %s", intent?.action)
         if (SERVICE_INTERFACE == intent?.action) {
             return super.onBind(intent)
@@ -299,6 +314,8 @@ class MediaService : MediaBrowserServiceCompat(), Playback.Callback {
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
+        dispatcher.onServicePreSuperOnStart()
+
         if (intent == null || intent.action.isNullOrBlank()) {
             return START_NOT_STICKY
         }

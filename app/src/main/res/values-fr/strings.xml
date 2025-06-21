@@ -248,6 +248,9 @@
     <string name="settings_clear_cache_summary">Clear cached images and other cached data.</string>
     <string name="settings_cache_cleared">Cache cleared.</string>
 
+    <string name="settings_use_any_network">Use any network</string>
+    <string name="settings_use_any_network_desc">Use any network to connect to Rainwave. For example, if your Wi-Fi connection has no internet access, the app will automatically use cellular data.</string>
+
     <string name="sleep_timer_stop">Playback will stop at %1$s %2$s.</string>
 
     <string name="permission_notification_not_granted">No permission to post notifications.</string>

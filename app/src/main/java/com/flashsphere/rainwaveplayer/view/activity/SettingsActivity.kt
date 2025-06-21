@@ -52,6 +52,7 @@ import com.flashsphere.rainwaveplayer.util.PreferencesKeys.BUFFER_MIN
 import com.flashsphere.rainwaveplayer.util.PreferencesKeys.CRASH_REPORTING
 import com.flashsphere.rainwaveplayer.util.PreferencesKeys.HIDE_RATING_UNTIL_RATED
 import com.flashsphere.rainwaveplayer.util.PreferencesKeys.SSL_RELAY
+import com.flashsphere.rainwaveplayer.util.PreferencesKeys.USE_ANY_NETWORK
 import com.flashsphere.rainwaveplayer.util.PreferencesKeys.USE_OGG
 import com.flashsphere.rainwaveplayer.util.PreferencesKeys.VOTE_SONG_NOTIFICATIONS
 import com.flashsphere.rainwaveplayer.util.getBlocking
@@ -66,6 +67,7 @@ import com.flashsphere.rainwaveplayer.view.uistate.model.ListPreferenceItem
 import com.flashsphere.rainwaveplayer.view.uistate.model.Preference
 import com.flashsphere.rainwaveplayer.view.uistate.model.PreferenceCategoryItem
 import com.flashsphere.rainwaveplayer.view.uistate.model.PreferenceItemValue
+import com.jakewharton.processphoenix.ProcessPhoenix
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.channels.BufferOverflow.SUSPEND
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -73,7 +75,6 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.drop
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
-import kotlinx.coroutines.flow.skip
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import javax.inject.Inject
@@ -432,6 +433,28 @@ class SettingsActivity : BaseActivity() {
                     ),
                 )
             ))
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                add(CheckBoxPreferenceItem(
+                    scope = lifecycleScope,
+                    dataStore = dataStore,
+                    key = USE_ANY_NETWORK,
+                    title = getString(R.string.settings_use_any_network),
+                    options = listOf(
+                        PreferenceItemValue(
+                            value = true,
+                            label = getString(R.string.settings_use_any_network_desc),
+                        ),
+                        PreferenceItemValue(
+                            value = false,
+                            label = getString(R.string.settings_use_any_network_desc),
+                        ),
+                    )
+                ).also { item ->
+                    item.state.drop(1) // ignore the initial value
+                        .onEach { ProcessPhoenix.triggerRebirth(this@SettingsActivity) }
+                        .launchIn(lifecycleScope)
+                })
+            }
             add(BasicPreferenceItem(
                 title = getString(R.string.settings_clear_cache),
                 summary = getString(R.string.settings_clear_cache_summary),

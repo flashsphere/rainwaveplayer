@@ -34,6 +34,8 @@ import com.flashsphere.rainwaveplayer.flow.broadcastReceiverFlow
 import com.flashsphere.rainwaveplayer.media.Mp3ExtractorFactory
 import com.flashsphere.rainwaveplayer.media.OggExtractorFactory
 import com.flashsphere.rainwaveplayer.model.station.Station
+import com.flashsphere.rainwaveplayer.okhttp.NetworkChangeCallback
+import com.flashsphere.rainwaveplayer.okhttp.NetworkManager
 import com.flashsphere.rainwaveplayer.repository.StationRepository
 import com.flashsphere.rainwaveplayer.util.ClassUtils.getSimpleClassName
 import com.flashsphere.rainwaveplayer.util.JobUtils.cancel
@@ -53,7 +55,8 @@ import kotlin.math.max
     private val stationRepository: StationRepository,
     private val okHttpClient: OkHttpClient,
     private val dataStore: DataStore<Preferences>,
-) : Playback, Player.Listener, OnAudioFocusChangeListener {
+    private val networkManager: NetworkManager,
+) : Playback, Player.Listener, OnAudioFocusChangeListener, NetworkChangeCallback {
 
     private val context = context.applicationContext
     private val userAgent = Util.getUserAgent(this.context, context.getString(R.string.app_name))
@@ -113,17 +116,18 @@ import kotlin.math.max
             callback?.onPlaybackStateChanged(playbackState)
             return
         }
+        networkManager.registerNetworkChangeCallback(this)
         setupExoPlayer(uri)
     }
 
     private fun cleanupExoPlayer() {
-        exoPlayer = exoPlayer?.let {
+        exoPlayer?.let {
             Timber.d("cleanupExoPlayer")
             it.removeListener(this)
             it.stop()
             it.release()
-            null
         }
+        exoPlayer = null
     }
 
     private fun setupExoPlayer(uri: Uri) {
@@ -207,6 +211,7 @@ import kotlin.math.max
 
     private fun relaxResources() {
         Timber.d("relaxResources")
+        networkManager.unregisterNetworkChangeCallback(this)
         cleanupExoPlayer()
 
         if (wifiLock.isHeld) {
@@ -217,6 +222,10 @@ import kotlin.math.max
             Timber.d("release wake lock")
             wakeLock.release()
         }
+    }
+
+    override fun networkChanged() {
+        setupExoPlayer(this.streamUrl)
     }
 
     override fun onAudioFocusChange(focusChange: Int) {

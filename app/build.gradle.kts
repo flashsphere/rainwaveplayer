@@ -164,6 +164,7 @@ dependencies {
     implementation(libs.androidx.lifecycle.vm.compose)
     implementation(libs.androidx.lifecycle.runtime.compose)
     implementation(libs.androidx.lifecycle.process)
+    implementation(libs.androidx.lifecycle.service)
     implementation(libs.androidx.navigation.compose)
     implementation(libs.androidx.hilt.nav.compose)
     implementation(libs.androidx.splashscreen)

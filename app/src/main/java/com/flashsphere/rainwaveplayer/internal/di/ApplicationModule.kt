@@ -3,11 +3,17 @@ package com.flashsphere.rainwaveplayer.internal.di
 import android.app.Application
 import android.content.Context
 import android.os.Build
+import androidx.datastore.core.DataStore
+import androidx.datastore.preferences.core.Preferences
+import androidx.lifecycle.ProcessLifecycleOwner
 import com.flashsphere.rainwaveplayer.BuildConfig
 import com.flashsphere.rainwaveplayer.coroutine.coroutineExceptionHandler
 import com.flashsphere.rainwaveplayer.model.stationInfo.InfoErrorResponse
+import com.flashsphere.rainwaveplayer.okhttp.Api24NetworkManager
 import com.flashsphere.rainwaveplayer.okhttp.AuthenticatedUserInterceptor
 import com.flashsphere.rainwaveplayer.okhttp.CustomHttpLoggingInterceptor
+import com.flashsphere.rainwaveplayer.okhttp.NetworkManager
+import com.flashsphere.rainwaveplayer.okhttp.NoOpNetworkManager
 import com.flashsphere.rainwaveplayer.okhttp.RequestHeadersInterceptor
 import com.flashsphere.rainwaveplayer.okhttp.TrustedCertificateStore
 import com.flashsphere.rainwaveplayer.repository.RainwaveService
@@ -144,4 +150,19 @@ object ApplicationModule {
     fun provideUiEventDelegate(dispatchers: CoroutineDispatchers): UiEventDelegate {
         return UiEventDelegate(dispatchers.scope)
     }
-}
+
+    @Provides
+    @Singleton
+    fun provideNetworkManager(
+        context: Context,
+        dataStore: DataStore<Preferences>,
+    ): NetworkManager {
+        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            Api24NetworkManager(context, dataStore)
+        } else {
+            NoOpNetworkManager(context)
+        }.apply {
+            ProcessLifecycleOwner.get().lifecycle.addObserver(this)
+        }
+    }
+ }

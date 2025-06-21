@@ -43,6 +43,7 @@ object PreferencesKeys {
     val USE_OGG = PreferenceKey(booleanPreferencesKey("com.flashsphere.prefs.use_ogg"), false)
     val AUTO_VOTE_RULES = PreferenceKey(stringPreferencesKey("com.flashsphere.prefs.auto_vote_rules"), "")
     val HIDE_RATING_UNTIL_RATED = PreferenceKey(booleanPreferencesKey("com.flashsphere.prefs.hide_rating_until_rated"), false)
+    val USE_ANY_NETWORK = PreferenceKey(booleanPreferencesKey("com.flashsphere.prefs.use_any_network"), false)
 
     @Deprecated("Not used since pref version 8")
     val SYSTEM_RESUMPTION = booleanPreferencesKey("com.flashsphere.prefs.system_resumption")
