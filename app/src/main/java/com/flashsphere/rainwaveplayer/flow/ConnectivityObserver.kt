@@ -13,9 +13,12 @@ import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.core.content.ContextCompat
 import com.flashsphere.rainwaveplayer.util.CoroutineDispatchers
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.channels.Channel.Factory.CONFLATED
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.SharingStarted.Companion.WhileSubscribed
+import kotlinx.coroutines.flow.buffer
 import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.map
@@ -31,20 +34,14 @@ class ConnectivityObserver @Inject constructor(
     context: Context,
     coroutineDispatchers: CoroutineDispatchers,
 ) {
-    private val connectivityCompat: ConnectivityCompat
-    val connectivityFlow: Flow<Boolean>
-
-    init {
-        connectivityCompat = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            Api23ConnectivityImpl(context)
-        } else {
-            BaseConnectivityImpl(context)
-        }
-
-        connectivityFlow = connectivityCompat.createConnectivityFlow()
-            .distinctUntilChanged()
-            .shareIn(coroutineDispatchers.scope, WhileSubscribed(replayExpirationMillis = 0))
+    private val connectivityCompat: ConnectivityCompat = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+        Api23ConnectivityImpl(context)
+    } else {
+        BaseConnectivityImpl(context)
     }
+    val connectivityFlow: Flow<Boolean> = connectivityCompat.createConnectivityFlow()
+        .distinctUntilChanged()
+        .shareIn(coroutineDispatchers.scope, WhileSubscribed(replayExpirationMillis = 0))
 
     fun isConnected() = connectivityCompat.isConnected()
 }
@@ -64,7 +61,7 @@ class BaseConnectivityImpl(
 
     override fun isConnected(): Boolean {
         @Suppress("DEPRECATION")
-        return connectivityManager.activeNetworkInfo?.isConnected ?: false
+        return connectivityManager.activeNetworkInfo?.isConnected == true
     }
 
     override fun createConnectivityFlow(): Flow<Boolean> {
@@ -84,10 +81,10 @@ class Api23ConnectivityImpl(
     private val connectivityManager = ContextCompat.getSystemService(appContext, ConnectivityManager::class.java)!!
 
     override fun isConnected(): Boolean {
-        val networkCapabilities = connectivityManager.activeNetwork ?: return false
-        val activeNetwork =
-            connectivityManager.getNetworkCapabilities(networkCapabilities) ?: return false
-        return activeNetwork.run {
+        val activeNetwork = connectivityManager.activeNetwork ?: return false
+        val networkCapabilities =
+            connectivityManager.getNetworkCapabilities(activeNetwork) ?: return false
+        return networkCapabilities.run {
             hasCapability(NET_CAPABILITY_INTERNET) && hasCapability(NET_CAPABILITY_VALIDATED)
         }
     }
@@ -127,6 +124,6 @@ class Api23ConnectivityImpl(
                 Timber.e(it, "Unable to unregister network callback")
             }
         }
-    }
+    }.buffer(CONFLATED)
 }
 
