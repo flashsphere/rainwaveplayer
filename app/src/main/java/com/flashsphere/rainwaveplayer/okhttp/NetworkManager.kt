@@ -92,6 +92,7 @@ class NoOpNetworkManager(context: Context) : NetworkManager() {
     }
 
     override fun stop() {
+        _connectivityFlow.value = false
         applicationContext.unregisterReceiver(broadcastReceiver)
     }
 }
@@ -111,12 +112,12 @@ class Api24NetworkManager(
     private val networkCapabilitiesMap = mutableMapOf<Network, NetworkCapabilities>()
     private val networkChangeCallbacks = mutableSetOf<NetworkChangeCallback>()
 
-    private var currentNetwork: Network? = connectivityManager.activeNetwork
+    private var currentNetwork: Network? = null
     private var usingDefaultNetwork: Boolean = true
 
     override fun isConnected(): Boolean = _connectivityFlow.value
 
-    private val _connectivityFlow = MutableStateFlow(true)
+    private val _connectivityFlow = MutableStateFlow(false)
     override val connectivityFlow = _connectivityFlow.asStateFlow()
 
     private var defaultNetworkCallback = object : NetworkCallback() {
@@ -201,10 +202,10 @@ class Api24NetworkManager(
 
         handler.removeCallbacksAndMessages(null)
 
-        usingDefaultNetwork = true
-        _connectivityFlow.value = true
-        currentNetwork = connectivityManager.activeNetwork
         connectivityManager.bindProcessToNetwork(null)
+        usingDefaultNetwork = true
+        _connectivityFlow.value = false
+        currentNetwork = null
 
         availableNetworks.clear()
         networkCapabilitiesMap.clear()
@@ -260,9 +261,9 @@ class Api24NetworkManager(
             logNetworkCapabilities(selectedNetwork)
         }
         _connectivityFlow.value = selectedNetwork != null
-        if (selectedNetwork != null && currentNetwork != selectedNetwork) {
+        if (currentNetwork != selectedNetwork) {
             currentNetwork = selectedNetwork
-            runNetworkChangeCallbacks(selectedNetwork)
+            selectedNetwork?.let { runNetworkChangeCallbacks(it) }
         }
     }
 
