@@ -1,6 +1,6 @@
 [versions]
-appVersionCode = "584"
-appVersionName = "1.22.4"
+appVersionCode = "585"
+appVersionName = "1.22.5"
 androidGradlePlugin = "8.10.1"
 kotlin = "2.1.21"
 dagger = "2.56"
