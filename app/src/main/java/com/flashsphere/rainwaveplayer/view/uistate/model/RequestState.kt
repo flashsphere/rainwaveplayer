@@ -1,15 +1,12 @@
 package com.flashsphere.rainwaveplayer.view.uistate.model
 
 import android.content.Context
-import android.os.Parcelable
 import androidx.compose.runtime.Immutable
 import com.flashsphere.rainwaveplayer.R
 import com.flashsphere.rainwaveplayer.model.request.Request
-import kotlinx.parcelize.Parcelize
 import java.util.concurrent.TimeUnit
 import kotlin.time.Duration.Companion.milliseconds
 
-@Parcelize
 @Immutable
 class RequestState(
     val id: Int,
@@ -24,7 +21,7 @@ class RequestState(
     val electionBlocked: Boolean,
     val electionBlockedBy: String,
     val stationName: String
-) : Parcelable {
+) {
     constructor(request: Request) : this(
         id = request.requestId,
         title = request.title,

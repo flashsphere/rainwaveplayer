@@ -1,7 +1,5 @@
 package com.flashsphere.rainwaveplayer.model.requestLine
 
-import android.os.Parcelable
-import kotlinx.parcelize.Parcelize
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
@@ -23,7 +21,6 @@ class RequestLine(
 )
 
 @Serializable
-@Parcelize
 class RequestLineSong(
     @SerialName("id")
     val id: Int = 0,
@@ -33,4 +30,4 @@ class RequestLineSong(
 
     @SerialName("title")
     val title: String = "",
-) : Parcelable
+)
