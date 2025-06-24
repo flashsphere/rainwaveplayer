@@ -1,6 +1,10 @@
 package com.flashsphere.rainwaveplayer.model
 
 import com.flashsphere.rainwaveplayer.util.OperationError
+import com.flashsphere.rainwaveplayer.util.OperationError.Companion.Connectivity
+import com.flashsphere.rainwaveplayer.util.OperationError.Companion.Server
+import com.flashsphere.rainwaveplayer.util.OperationError.Companion.Unauthorized
+import com.flashsphere.rainwaveplayer.util.OperationError.Companion.Unknown
 import okhttp3.ResponseBody
 import retrofit2.Converter
 import retrofit2.HttpException
@@ -25,30 +29,30 @@ internal class FailureApiResponse(
 
 fun Throwable.toOperationError(): OperationError {
     return if (this is IOException) {
-        OperationError(OperationError.Connectivity, this.message)
+        OperationError(Connectivity, this.message)
     } else if (this is HttpException) {
         if (this.code() == 403) {
-            OperationError(OperationError.Unauthorized)
+            OperationError(Unauthorized)
         } else {
-            OperationError(OperationError.Server)
+            OperationError(Server)
         }
     } else {
-        OperationError(OperationError.Unknown)
+        OperationError(Unknown)
     }
 }
 
 fun <T : HasResponseResult<*>> Throwable.toOperationError(converter: Converter<ResponseBody, T>): OperationError {
     return if (this is IOException) {
-        OperationError(OperationError.Connectivity, this.message)
+        OperationError(Connectivity, this.message)
     } else if (this is HttpException) {
         val responseResult = extractResponseResult(this, converter)
         if (this.code() == 403) {
-            OperationError(OperationError.Unauthorized, responseResult?.text)
+            OperationError(Unauthorized, responseResult?.text, responseResult)
         } else {
-            OperationError(OperationError.Server, responseResult?.text)
+            OperationError(Server, responseResult?.text, responseResult)
         }
     } else {
-        OperationError(OperationError.Unknown)
+        OperationError(Unknown)
     }
 }
 

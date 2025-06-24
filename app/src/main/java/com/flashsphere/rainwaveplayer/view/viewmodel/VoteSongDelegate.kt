@@ -6,6 +6,7 @@ import com.flashsphere.rainwaveplayer.model.toOperationError
 import com.flashsphere.rainwaveplayer.model.vote.VoteResponse
 import com.flashsphere.rainwaveplayer.repository.StationRepository
 import com.flashsphere.rainwaveplayer.util.OperationError
+import com.flashsphere.rainwaveplayer.util.OperationError.Companion.Server
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.channels.BufferOverflow.SUSPEND
@@ -28,12 +29,20 @@ class VoteSongDelegate(
     suspend fun voteSong(stationId: Int, eventId: Int, entryId: Int) {
         suspendRunCatching { stationRepository.vote(stationId, entryId) }
             .onFailure { e ->
+                val error = e.toOperationError(voteResponseConverter).let {
+                    if (it.responseResult?.tlKey == "tunein_required") {
+                        OperationError(Server, it.message, it.responseResult)
+                    } else {
+                        it
+                    }
+                }
+
                 _voteSongState.emit(VoteSongState(
                     success = false,
                     stationId = stationId,
                     eventId = eventId,
                     entryId = entryId,
-                    error = e.toOperationError(voteResponseConverter)
+                    error = error
                 ))
             }
             .onSuccess {
@@ -50,7 +59,7 @@ class VoteSongDelegate(
                         stationId = stationId,
                         eventId = eventId,
                         entryId = entryId,
-                        error = OperationError(OperationError.Server, it.result.text)
+                        error = OperationError(Server, it.result.text)
                     ))
                 }
                 it.result.success

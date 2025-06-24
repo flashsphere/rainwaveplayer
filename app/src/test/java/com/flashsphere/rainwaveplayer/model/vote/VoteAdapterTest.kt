@@ -33,6 +33,7 @@ class VoteAdapterTest {
 
         assertThat(result.code).isEqualTo(0)
         assertThat(result.success).isEqualTo(false)
+        assertThat(result.tlKey).isEqualTo("cannot_vote_for_this_now")
         assertThat(result.text).isEqualTo("Cannot vote for that song right now.")
     }
 }

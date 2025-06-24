@@ -1,24 +1,21 @@
 package com.flashsphere.rainwaveplayer.util
 
 import android.content.Context
-import android.os.Parcelable
 import androidx.annotation.IntDef
 import androidx.compose.runtime.Immutable
 import com.flashsphere.rainwaveplayer.R
-import kotlinx.parcelize.Parcelize
+import com.flashsphere.rainwaveplayer.model.ResponseResult
 
 @Immutable
-@Parcelize
-class OperationError
-@JvmOverloads constructor(
-    @field:Def @param:Def val type: Int,
+class OperationError(
+    @field:OperationErrorDef @param:OperationErrorDef val type: Int,
     val message: String? = null,
-    val throwable: Throwable? = null,
-) : Parcelable {
+    val responseResult: ResponseResult? = null,
+) {
 
     @IntDef(Unknown, Connectivity, Unauthorized, Server)
     @Retention(AnnotationRetention.SOURCE)
-    annotation class Def
+    annotation class OperationErrorDef
 
     fun getMessage(context: Context, defaultMessage: String): String {
         return when (type) {

@@ -134,11 +134,13 @@ fun OperationError.toSnackbarData(context: Context, retryAction: (() -> Unit)): 
     )
 }
 
-fun OperationError.toSnackbarData(context: Context,
-                                  defaultMessage: String,
-                                  defaultDuration: SnackbarDuration,
-                                  retryAction: (() -> Unit)? = null,
-                                  dismissAction: (() -> Unit)? = null): SnackbarStateData {
+fun OperationError.toSnackbarData(
+    context: Context,
+    defaultMessage: String,
+    defaultDuration: SnackbarDuration,
+    retryAction: (() -> Unit)? = null,
+    dismissAction: (() -> Unit)? = null,
+): SnackbarStateData {
     val isUnauthorized = type == Unauthorized
     val message = getMessage(context, defaultMessage)
     val duration = when (type) {
