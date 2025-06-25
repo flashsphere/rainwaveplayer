@@ -105,6 +105,7 @@ data class RequestCondition(
     enum class RequestType(
         @StringRes
         val shortStringResId: Int,
+        @StringRes
         val fullStringResId: Int,
     ) {
         User(R.string.auto_vote_condition_request_yours_short, R.string.auto_vote_condition_request_yours),

@@ -8,7 +8,7 @@ import com.flashsphere.rainwaveplayer.model.ResponseResult
 
 @Immutable
 class OperationError(
-    @field:OperationErrorDef @param:OperationErrorDef val type: Int,
+    @OperationErrorDef val type: Int,
     val message: String? = null,
     val responseResult: ResponseResult? = null,
 ) {
