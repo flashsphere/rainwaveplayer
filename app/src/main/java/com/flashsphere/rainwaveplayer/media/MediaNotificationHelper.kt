@@ -20,16 +20,17 @@ import android.view.KeyEvent.KEYCODE_MEDIA_PAUSE
 import android.view.KeyEvent.KEYCODE_MEDIA_PLAY
 import android.view.KeyEvent.KEYCODE_MEDIA_PREVIOUS
 import android.view.KeyEvent.KEYCODE_MEDIA_STOP
+import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationCompat.Action
 import androidx.core.app.NotificationCompat.CATEGORY_TRANSPORT
+import androidx.core.graphics.drawable.toBitmap
 import androidx.media.app.NotificationCompat.MediaStyle
 import com.flashsphere.rainwaveplayer.R
 import com.flashsphere.rainwaveplayer.model.song.Song
 import com.flashsphere.rainwaveplayer.model.station.Station
 import com.flashsphere.rainwaveplayer.receiver.FavoriteSongIntentHandler
 import com.flashsphere.rainwaveplayer.repository.UserRepository
-import com.flashsphere.rainwaveplayer.util.DrawableUtils.getDrawableBitmap
 import com.flashsphere.rainwaveplayer.util.PendingIntentUtils.getPendingIntentFlags
 import com.flashsphere.rainwaveplayer.view.activity.MainActivity.Companion.getCallingIntent
 import timber.log.Timber
@@ -39,13 +40,16 @@ class MediaNotificationHelper(
     private val mediaSessionHelper: MediaSessionHelper,
     private val userRepository: UserRepository,
 ) {
+    private val largeIcon by lazy {
+        AppCompatResources.getDrawable(context, R.drawable.ic_rainwave_64dp)?.toBitmap()
+    }
 
     private var notificationBuilder = NotificationCompat.Builder(context, context.getString(R.string.channel_name_playback))
         .setShowWhen(false)
         .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
         .setDeleteIntent(generateMediaPlayerIntent(context, ACTION_STOP))
         .setSmallIcon(R.drawable.ic_rainwave_24dp)
-        .setLargeIcon(loadLargeIcon(context))
+        .setLargeIcon(largeIcon)
         .setCategory(CATEGORY_TRANSPORT)
         .setForegroundServiceBehavior(NotificationCompat.FOREGROUND_SERVICE_IMMEDIATE)
 
@@ -117,7 +121,7 @@ class MediaNotificationHelper(
         val contentText = context.resources.getString(R.string.connecting)
         return createPlayingNotificationBuilder()
             .setContentIntent(getNotificationIntent())
-            .setLargeIcon(loadLargeIcon(context))
+            .setLargeIcon(largeIcon)
             .setContentTitle(contentText)
             .setTicker(contentText)
             .build()
@@ -129,7 +133,7 @@ class MediaNotificationHelper(
 
         return createPlayingNotificationBuilder(station)
             .setContentIntent(getNotificationIntent(station))
-            .setLargeIcon(loadLargeIcon(context))
+            .setLargeIcon(largeIcon)
             .setContentTitle(contentTitle)
             .setContentText(contentText)
             .setTicker(contentTitle + LINE_SEPARATOR + contentText)
@@ -142,7 +146,7 @@ class MediaNotificationHelper(
 
         return createPlayingNotificationBuilder(station)
             .setContentIntent(getNotificationIntent(station))
-            .setLargeIcon(loadLargeIcon(context))
+            .setLargeIcon(largeIcon)
             .setContentTitle(contentTitle)
             .setContentText(contentText)
             .setTicker(contentTitle + LINE_SEPARATOR + contentText)
@@ -152,7 +156,7 @@ class MediaNotificationHelper(
     fun createPlayingNotification(station: Station): Notification {
         return createPlayingNotificationBuilder(station)
             .setContentIntent(getNotificationIntent(station))
-            .setLargeIcon(loadLargeIcon(context))
+            .setLargeIcon(largeIcon)
             .setContentTitle(station.name)
             .setContentText(null)
             .setTicker(station.name)
@@ -165,7 +169,7 @@ class MediaNotificationHelper(
 
         return createPlayingNotificationBuilder(station)
             .setContentIntent(getNotificationIntent(station))
-            .setLargeIcon(loadLargeIcon(context))
+            .setLargeIcon(largeIcon)
             .setContentTitle(contentTitle)
             .setContentText(contentText)
             .setTicker(contentTitle + LINE_SEPARATOR + contentText)
@@ -178,7 +182,7 @@ class MediaNotificationHelper(
 
         return createStoppedNotificationBuilder(station)
             .setContentIntent(getNotificationIntent(station))
-            .setLargeIcon(loadLargeIcon(context))
+            .setLargeIcon(largeIcon)
             .setContentTitle(contentTitle)
             .setContentText(contentText)
             .setTicker(contentTitle + LINE_SEPARATOR + contentText)
@@ -189,7 +193,7 @@ class MediaNotificationHelper(
         Timber.d("createSongNotification")
 
         return createPlayingNotificationBuilder(station, song)
-            .setLargeIcon(loadLargeIcon(context))
+            .setLargeIcon(largeIcon)
             .build()
     }
 
@@ -219,10 +223,6 @@ class MediaNotificationHelper(
         }
 
         private val LINE_SEPARATOR = System.lineSeparator()
-
-        private fun loadLargeIcon(context: Context): Bitmap {
-            return getDrawableBitmap(context, R.drawable.ic_rainwave_64dp)
-        }
 
         private fun generateMediaPlayerIntent(context: Context, @MediaKeyAction action: Long): PendingIntent {
             val keyCode = when (action) {

@@ -67,7 +67,6 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.onEmpty
 import kotlinx.coroutines.flow.shareIn
-import kotlinx.coroutines.flow.take
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
 import timber.log.Timber
@@ -194,7 +193,6 @@ class StationRepository @Inject constructor(
     fun hasLocalCachedStations(): Boolean = runBlocking { savedStationsStore.exists() }
 
     suspend fun getStations(): List<Station> = stationsFlow
-        .take(1)
         .map { apiResponse ->
             when (apiResponse) {
                 is SuccessApiResponse -> apiResponse.data
