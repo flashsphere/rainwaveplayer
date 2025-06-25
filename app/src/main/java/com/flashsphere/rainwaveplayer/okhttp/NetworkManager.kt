@@ -32,6 +32,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import timber.log.Timber
+import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.atomic.AtomicInteger
 
 abstract class NetworkManager : DefaultLifecycleObserver {
@@ -108,9 +109,8 @@ class Api24NetworkManager(
     private val useAnyNetwork = dataStore.getBlocking(PreferencesKeys.USE_ANY_NETWORK)
 
     private val handler = Handler(Looper.getMainLooper())
-    private val availableNetworks = mutableSetOf<Network>()
-    private val networkCapabilitiesMap = mutableMapOf<Network, NetworkCapabilities>()
-    private val networkChangeCallbacks = mutableSetOf<NetworkChangeCallback>()
+    private val availableNetworks = ConcurrentHashMap<Network, NetworkCapabilities>()
+    private val networkChangeCallbacks = ConcurrentHashMap.newKeySet<NetworkChangeCallback>()
 
     private var currentNetwork: Network? = null
     private var usingDefaultNetwork: Boolean = true
@@ -147,14 +147,13 @@ class Api24NetworkManager(
         }
 
         fun clear() {
-            previousNetwork = Pair<Network?, Boolean>(null, false)
+            previousNetwork = Pair(null, false)
         }
     }
 
     private val networkCallback = object : NetworkCallback() {
         override fun onAvailable(network: Network) {
             Timber.tag(TAG).d("Got network %s", network)
-            availableNetworks.add(network)
         }
 
         override fun onLost(network: Network) {
@@ -162,13 +161,11 @@ class Api24NetworkManager(
                 Timber.tag(TAG).d("Lost network %s", network)
             }
             availableNetworks.remove(network)
-            networkCapabilitiesMap.remove(network)
-
             selectFromAvailableNetworks()
         }
 
         override fun onCapabilitiesChanged(network: Network, capabilities: NetworkCapabilities) {
-            networkCapabilitiesMap.put(network, capabilities)
+            availableNetworks.put(network, capabilities)
             selectFromAvailableNetworks()
         }
     }
@@ -208,17 +205,14 @@ class Api24NetworkManager(
         currentNetwork = null
 
         availableNetworks.clear()
-        networkCapabilitiesMap.clear()
         networkChangeCallbacks.clear()
         defaultNetworkCallback.clear()
     }
 
     private fun runNetworkChangeCallbacks(network: Network?) {
         Timber.tag(TAG).d("Network %s change callback ", network)
-        handler.post {
-            networkChangeCallbacks.forEach { callback ->
-                callback.networkChanged()
-            }
+        networkChangeCallbacks.forEach { callback ->
+            handler.post { callback.networkChanged() }
         }
     }
 
@@ -236,6 +230,7 @@ class Api24NetworkManager(
             }
         } else {
             Timber.tag(TAG).d("Default network %s has no internet", network)
+            availableNetworks.remove(network)
             usingDefaultNetwork = false
             selectFromAvailableNetworks()
         }
@@ -246,14 +241,9 @@ class Api24NetworkManager(
 
         Timber.tag(TAG).d("%d available networks: %s", availableNetworks.size, availableNetworks)
 
-        val selectedNetwork = availableNetworks.minByOrNull { network ->
-            val capabilities = networkCapabilitiesMap[network]
-            if (capabilities == null) {
-                Int.MAX_VALUE
-            } else {
-                TRANSPORT_PRIORITY.indexOfFirst { capabilities.hasTransport(it) }
-            }
-        }
+        val selectedNetwork = availableNetworks.minByOrNull { (_, capabilities) ->
+            TRANSPORT_PRIORITY.indexOfFirst { capabilities.hasTransport(it) }
+        }?.key
 
         if (selectedNetwork != connectivityManager.boundNetworkForProcess) {
             Timber.tag(TAG).d("Using network %s", selectedNetwork)
@@ -269,7 +259,7 @@ class Api24NetworkManager(
 
     private fun logNetworkCapabilities(network: Network?) {
         if (network == null) return
-        networkCapabilitiesMap[network]?.let {
+        availableNetworks[network]?.let {
             Timber.tag(TAG).d("""
                 is ethernet = %s
                 is wifi = %s
