@@ -7,14 +7,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.webkit.WebView
-import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
+import androidx.core.net.toUri
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.lifecycleScope
-import com.flashsphere.rainwaveplayer.R
-import com.flashsphere.rainwaveplayer.coroutine.launchWithDefaults
-import com.flashsphere.rainwaveplayer.coroutine.suspendRunCatching
 import com.flashsphere.rainwaveplayer.databinding.LayoutWebViewBinding
 import com.flashsphere.rainwaveplayer.flow.MediaPlayerStateObserver
 import com.flashsphere.rainwaveplayer.okhttp.TrustedCertificateStore
@@ -23,14 +19,12 @@ import com.flashsphere.rainwaveplayer.repository.StationRepository
 import com.flashsphere.rainwaveplayer.repository.UserRepository
 import com.flashsphere.rainwaveplayer.util.Analytics
 import com.flashsphere.rainwaveplayer.util.CoroutineDispatchers
-import com.flashsphere.rainwaveplayer.view.activity.MainActivity
+import com.flashsphere.rainwaveplayer.view.activity.delegate.StoreUserCredentialsDelegate
 import com.flashsphere.rainwaveplayer.view.autofill.Autofill
 import com.flashsphere.rainwaveplayer.view.viewmodel.StoreUserCredentialsViewModel
 import com.flashsphere.rainwaveplayer.view.webview.CustomWebChromeClient
 import com.flashsphere.rainwaveplayer.view.webview.CustomWebViewClient
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.filterNotNull
-import kotlinx.coroutines.flow.onEach
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -55,6 +49,8 @@ class WebViewFragment : Fragment() {
 
     @Inject
     lateinit var playbackManager: PlaybackManager
+
+    private lateinit var storeUserCredentialsDelegate: StoreUserCredentialsDelegate
 
     private val viewModel: StoreUserCredentialsViewModel by viewModels()
 
@@ -87,23 +83,17 @@ class WebViewFragment : Fragment() {
             binding.webview.scrollY = savedInstanceState.getInt(BUNDLE_WEB_VIEW_SCROLL_Y)
         } else {
             val url = arguments?.getString(ARG_URL)
-            if (url != null) {
+            if (!url.isNullOrBlank()) {
                 binding.webview.loadUrl(url)
             } else {
-                requireActivity().finish()
+                finishActivity()
             }
         }
 
-        viewModel.userCredentialsSaved
-            .filterNotNull()
-            .onEach { userCredentialsSaved ->
-                if (userCredentialsSaved) {
-                    onStoreCredentialsSuccess()
-                } else {
-                    onStoreCredentialsFailed()
-                }
-            }
-            .launchWithDefaults(viewLifecycleOwner.lifecycleScope, "Store User Credentials in TV")
+        storeUserCredentialsDelegate = StoreUserCredentialsDelegate(requireContext(), viewModel,
+            stationRepository, userRepository, mediaPlayerStateObserver, playbackManager,
+            analytics, this::finishActivity)
+        viewLifecycleOwner.lifecycle.addObserver(storeUserCredentialsDelegate)
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -145,7 +135,7 @@ class WebViewFragment : Fragment() {
 
                 override fun shouldOverrideUrlLoading(url: String): Boolean {
                     if (url.startsWith("rw://")) {
-                        handleLogin(url)
+                        storeUserCredentialsDelegate.process(url.toUri())
                         return true
                     }
                     return false
@@ -174,41 +164,8 @@ class WebViewFragment : Fragment() {
         }
     }
 
-    private fun handleLogin(url: String) {
-        val userCredentials = userRepository.parseCredentialsUrl(url)
-
-        if (userCredentials == null) {
-            onStoreCredentialsFailed()
-            return
-        }
-
-        analytics.logEvent(Analytics.EVENT_LOGIN)
-        viewModel.saveUserCredentials(userCredentials.userId, userCredentials.apiKey)
-    }
-
-    private fun onStoreCredentialsFailed() {
-        Toast.makeText(requireContext(), R.string.error_save_credentials_failed, Toast.LENGTH_LONG)
-            .show()
-        showMainActivity()
-    }
-
-    private fun onStoreCredentialsSuccess() {
-        stationRepository.clearCache()
-        showMainActivity()
-        restartPlayback()
-    }
-
-    private fun showMainActivity() {
-        MainActivity.startActivity(requireContext())
+    private fun finishActivity() {
         requireActivity().finish()
-    }
-
-    private fun restartPlayback() {
-        if (!mediaPlayerStateObserver.currentState.isStopped()) {
-            coroutineDispatchers.scope.launchWithDefaults("Restart Playback After TV Login") {
-                suspendRunCatching { playbackManager.play() }
-            }
-        }
     }
 
     companion object {

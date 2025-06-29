@@ -16,7 +16,7 @@ class StoreUserCredentialsViewModel @Inject constructor(
     val userCredentialsSaved = _userCredentialsSaved.asStateFlow()
 
     fun saveUserCredentials(userId: Int?, apiKey: String?) {
-        if (userId == null || apiKey.isNullOrEmpty()) {
+        if (userId == null || apiKey.isNullOrBlank()) {
             _userCredentialsSaved.value = false
             return
         }

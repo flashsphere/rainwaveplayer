@@ -1,7 +1,6 @@
 package com.flashsphere.rainwaveplayer.repository
 
 import android.net.Uri
-import androidx.core.net.toUri
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import com.flashsphere.rainwaveplayer.util.PreferencesKeys.API_KEY
@@ -39,10 +38,6 @@ class UserRepository @Inject constructor(
                 null
             }
         }
-    }
-
-    fun parseCredentialsUrl(url: String): UserCredentials? {
-        return parseCredentialsUri(url.toUri())
     }
 
     fun parseCredentialsUri(uri: Uri): UserCredentials? {

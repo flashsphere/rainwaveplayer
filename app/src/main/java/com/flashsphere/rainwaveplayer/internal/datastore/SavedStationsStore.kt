@@ -1,7 +1,6 @@
 package com.flashsphere.rainwaveplayer.internal.datastore
 
 import android.content.Context
-import com.flashsphere.rainwaveplayer.coroutine.launchWithDefaults
 import com.flashsphere.rainwaveplayer.internal.datastore.model.SavedStations
 import com.flashsphere.rainwaveplayer.model.station.Station
 import com.flashsphere.rainwaveplayer.util.CoroutineDispatchers
@@ -75,9 +74,7 @@ class SavedStationsStore @Inject constructor(
         }
     }
 
-    fun remove() {
-        coroutineDispatchers.scope.launchWithDefaults("Delete stations json") {
-            deleteFile()
-        }
+    suspend fun remove() {
+        deleteFile()
     }
 }

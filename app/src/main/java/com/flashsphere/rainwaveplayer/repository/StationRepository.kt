@@ -91,7 +91,7 @@ class StationRepository @Inject constructor(
     private val allArtistsCache = mutableScatterMapOf<Int, AllArtists>()
     private val categoriesCache = mutableScatterMapOf<Int, AllCategories>()
 
-    fun clearCache() {
+    suspend fun clearCache() {
         Timber.d("clearCache")
         stationsCache = null
         savedStationsStore.remove()

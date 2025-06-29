@@ -27,7 +27,7 @@ fun OneLineWithSubtitleText(params: OneLineWithSubtitleParams) {
     ) {
 
         Text(params.text, style = AppTypography.bodyMedium)
-        if (!params.subtitle.isNullOrEmpty()) {
+        if (!params.subtitle.isNullOrBlank()) {
             Text(params.subtitle, style = AppTypography.bodySmall)
         }
     }

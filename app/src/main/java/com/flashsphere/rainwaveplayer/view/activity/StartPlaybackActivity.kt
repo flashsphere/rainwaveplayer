@@ -15,10 +15,6 @@ class StartPlaybackActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         MediaService.play(this)
-    }
-
-    override fun onStart() {
-        super.onStart()
         finish()
     }
 

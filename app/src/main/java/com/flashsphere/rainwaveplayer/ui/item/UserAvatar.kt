@@ -19,7 +19,7 @@ import com.flashsphere.rainwaveplayer.view.uistate.model.UserState
 @Composable
 fun UserAvatar(modifier: Modifier = Modifier, size: Dp = 50.dp, user: UserState?) {
     if (user != null && !user.isAnon()) {
-        if (user.avatar.isNullOrEmpty()) {
+        if (user.avatar.isNullOrBlank()) {
             Image(painter = painterResource(id = R.drawable.ic_account_circle_white_50dp),
                 contentDescription = null, modifier = modifier.size(size))
         } else {

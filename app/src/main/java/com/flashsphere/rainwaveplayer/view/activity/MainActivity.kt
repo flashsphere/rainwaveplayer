@@ -42,6 +42,7 @@ import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.launch
 import kotlinx.serialization.json.Json
 import timber.log.Timber
 import javax.inject.Inject
@@ -155,12 +156,15 @@ class MainActivity : BaseActivity(), MediaServiceConnected {
     }
 
     private fun logout() {
-        userRepository.logout()
-        stationRepository.clearCache()
+        lifecycleScope.launch {
+            playbackManager.stop()
 
-        playbackManager.stop()
-        startActivity(this)
-        finish()
+            userRepository.logout()
+            stationRepository.clearCache()
+
+            startActivity(this@MainActivity)
+            finish()
+        }
     }
 
     private fun createDrawerItemHandler(): DrawerItemHandler = DrawerItemHandler(
@@ -190,7 +194,7 @@ class MainActivity : BaseActivity(), MediaServiceConnected {
         settingsClick = { SettingsActivity.startActivity(this) },
         aboutClick = { AboutActivity.startActivity(this) },
         loginClick = { CustomTabsUtil.openLoginPage(this) },
-        logoutClick = { logout() },
+        logoutClick = this::logout,
     )
 
     override fun serviceConnected(binder: MediaService.LocalBinder) {
