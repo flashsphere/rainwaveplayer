@@ -34,8 +34,8 @@ import com.flashsphere.rainwaveplayer.flow.broadcastReceiverFlow
 import com.flashsphere.rainwaveplayer.media.Mp3ExtractorFactory
 import com.flashsphere.rainwaveplayer.media.OggExtractorFactory
 import com.flashsphere.rainwaveplayer.model.station.Station
-import com.flashsphere.rainwaveplayer.okhttp.NetworkChangeCallback
-import com.flashsphere.rainwaveplayer.okhttp.NetworkManager
+import com.flashsphere.rainwaveplayer.network.NetworkChangeCallback
+import com.flashsphere.rainwaveplayer.network.NetworkManager
 import com.flashsphere.rainwaveplayer.repository.StationRepository
 import com.flashsphere.rainwaveplayer.util.ClassUtils.getSimpleClassName
 import com.flashsphere.rainwaveplayer.util.JobUtils.cancel

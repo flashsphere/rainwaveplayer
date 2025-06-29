@@ -401,6 +401,28 @@ class SettingsActivity : BaseActivity() {
                     onClick = { openBatteryUsage() },
                 ))
             }
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                add(CheckBoxPreferenceItem(
+                    scope = lifecycleScope,
+                    dataStore = dataStore,
+                    key = USE_ANY_NETWORK,
+                    title = getString(R.string.settings_use_any_network),
+                    options = listOf(
+                        PreferenceItemValue(
+                            value = true,
+                            label = getString(R.string.settings_use_any_network_desc),
+                        ),
+                        PreferenceItemValue(
+                            value = false,
+                            label = getString(R.string.settings_use_any_network_desc),
+                        ),
+                    )
+                ).also { item ->
+                    item.state.drop(1) // ignore the initial value
+                        .onEach { ProcessPhoenix.triggerRebirth(this@SettingsActivity) }
+                        .launchIn(lifecycleScope)
+                })
+            }
             add(CheckBoxPreferenceItem(
                 scope = lifecycleScope,
                 dataStore = dataStore,
@@ -433,28 +455,6 @@ class SettingsActivity : BaseActivity() {
                     ),
                 )
             ))
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                add(CheckBoxPreferenceItem(
-                    scope = lifecycleScope,
-                    dataStore = dataStore,
-                    key = USE_ANY_NETWORK,
-                    title = getString(R.string.settings_use_any_network),
-                    options = listOf(
-                        PreferenceItemValue(
-                            value = true,
-                            label = getString(R.string.settings_use_any_network_desc),
-                        ),
-                        PreferenceItemValue(
-                            value = false,
-                            label = getString(R.string.settings_use_any_network_desc),
-                        ),
-                    )
-                ).also { item ->
-                    item.state.drop(1) // ignore the initial value
-                        .onEach { ProcessPhoenix.triggerRebirth(this@SettingsActivity) }
-                        .launchIn(lifecycleScope)
-                })
-            }
             add(BasicPreferenceItem(
                 title = getString(R.string.settings_clear_cache),
                 summary = getString(R.string.settings_clear_cache_summary),

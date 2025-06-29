@@ -9,16 +9,19 @@ import androidx.lifecycle.ProcessLifecycleOwner
 import com.flashsphere.rainwaveplayer.BuildConfig
 import com.flashsphere.rainwaveplayer.coroutine.coroutineExceptionHandler
 import com.flashsphere.rainwaveplayer.model.stationInfo.InfoErrorResponse
-import com.flashsphere.rainwaveplayer.okhttp.Api24NetworkManager
+import com.flashsphere.rainwaveplayer.network.Api24AnyNetworkManager
+import com.flashsphere.rainwaveplayer.network.Api24NoOpNetworkManager
+import com.flashsphere.rainwaveplayer.network.NetworkManager
+import com.flashsphere.rainwaveplayer.network.NoOpNetworkManager
 import com.flashsphere.rainwaveplayer.okhttp.AuthenticatedUserInterceptor
 import com.flashsphere.rainwaveplayer.okhttp.CustomHttpLoggingInterceptor
-import com.flashsphere.rainwaveplayer.okhttp.NetworkManager
-import com.flashsphere.rainwaveplayer.okhttp.NoOpNetworkManager
 import com.flashsphere.rainwaveplayer.okhttp.RequestHeadersInterceptor
 import com.flashsphere.rainwaveplayer.okhttp.TrustedCertificateStore
 import com.flashsphere.rainwaveplayer.repository.RainwaveService
 import com.flashsphere.rainwaveplayer.ui.UiEventDelegate
 import com.flashsphere.rainwaveplayer.util.CoroutineDispatchers
+import com.flashsphere.rainwaveplayer.util.PreferencesKeys
+import com.flashsphere.rainwaveplayer.util.getBlocking
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -155,12 +158,15 @@ object ApplicationModule {
     @Singleton
     fun provideNetworkManager(
         context: Context,
+        coroutineDispatchers: CoroutineDispatchers,
         dataStore: DataStore<Preferences>,
     ): NetworkManager {
-        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            Api24NetworkManager(context, dataStore)
-        } else {
-            NoOpNetworkManager(context)
+        val isApi24AndAbove = (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N)
+        val useAnyNetwork = dataStore.getBlocking(PreferencesKeys.USE_ANY_NETWORK)
+        return when {
+            (isApi24AndAbove && useAnyNetwork) -> Api24AnyNetworkManager(context)
+            (isApi24AndAbove) -> Api24NoOpNetworkManager(context, coroutineDispatchers)
+            else -> NoOpNetworkManager(context, coroutineDispatchers)
         }.apply {
             ProcessLifecycleOwner.get().lifecycle.addObserver(this)
         }

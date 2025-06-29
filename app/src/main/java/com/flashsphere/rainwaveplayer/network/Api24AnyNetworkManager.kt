@@ -1,11 +1,7 @@
-package com.flashsphere.rainwaveplayer.okhttp
+package com.flashsphere.rainwaveplayer.network
 
-import android.content.BroadcastReceiver
 import android.content.Context
-import android.content.Intent
-import android.content.IntentFilter
 import android.net.ConnectivityManager
-import android.net.ConnectivityManager.CONNECTIVITY_ACTION
 import android.net.ConnectivityManager.NetworkCallback
 import android.net.Network
 import android.net.NetworkCapabilities
@@ -21,92 +17,19 @@ import android.os.Handler
 import android.os.Looper
 import androidx.annotation.RequiresApi
 import androidx.core.content.ContextCompat
-import androidx.core.content.ContextCompat.RECEIVER_EXPORTED
-import androidx.datastore.core.DataStore
-import androidx.datastore.preferences.core.Preferences
-import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
-import com.flashsphere.rainwaveplayer.util.PreferencesKeys
-import com.flashsphere.rainwaveplayer.util.getBlocking
-import kotlinx.coroutines.flow.Flow
+import com.flashsphere.rainwaveplayer.network.NetworkManager.Companion.TAG
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import timber.log.Timber
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.atomic.AtomicInteger
 
-abstract class NetworkManager : DefaultLifecycleObserver {
-    abstract fun isConnected(): Boolean
-    abstract val connectivityFlow: Flow<Boolean>
-
-    abstract fun registerNetworkChangeCallback(callback: NetworkChangeCallback)
-    abstract fun unregisterNetworkChangeCallback(callback: NetworkChangeCallback)
-    protected abstract fun start()
-    protected abstract fun stop()
-
-    private val count = AtomicInteger(0)
-    override fun onStart(owner: LifecycleOwner) {
-        if (count.getAndAdd(1) == 0) {
-            start()
-        }
-    }
-    override fun onStop(owner: LifecycleOwner) {
-        if (count.decrementAndGet() > 0) return
-        stop()
-    }
-
-    companion object {
-        val TAG: String = NetworkManager::class.java.simpleName
-    }
-}
-
-interface NetworkChangeCallback {
-    fun networkChanged()
-}
-
-@Suppress("DEPRECATION")
-class NoOpNetworkManager(context: Context) : NetworkManager() {
-    private val applicationContext = context.applicationContext
-    private val connectivityManager = ContextCompat.getSystemService(applicationContext,
-        ConnectivityManager::class.java)!!
-
-    private val broadcastReceiver = object : BroadcastReceiver() {
-        override fun onReceive(context: Context, intent: Intent) {
-            Timber.tag(TAG).d("receive intent %s", intent.action)
-            _connectivityFlow.value = isConnected()
-        }
-    }
-
-    override fun isConnected(): Boolean =
-        connectivityManager.activeNetworkInfo?.isConnected == true
-
-    private val _connectivityFlow = MutableStateFlow(false)
-    override val connectivityFlow: Flow<Boolean> = _connectivityFlow.asStateFlow()
-
-    override fun registerNetworkChangeCallback(callback: NetworkChangeCallback) {}
-
-    override fun unregisterNetworkChangeCallback(callback: NetworkChangeCallback) {}
-
-    override fun start() {
-        Timber.tag(TAG).d("register '%s' broadcast receiver", CONNECTIVITY_ACTION)
-        ContextCompat.registerReceiver(applicationContext, broadcastReceiver, IntentFilter(CONNECTIVITY_ACTION), RECEIVER_EXPORTED)
-    }
-
-    override fun stop() {
-        _connectivityFlow.value = false
-        applicationContext.unregisterReceiver(broadcastReceiver)
-    }
-}
-
 @RequiresApi(Build.VERSION_CODES.N)
-class Api24NetworkManager(
-    context: Context,
-    dataStore: DataStore<Preferences>,
-) : NetworkManager() {
+class Api24AnyNetworkManager(context: Context) : NetworkManager {
     private val applicationContext = context.applicationContext
     private val connectivityManager = ContextCompat.getSystemService(applicationContext,
         ConnectivityManager::class.java)!!
-    private val useAnyNetwork = dataStore.getBlocking(PreferencesKeys.USE_ANY_NETWORK)
 
     private val handler = Handler(Looper.getMainLooper())
     private val availableNetworks = ConcurrentHashMap<Network, NetworkCapabilities>()
@@ -124,8 +47,8 @@ class Api24NetworkManager(
         private var previousNetwork = Pair<Network?, Boolean>(null, false)
 
         override fun onCapabilitiesChanged(network: Network, capabilities: NetworkCapabilities) {
-            val hasInternet = capabilities.hasCapability(NET_CAPABILITY_INTERNET)
-                && capabilities.hasCapability(NET_CAPABILITY_VALIDATED)
+            val hasInternet = capabilities.hasCapability(NET_CAPABILITY_INTERNET) &&
+                capabilities.hasCapability(NET_CAPABILITY_VALIDATED)
 
             if (setPreviousNetwork(network, hasInternet)) {
                 handleDefaultNetworkInternetCapability(network, hasInternet)
@@ -178,24 +101,20 @@ class Api24NetworkManager(
         networkChangeCallbacks.remove(callback)
     }
 
-    override fun start() {
+    private fun start() {
         Timber.tag(TAG).d("Register network callback")
-        if (useAnyNetwork) {
-            val networkRequest = NetworkRequest.Builder()
-                .addCapability(NET_CAPABILITY_INTERNET)
-                .addCapability(NET_CAPABILITY_VALIDATED)
-                .build()
-            connectivityManager.registerNetworkCallback(networkRequest, networkCallback)
-        }
+        val networkRequest = NetworkRequest.Builder()
+            .addCapability(NET_CAPABILITY_INTERNET)
+            .addCapability(NET_CAPABILITY_VALIDATED)
+            .build()
+        connectivityManager.registerNetworkCallback(networkRequest, networkCallback)
         connectivityManager.registerDefaultNetworkCallback(defaultNetworkCallback)
     }
 
-    override fun stop() {
+    private fun stop() {
         Timber.tag(TAG).d("Unregister network callback")
         connectivityManager.unregisterNetworkCallback(defaultNetworkCallback)
-        if (useAnyNetwork) {
-            connectivityManager.unregisterNetworkCallback(networkCallback)
-        }
+        connectivityManager.unregisterNetworkCallback(networkCallback)
 
         handler.removeCallbacksAndMessages(null)
 
@@ -239,7 +158,7 @@ class Api24NetworkManager(
     private fun selectFromAvailableNetworks() {
         if (usingDefaultNetwork) return
 
-        Timber.tag(TAG).d("%d available networks: %s", availableNetworks.size, availableNetworks)
+        Timber.tag(TAG).d("%d available networks", availableNetworks.size)
 
         val selectedNetwork = availableNetworks.minByOrNull { (_, capabilities) ->
             TRANSPORT_PRIORITY.indexOfFirst { capabilities.hasTransport(it) }
@@ -248,7 +167,7 @@ class Api24NetworkManager(
         if (selectedNetwork != connectivityManager.boundNetworkForProcess) {
             Timber.tag(TAG).d("Using network %s", selectedNetwork)
             connectivityManager.bindProcessToNetwork(selectedNetwork)
-            logNetworkCapabilities(selectedNetwork)
+            logNetworkCapabilities(availableNetworks[selectedNetwork])
         }
         _connectivityFlow.value = selectedNetwork != null
         if (currentNetwork != selectedNetwork) {
@@ -257,9 +176,8 @@ class Api24NetworkManager(
         }
     }
 
-    private fun logNetworkCapabilities(network: Network?) {
-        if (network == null) return
-        availableNetworks[network]?.let {
+    private fun logNetworkCapabilities(capabilities: NetworkCapabilities?) {
+        capabilities?.let {
             Timber.tag(TAG).d("""
                 is ethernet = %s
                 is wifi = %s
@@ -276,6 +194,18 @@ class Api24NetworkManager(
                 it.hasCapability(NET_CAPABILITY_VALIDATED)
             )
         }
+    }
+
+    private val count = AtomicInteger(0)
+    override fun onStart(owner: LifecycleOwner) {
+        if (count.getAndAdd(1) == 0) {
+            start()
+        }
+    }
+
+    override fun onStop(owner: LifecycleOwner) {
+        if (count.decrementAndGet() > 0) return
+        stop()
     }
 
     companion object {

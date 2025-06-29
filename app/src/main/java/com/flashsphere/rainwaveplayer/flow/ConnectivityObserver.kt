@@ -1,6 +1,6 @@
 package com.flashsphere.rainwaveplayer.flow
 
-import com.flashsphere.rainwaveplayer.okhttp.NetworkManager
+import com.flashsphere.rainwaveplayer.network.NetworkManager
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 import javax.inject.Singleton

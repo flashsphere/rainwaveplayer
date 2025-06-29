@@ -50,7 +50,7 @@ import com.flashsphere.rainwaveplayer.model.song.Song
 import com.flashsphere.rainwaveplayer.model.station.Station
 import com.flashsphere.rainwaveplayer.model.stationInfo.InfoErrorResponse
 import com.flashsphere.rainwaveplayer.model.stationInfo.InfoResponse
-import com.flashsphere.rainwaveplayer.okhttp.NetworkManager
+import com.flashsphere.rainwaveplayer.network.NetworkManager
 import com.flashsphere.rainwaveplayer.playback.LocalPlayback
 import com.flashsphere.rainwaveplayer.playback.Playback
 import com.flashsphere.rainwaveplayer.receiver.FavoriteSongIntentHandler
