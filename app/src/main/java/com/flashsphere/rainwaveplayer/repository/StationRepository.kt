@@ -59,6 +59,7 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.SharingStarted.Companion.WhileSubscribed
+import kotlinx.coroutines.flow.buffer
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flow
@@ -165,6 +166,8 @@ class StationRepository @Inject constructor(
         return savedStations.stations
     }
 
+    fun hasLocalCachedStations(): Boolean = runBlocking { savedStationsStore.exists() }
+
     private val stationsFlow =
         flow {
             val stations = stationsCache
@@ -188,9 +191,8 @@ class StationRepository @Inject constructor(
             emit(ApiResponse.ofSuccess(stations))
         }
         .catch { emit(ApiResponse.ofFailure(it)) }
-        .shareIn(coroutineDispatchers.scope, WhileSubscribed(replayExpirationMillis = 0))
-
-    fun hasLocalCachedStations(): Boolean = runBlocking { savedStationsStore.exists() }
+        .buffer(0)
+        .shareIn(scope = coroutineDispatchers.scope, started = WhileSubscribed(replayExpirationMillis = 0), replay = 0)
 
     suspend fun getStations(): List<Station> = stationsFlow
         .map { apiResponse ->

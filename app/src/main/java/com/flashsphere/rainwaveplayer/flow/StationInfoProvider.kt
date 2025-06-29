@@ -17,6 +17,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharingStarted.Companion.WhileSubscribed
+import kotlinx.coroutines.flow.buffer
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.filter
@@ -171,7 +172,8 @@ class StationInfoProvider(
             }
             .map { ApiResponse.ofSuccess(it) }
             .catch { emit(ApiResponse.ofFailure(it)) }
-            .shareIn(coroutineDispatchers.scope, WhileSubscribed(replayExpirationMillis = 0))
+            .buffer(0)
+            .shareIn(scope = coroutineDispatchers.scope, started = WhileSubscribed(replayExpirationMillis = 0), replay = 0)
     }
 
     private fun getTimeRemainingForCache(): Long {
