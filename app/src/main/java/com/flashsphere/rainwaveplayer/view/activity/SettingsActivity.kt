@@ -13,7 +13,6 @@ import android.os.Handler
 import android.os.Looper
 import android.os.PowerManager
 import android.provider.Settings
-import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts.RequestPermission
@@ -41,6 +40,7 @@ import com.flashsphere.rainwaveplayer.ui.screen.SettingsScreen
 import com.flashsphere.rainwaveplayer.ui.screen.tv.TvSettingsScreen
 import com.flashsphere.rainwaveplayer.util.BottomNavPreference
 import com.flashsphere.rainwaveplayer.util.BufferMinSettingHelper
+import com.flashsphere.rainwaveplayer.util.CoroutineDispatchers
 import com.flashsphere.rainwaveplayer.util.PreferencesKeys.ADD_REQUEST_TO_TOP
 import com.flashsphere.rainwaveplayer.util.PreferencesKeys.ANALYTICS
 import com.flashsphere.rainwaveplayer.util.PreferencesKeys.AUTO_PLAY
@@ -76,6 +76,7 @@ import kotlinx.coroutines.flow.drop
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -90,6 +91,9 @@ class SettingsActivity : BaseActivity() {
     @Inject
     lateinit var castContextHolder: CastContextHolder
 
+    @Inject
+    lateinit var coroutineDispatchers: CoroutineDispatchers
+
     private val snackbarEventFlow = MutableSharedFlow<SnackbarEvent>(
         replay = 0,
         extraBufferCapacity = 1,
@@ -99,8 +103,6 @@ class SettingsActivity : BaseActivity() {
     private lateinit var powerManager: PowerManager
     private lateinit var backPressedCallback: OnBackPressedCallback
     private lateinit var requestNotificationPermissionLauncher: ActivityResultLauncher<String>
-
-    private var toast: Toast? = null
 
     @OptIn(ExperimentalMaterial3WindowSizeClassApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -152,11 +154,6 @@ class SettingsActivity : BaseActivity() {
                 }
             }
         }
-    }
-
-    override fun onDestroy() {
-        cancelToast()
-        super.onDestroy()
     }
 
     private fun createPreferences(): List<Preference> {
@@ -458,7 +455,7 @@ class SettingsActivity : BaseActivity() {
             add(BasicPreferenceItem(
                 title = getString(R.string.settings_clear_cache),
                 summary = getString(R.string.settings_clear_cache_summary),
-                onClick = { clearCache() },
+                onClick = this@SettingsActivity::clearCache,
             ))
         }
     }
@@ -640,7 +637,7 @@ class SettingsActivity : BaseActivity() {
             add(BasicPreferenceItem(
                 title = getString(R.string.settings_clear_cache),
                 summary = getString(R.string.settings_clear_cache_summary),
-                onClick = { clearCache() },
+                onClick = this@SettingsActivity::clearCache,
             ))
         }
     }
@@ -733,18 +730,14 @@ class SettingsActivity : BaseActivity() {
     }
 
     private fun clearCache() {
-        imageLoader.memoryCache?.clear()
-        imageLoader.diskCache?.clear()
-        savedStationsStore.remove()
+        lifecycleScope.launch {
+            withContext(coroutineDispatchers.network) {
+                imageLoader.diskCache?.clear()
+            }
+            savedStationsStore.remove()
 
-        cancelToast()
-        toast = Toast.makeText(this, R.string.settings_cache_cleared, Toast.LENGTH_LONG)
-            .also { it.show() }
-    }
-
-    private fun cancelToast() {
-        toast?.cancel()
-        toast = null
+            ProcessPhoenix.triggerRebirth(this@SettingsActivity)
+        }
     }
 
     companion object {

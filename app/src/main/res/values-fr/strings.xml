@@ -245,8 +245,7 @@
     <string name="settings_other_battery_usage_summary">If you are experiencing playback not starting via your hardware controls (i.e. headset play/pause buttons), then you might need to set \"App battery usage\" to \"Unrestricted\".</string>
 
     <string name="settings_clear_cache">Clear cache</string>
-    <string name="settings_clear_cache_summary">Clear cached images and other cached data.</string>
-    <string name="settings_cache_cleared">Cache cleared.</string>
+    <string name="settings_clear_cache_summary">Clear cached images and other cached data. App will restart automatically.</string>
 
     <string name="settings_use_any_network">Use any network</string>
     <string name="settings_use_any_network_desc">Use any network to connect to Rainwave. \nFor example, if your Wi-Fi connection has no internet access, the app will automatically use cellular data if available. \nApp will restart automatically.</string>
