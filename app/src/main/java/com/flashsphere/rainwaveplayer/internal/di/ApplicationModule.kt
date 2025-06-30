@@ -171,4 +171,4 @@ object ApplicationModule {
             ProcessLifecycleOwner.get().lifecycle.addObserver(this)
         }
     }
- }
+}

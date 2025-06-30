@@ -175,6 +175,10 @@ class MainViewModel @Inject constructor(
         cancel(stationInfoJob)
     }
 
+    fun clearStationInfo() {
+        _stationInfoScreenState.value = StationInfoScreenState.clear()
+    }
+
     fun faveSong(song: SongState) {
         uiEventDelegate.send(DismissSnackbarEvent)
         faveSongDelegate.faveSong(viewModelScope, song)

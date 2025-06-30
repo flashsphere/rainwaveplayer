@@ -1,6 +1,7 @@
 package com.flashsphere.rainwaveplayer.view.activity.delegate
 
 import android.os.Bundle
+import android.support.v4.media.session.MediaControllerCompat
 import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
 import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteScaffoldDefaults
 import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteType
@@ -14,6 +15,7 @@ import androidx.navigation.compose.rememberNavController
 import com.flashsphere.rainwaveplayer.cast.CastSessionManagerListener
 import com.flashsphere.rainwaveplayer.coroutine.launchWithDefaults
 import com.flashsphere.rainwaveplayer.model.station.Station
+import com.flashsphere.rainwaveplayer.service.MediaService
 import com.flashsphere.rainwaveplayer.ui.composition.LocalUiScreenConfig
 import com.flashsphere.rainwaveplayer.ui.composition.LocalUiSettings
 import com.flashsphere.rainwaveplayer.ui.composition.LocalUserCredentials
@@ -22,12 +24,17 @@ import com.flashsphere.rainwaveplayer.ui.composition.UiSettings
 import com.flashsphere.rainwaveplayer.ui.drawer.DrawerItemHandler
 import com.flashsphere.rainwaveplayer.ui.screen.MainScreen
 import com.flashsphere.rainwaveplayer.util.AnalyticsOnDestinationChangedListener
+import com.flashsphere.rainwaveplayer.util.JobUtils.cancel
 import com.flashsphere.rainwaveplayer.util.getBottomNavigationUiPref
 import com.flashsphere.rainwaveplayer.util.getLastPlayedStation
 import com.flashsphere.rainwaveplayer.util.isAutoPlayEnabled
 import com.flashsphere.rainwaveplayer.util.isLoggedIn
 import com.flashsphere.rainwaveplayer.view.activity.MainActivity
 import com.flashsphere.rainwaveplayer.view.viewmodel.MainViewModel
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.onEach
 
 class NonTvMainActivityDelegate(
     private val activity: MainActivity,
@@ -35,7 +42,16 @@ class NonTvMainActivityDelegate(
     private val drawerItemHandler: DrawerItemHandler,
 ) : MainActivityDelegate {
     private var isFirstStart = false
-    private var sessionManagerListener: CastSessionManagerListener? = null
+    private var castStateJob: Job? = null
+    private val sessionManagerListener: CastSessionManagerListener? by lazy {
+        activity.castContextHolder.castContext?.let {
+            CastSessionManagerListener(
+                it, activity, activity.lifecycleScope,
+                activity.stationRepository, activity.mediaPlayerStateObserver,
+                mainViewModel.castState
+            )
+        }
+    }
 
     @OptIn(ExperimentalMaterial3WindowSizeClassApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -76,6 +92,8 @@ class NonTvMainActivityDelegate(
                 )
             }
         }
+
+        subscribeToMediaServiceConnection()
     }
 
     override fun onStationsLoaded(stations: List<Station>) {
@@ -87,14 +105,37 @@ class NonTvMainActivityDelegate(
         if (isFirstStart && activity.mediaPlayerStateObserver.currentState.isStopped() && activity.dataStore.isAutoPlayEnabled()) {
             activity.playbackManager.play(currentStation)
         }
-
-        if (sessionManagerListener == null) {
-            activity.castContextHolder.castContext?.let {
-                this.sessionManagerListener = CastSessionManagerListener(
-                    it, activity, activity.lifecycleScope, stations, activity.mediaPlayerStateObserver,
-                    mainViewModel.castState
-                ).apply { activity.lifecycle.addObserver(this) }
-            }
+        sessionManagerListener?.let {
+            activity.lifecycle.addObserver(it)
         }
+    }
+
+    private fun subscribeToCastState(binder: MediaService.LocalBinder) {
+        cancel(castStateJob)
+        castStateJob = mainViewModel.castState
+            .map { it.isNotEmpty() }
+            .distinctUntilChanged()
+            .onEach { castConnected ->
+                if (castConnected) {
+                    MediaControllerCompat.setMediaController(activity, null)
+                } else {
+                    val controller = binder.service.mediaSession.controller
+                    MediaControllerCompat.setMediaController(activity, controller)
+                }
+            }
+            .launchWithDefaults(activity.lifecycleScope,"Cast State in Main activity")
+    }
+
+    private fun subscribeToMediaServiceConnection() {
+        activity.mediaServiceConnection.boundService
+            .onEach { binder ->
+                if (binder != null) {
+                    subscribeToCastState(binder)
+                } else {
+                    cancel(castStateJob)
+                    MediaControllerCompat.setMediaController(activity, null)
+                }
+            }
+            .launchWithDefaults(activity.lifecycleScope, "Media service connection in Main activity")
     }
 }

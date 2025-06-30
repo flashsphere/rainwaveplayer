@@ -10,6 +10,7 @@ import com.flashsphere.rainwaveplayer.flow.remoteMediaClientFlow
 import com.flashsphere.rainwaveplayer.model.MediaPlayerStatus
 import com.flashsphere.rainwaveplayer.model.MediaPlayerStatus.State
 import com.flashsphere.rainwaveplayer.model.station.Station
+import com.flashsphere.rainwaveplayer.repository.StationRepository
 import com.flashsphere.rainwaveplayer.service.MediaService
 import com.flashsphere.rainwaveplayer.util.JobUtils.cancel
 import com.google.android.gms.cast.MediaInfo
@@ -32,7 +33,7 @@ class CastSessionManagerListener(
     castContext: CastContext,
     private val context: Context,
     private val coroutineScope: CoroutineScope,
-    private val stations: List<Station>,
+    private val stationRepository: StationRepository,
     private val mediaPlayerStateObserver: MediaPlayerStateObserver,
     private val castState: MutableStateFlow<String>,
 ) : DefaultSessionManagerListener, DefaultLifecycleObserver {
@@ -73,7 +74,7 @@ class CastSessionManagerListener(
                 val mediaInfo = result.mediaInfo
                 Timber.d("cast player state = %d", playerState)
 
-                var station = getStation(mediaInfo, stations)
+                val station = getStation(mediaInfo, stationRepository.getStations())
 
                 val state = when (playerState) {
                     MediaStatus.PLAYER_STATE_LOADING, MediaStatus.PLAYER_STATE_BUFFERING -> {

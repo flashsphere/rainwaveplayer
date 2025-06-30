@@ -2,6 +2,7 @@ package com.flashsphere.rainwaveplayer.playback
 
 import android.content.Context
 import com.flashsphere.rainwaveplayer.cast.CastContextHolder
+import com.flashsphere.rainwaveplayer.coroutine.launchWithDefaults
 import com.flashsphere.rainwaveplayer.flow.MediaPlayerStateObserver
 import com.flashsphere.rainwaveplayer.model.station.Station
 import com.flashsphere.rainwaveplayer.repository.StationRepository
@@ -78,8 +79,12 @@ class PlaybackManager @Inject constructor(
             .setAutoplay(true)
             .build()
 
-        castSession.remoteMediaClient?.load(mediaLoadRequest)
-        stationRepository.refreshStationInfo(station.id, 3)
+        val result = castSession.remoteMediaClient?.load(mediaLoadRequest)
+        coroutineDispatchers.scope.launchWithDefaults("Remote media client load status") {
+            if (result?.await()?.status?.isSuccess == true) {
+                stationRepository.refreshStationInfo(station.id, 3)
+            }
+        }
     }
 
     fun stop() {

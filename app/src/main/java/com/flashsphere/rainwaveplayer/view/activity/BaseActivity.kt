@@ -35,7 +35,7 @@ abstract class BaseActivity : AppCompatActivity() {
             return
         }
 
-        Timber.tag(getSimpleClassName()).d("Starting")
+        Timber.tag(getSimpleClassName()).d("Creating")
         enableEdgeToEdge(
             statusBarStyle = SystemBarStyle.dark(Color.TRANSPARENT),
             navigationBarStyle = SystemBarStyle.dark(Color.argb(0x80, 0x1b, 0x1b, 0x1b))

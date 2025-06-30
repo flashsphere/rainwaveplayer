@@ -5,7 +5,6 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.provider.MediaStore
-import android.support.v4.media.session.MediaControllerCompat
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
@@ -21,13 +20,10 @@ import com.flashsphere.rainwaveplayer.model.station.Station
 import com.flashsphere.rainwaveplayer.playback.PlaybackManager
 import com.flashsphere.rainwaveplayer.repository.StationRepository
 import com.flashsphere.rainwaveplayer.repository.UserRepository
-import com.flashsphere.rainwaveplayer.service.MediaService
 import com.flashsphere.rainwaveplayer.service.MediaServiceConnection
-import com.flashsphere.rainwaveplayer.service.MediaServiceConnection.MediaServiceConnected
 import com.flashsphere.rainwaveplayer.ui.drawer.DrawerItemHandler
 import com.flashsphere.rainwaveplayer.util.Analytics
 import com.flashsphere.rainwaveplayer.util.CoroutineDispatchers
-import com.flashsphere.rainwaveplayer.util.JobUtils.cancel
 import com.flashsphere.rainwaveplayer.util.OperationError
 import com.flashsphere.rainwaveplayer.util.isTv
 import com.flashsphere.rainwaveplayer.view.activity.delegate.MainActivityDelegate
@@ -36,8 +32,6 @@ import com.flashsphere.rainwaveplayer.view.activity.delegate.TvMainActivityDeleg
 import com.flashsphere.rainwaveplayer.view.helper.CustomTabsUtil
 import com.flashsphere.rainwaveplayer.view.viewmodel.MainViewModel
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.map
@@ -48,7 +42,7 @@ import timber.log.Timber
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class MainActivity : BaseActivity(), MediaServiceConnected {
+class MainActivity : BaseActivity() {
     @Inject
     lateinit var stationRepository: StationRepository
     @Inject
@@ -64,19 +58,18 @@ class MainActivity : BaseActivity(), MediaServiceConnected {
     @Inject
     lateinit var coroutineDispatchers: CoroutineDispatchers
     @Inject
+    lateinit var mediaServiceConnection: MediaServiceConnection
+    @Inject
     lateinit var json: Json
 
     private val mainViewModel: MainViewModel by viewModels()
 
     private lateinit var delegate: MainActivityDelegate
 
-    private var castStateJob: Job? = null
-
     @OptIn(ExperimentalMaterial3WindowSizeClassApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         setupSplashScreen()
         super.onCreate(savedInstanceState)
-        lifecycle.addObserver(MediaServiceConnection(this, this))
 
         val drawerItemHandler = createDrawerItemHandler()
         delegate = if (!isTv()) {
@@ -196,27 +189,6 @@ class MainActivity : BaseActivity(), MediaServiceConnected {
         loginClick = { CustomTabsUtil.openLoginPage(this) },
         logoutClick = this::logout,
     )
-
-    override fun serviceConnected(binder: MediaService.LocalBinder) {
-        cancel(castStateJob)
-        castStateJob = mainViewModel.castState
-            .map { it.isNotEmpty() }
-            .distinctUntilChanged()
-            .onEach { castConnected ->
-                if (castConnected) {
-                    MediaControllerCompat.setMediaController(this, null)
-                } else {
-                    val controller = binder.service.mediaSession.controller
-                    MediaControllerCompat.setMediaController(this, controller)
-                }
-            }
-            .launchWithDefaults(lifecycleScope,"Cast State in Main activity")
-    }
-
-    override fun serviceDisconnected() {
-        cancel(castStateJob)
-        MediaControllerCompat.setMediaController(this, null)
-    }
 
     companion object {
         private const val INTENT_EXTRA_PARAM_STATION = "com.flashsphere.data.station"

@@ -1,7 +1,5 @@
 package com.flashsphere.rainwaveplayer.util
 
-import androidx.datastore.core.DataStore
-import androidx.datastore.preferences.core.MutablePreferences
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.floatPreferencesKey
@@ -9,17 +7,6 @@ import androidx.datastore.preferences.core.intPreferencesKey
 import androidx.datastore.preferences.core.longPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
 import com.flashsphere.rainwaveplayer.util.BottomNavPreference.Labeled
-import kotlinx.coroutines.flow.firstOrNull
-import kotlinx.coroutines.flow.map
-import kotlinx.serialization.json.Json
-import kotlinx.serialization.json.JsonElement
-import kotlinx.serialization.json.JsonObject
-import kotlinx.serialization.json.JsonPrimitive
-import kotlinx.serialization.json.boolean
-import kotlinx.serialization.json.float
-import kotlinx.serialization.json.int
-import kotlinx.serialization.json.jsonPrimitive
-import timber.log.Timber
 
 object PreferencesKeys {
     private const val SETTINGS_VERSION = 9
@@ -56,69 +43,6 @@ object PreferencesKeys {
 
     @Deprecated("Not used since pref version 6")
     val BUFFER_REBUFFER = floatPreferencesKey("com.flashsphere.prefs.buffer_rebuffer")
-
-    suspend fun exportTvPreferences(dataStore: DataStore<Preferences>, json: Json): String? {
-        return dataStore.data
-            .map {
-                mutableMapOf<String, JsonElement>().apply {
-                    exportPreference(it, USER_ID, this) { JsonPrimitive(it) }
-                    exportPreference(it, API_KEY, this) { JsonPrimitive(it) }
-                    exportPreference(it, ADD_REQUEST_TO_TOP, this) { JsonPrimitive(it) }
-                    exportPreference(it, AUTO_REQUEST_FAVE, this) { JsonPrimitive(it) }
-                    exportPreference(it, AUTO_REQUEST_UNRATED, this) { JsonPrimitive(it) }
-                    exportPreference(it, AUTO_REQUEST_CLEAR, this) { JsonPrimitive(it) }
-                    exportPreference(it, BUFFER_MIN, this) { JsonPrimitive(it) }
-                    exportPreference(it, CRASH_REPORTING, this) { JsonPrimitive(it) }
-                    exportPreference(it, ANALYTICS, this) { JsonPrimitive(it) }
-                    exportPreference(it, SSL_RELAY, this) { JsonPrimitive(it) }
-                    exportPreference(it, USE_OGG, this) { JsonPrimitive(it) }
-                    exportPreference(it, AUTO_VOTE_RULES, this) { JsonPrimitive(it) }
-                    exportPreference(it, HIDE_RATING_UNTIL_RATED, this) { JsonPrimitive(it) }
-                }.let {
-                    json.encodeToString(JsonObject(it))
-                }.also {
-                    Timber.d("Exporting TV preferences: %s", it)
-                }
-            }
-            .firstOrNull()
-    }
-
-    suspend fun importTvPreferences(dataStore: DataStore<Preferences>, json: Json, jsonString: String) {
-        val jsonPreferences = runCatching { json.decodeFromString<JsonObject?>(jsonString) }
-            .getOrNull()
-        if (jsonPreferences.isNullOrEmpty()) return
-
-        Timber.d("Importing TV preferences: %s", jsonPreferences)
-
-        dataStore.update {
-            importPreference(it, USER_ID, jsonPreferences) { it.jsonPrimitive.int }
-            importPreference(it, API_KEY, jsonPreferences) { it.jsonPrimitive.content }
-            importPreference(it, ADD_REQUEST_TO_TOP, jsonPreferences) { it.jsonPrimitive.boolean }
-            importPreference(it, AUTO_REQUEST_FAVE, jsonPreferences) { it.jsonPrimitive.boolean }
-            importPreference(it, AUTO_REQUEST_UNRATED, jsonPreferences) { it.jsonPrimitive.boolean }
-            importPreference(it, AUTO_REQUEST_CLEAR, jsonPreferences) { it.jsonPrimitive.boolean }
-            importPreference(it, BUFFER_MIN, jsonPreferences) { it.jsonPrimitive.float }
-            importPreference(it, CRASH_REPORTING, jsonPreferences) { it.jsonPrimitive.boolean }
-            importPreference(it, ANALYTICS, jsonPreferences) { it.jsonPrimitive.boolean }
-            importPreference(it, SSL_RELAY, jsonPreferences) { it.jsonPrimitive.boolean }
-            importPreference(it, USE_OGG, jsonPreferences) { it.jsonPrimitive.boolean }
-            importPreference(it, AUTO_VOTE_RULES, jsonPreferences) { it.jsonPrimitive.content }
-            importPreference(it, HIDE_RATING_UNTIL_RATED, jsonPreferences) { it.jsonPrimitive.boolean }
-        }
-    }
-
-    private fun <T> exportPreference(preferences: Preferences, preferenceKey: PreferenceKey<T>,
-                                     content: MutableMap<String, JsonElement>, converter: (T) -> JsonElement) {
-        val value = preferences[preferenceKey.key] ?: return
-
-        content[preferenceKey.key.name] = converter(value)
-    }
-
-    private fun <T> importPreference(preferences: MutablePreferences, preferenceKey: PreferenceKey<T>,
-                                     jsonObject: JsonObject, converter: (JsonElement) -> T) {
-        val jsonElement = jsonObject[preferenceKey.key.name] ?: return
-        preferences[preferenceKey.key] = converter(jsonElement)
-    }
 }
 
 class PreferenceKey<T>(

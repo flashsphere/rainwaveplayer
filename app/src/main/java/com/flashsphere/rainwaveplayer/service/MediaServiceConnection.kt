@@ -7,14 +7,26 @@ import android.content.ServiceConnection
 import android.os.IBinder
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.ProcessLifecycleOwner
+import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import timber.log.Timber
+import javax.inject.Inject
+import javax.inject.Singleton
 
-class MediaServiceConnection(
-    private val context: Context,
-    private val serviceConnected: MediaServiceConnected,
+@Singleton
+class MediaServiceConnection @Inject constructor(
+    @ApplicationContext private val context: Context,
 ) : ServiceConnection, DefaultLifecycleObserver {
     private val serviceComponent = ComponentName(context, MediaService::class.java)
-    private var boundService: MediaService.LocalBinder? = null
+
+    private val _boundService = MutableStateFlow<MediaService.LocalBinder?>(null)
+    val boundService = _boundService.asStateFlow()
+
+    init {
+        ProcessLifecycleOwner.get().lifecycle.addObserver(this)
+    }
 
     override fun onStart(owner: LifecycleOwner) {
         runCatching {
@@ -26,7 +38,7 @@ class MediaServiceConnection(
     }
 
     override fun onStop(owner: LifecycleOwner) {
-        if (boundService == null) return
+        if (_boundService.value == null) return
         runCatching {
             Timber.i("Unbind service")
             context.unbindService(this)
@@ -40,18 +52,11 @@ class MediaServiceConnection(
         if (serviceComponent != name) return
         if (binder !is MediaService.LocalBinder) return
         Timber.i("MediaService connected")
-        boundService = binder
-        serviceConnected.serviceConnected(binder)
+        _boundService.value = binder
     }
 
     override fun onServiceDisconnected(name: ComponentName) {
         if (serviceComponent != name) return
-        boundService = null
-        serviceConnected.serviceDisconnected()
-    }
-
-    interface MediaServiceConnected {
-        fun serviceConnected(binder: MediaService.LocalBinder)
-        fun serviceDisconnected()
+        _boundService.value = null
     }
 }

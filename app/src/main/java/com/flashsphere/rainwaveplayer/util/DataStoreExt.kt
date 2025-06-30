@@ -43,6 +43,12 @@ suspend fun <T> DataStore<Preferences>.get(key: Preferences.Key<T>, defValue: T)
     return data.map { it[key] ?: defValue }.first()
 }
 
+suspend fun <T> DataStore<Preferences>.get(block: (preferences: Preferences) -> T?): T? {
+    return data.map {
+        block(it)
+    }.firstOrNull()
+}
+
 fun <T> DataStore<Preferences>.getBlocking(key: PreferenceKey<T>): T {
     return getBlocking(key.key, key.defaultValue)
 }
@@ -60,11 +66,7 @@ fun <T> DataStore<Preferences>.getBlocking(key: Preferences.Key<T>, defValue: T)
 
 fun <T> DataStore<Preferences>.getBlocking(block: (preferences: Preferences) -> T?): T? {
     return runBlocking {
-        data.map {
-            block(it)
-        }.catch { e ->
-            Timber.e(e, "Error accessing Preferences datastore")
-        }.firstOrNull()
+        get(block)
     }
 }
 
