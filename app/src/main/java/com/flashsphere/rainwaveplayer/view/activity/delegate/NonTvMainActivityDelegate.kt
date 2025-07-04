@@ -110,7 +110,7 @@ class NonTvMainActivityDelegate(
         }
     }
 
-    private fun subscribeToCastState(binder: MediaService.LocalBinder) {
+    private fun subscribeToCastState(service: MediaService) {
         cancel(castStateJob)
         castStateJob = mainViewModel.castState
             .map { it.isNotEmpty() }
@@ -119,7 +119,7 @@ class NonTvMainActivityDelegate(
                 if (castConnected) {
                     MediaControllerCompat.setMediaController(activity, null)
                 } else {
-                    val controller = binder.service.mediaSession.controller
+                    val controller = service.mediaSession.controller
                     MediaControllerCompat.setMediaController(activity, controller)
                 }
             }
@@ -128,9 +128,9 @@ class NonTvMainActivityDelegate(
 
     private fun subscribeToMediaServiceConnection() {
         activity.mediaServiceConnection.boundService
-            .onEach { binder ->
-                if (binder != null) {
-                    subscribeToCastState(binder)
+            .onEach { service ->
+                if (service != null) {
+                    subscribeToCastState(service)
                 } else {
                     cancel(castStateJob)
                     MediaControllerCompat.setMediaController(activity, null)

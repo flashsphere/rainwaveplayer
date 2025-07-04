@@ -90,6 +90,7 @@ import okhttp3.ResponseBody
 import retrofit2.Converter
 import retrofit2.HttpException
 import timber.log.Timber
+import java.lang.ref.WeakReference
 import java.net.ConnectException
 import java.util.concurrent.atomic.AtomicInteger
 import javax.inject.Inject
@@ -151,7 +152,7 @@ class MediaService : MediaBrowserServiceCompat(), Playback.Callback, LifecycleOw
     private lateinit var favoriteSongIntentHandler: FavoriteSongIntentHandler
     private lateinit var voteSongIntentHandler: VoteSongIntentHandler
 
-    private val localBinder = LocalBinder(this)
+    private val localBinder = LocalBinder(WeakReference(this))
     private val bound = AtomicInteger(0)
 
     private var stationsJob: Job? = null
@@ -790,7 +791,7 @@ class MediaService : MediaBrowserServiceCompat(), Playback.Callback, LifecycleOw
             .launchWithDefaults(serviceScope, "Connectivity Check to Resume Playback")
     }
 
-    class LocalBinder(val service: MediaService) : Binder()
+    class LocalBinder(val service: WeakReference<MediaService>) : Binder()
 
     companion object {
         private const val BROWSABLE_ROOT = "__ROOT__"

@@ -21,7 +21,7 @@ class MediaServiceConnection @Inject constructor(
 ) : ServiceConnection, DefaultLifecycleObserver {
     private val serviceComponent = ComponentName(context, MediaService::class.java)
 
-    private val _boundService = MutableStateFlow<MediaService.LocalBinder?>(null)
+    private val _boundService = MutableStateFlow<MediaService?>(null)
     val boundService = _boundService.asStateFlow()
 
     init {
@@ -52,7 +52,7 @@ class MediaServiceConnection @Inject constructor(
         if (serviceComponent != name) return
         if (binder !is MediaService.LocalBinder) return
         Timber.i("MediaService connected")
-        _boundService.value = binder
+        _boundService.value = binder.service.get()
     }
 
     override fun onServiceDisconnected(name: ComponentName) {

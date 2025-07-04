@@ -209,9 +209,9 @@ class TvMainActivityDelegate(
 
     private fun subscribeToMediaServiceConnection() {
         activity.mediaServiceConnection.boundService
-            .onEach { binder ->
-                if (binder != null) {
-                    val controller = binder.service.mediaSession.controller
+            .onEach { service ->
+                if (service != null) {
+                    val controller = service.mediaSession.controller
                     MediaControllerCompat.setMediaController(activity, controller)
                 } else {
                     MediaControllerCompat.setMediaController(activity, null)
