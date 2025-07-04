@@ -23,6 +23,7 @@ import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ServiceLifecycleDispatcher
+import androidx.lifecycle.lifecycleScope
 import androidx.media.MediaBrowserServiceCompat
 import androidx.media.utils.MediaConstants.BROWSER_SERVICE_EXTRAS_KEY_SEARCH_SUPPORTED
 import androidx.media.utils.MediaConstants.DESCRIPTION_EXTRAS_KEY_CONTENT_STYLE_BROWSABLE
@@ -35,7 +36,6 @@ import coil3.toBitmap
 import com.flashsphere.rainwaveplayer.R
 import com.flashsphere.rainwaveplayer.autovote.v1.RuleParams
 import com.flashsphere.rainwaveplayer.cast.CastReceiverContextHolder
-import com.flashsphere.rainwaveplayer.coroutine.coroutineExceptionHandler
 import com.flashsphere.rainwaveplayer.coroutine.launchWithDefaults
 import com.flashsphere.rainwaveplayer.coroutine.suspendRunCatching
 import com.flashsphere.rainwaveplayer.flow.ConnectivityObserver
@@ -69,10 +69,8 @@ import com.flashsphere.rainwaveplayer.view.viewmodel.FaveSongState
 import com.flashsphere.rainwaveplayer.view.viewmodel.VoteSongDelegate
 import com.flashsphere.rainwaveplayer.view.viewmodel.VoteSongState
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.SupervisorJob
-import kotlinx.coroutines.cancel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.distinctUntilChangedBy
@@ -143,7 +141,6 @@ class MediaService : MediaBrowserServiceCompat(), Playback.Callback, LifecycleOw
     @Inject
     lateinit var networkManager: NetworkManager
 
-    private lateinit var serviceScope: CoroutineScope
     private lateinit var notificationManager: NotificationManagerCompat
     private lateinit var playback: Playback
     private lateinit var mediaSessionHelper: MediaSessionHelper
@@ -183,18 +180,17 @@ class MediaService : MediaBrowserServiceCompat(), Playback.Callback, LifecycleOw
 
         lifecycle.addObserver(networkManager)
 
-        serviceScope = CoroutineScope(coroutineDispatchers.main + SupervisorJob() + coroutineExceptionHandler)
         notificationManager = NotificationManagerCompat.from(this)
 
         mediaSessionHelper = MediaSessionHelper(this, userRepository, mediaPlayerStateObserver,
             castReceiverContextHolder)
         mediaNotificationHelper = MediaNotificationHelper(this, mediaSessionHelper, userRepository)
-        voteSongNotificationHelper = VoteSongNotificationHelper(this, serviceScope,
+        voteSongNotificationHelper = VoteSongNotificationHelper(this, lifecycleScope,
             userRepository, dataStore)
-        favoriteSongIntentHandler = FavoriteSongIntentHandler(serviceScope, faveSongDelegate)
-        voteSongIntentHandler = VoteSongIntentHandler(serviceScope, voteSongDelegate, analytics)
+        favoriteSongIntentHandler = FavoriteSongIntentHandler(lifecycleScope, faveSongDelegate)
+        voteSongIntentHandler = VoteSongIntentHandler(lifecycleScope, voteSongDelegate, analytics)
 
-        playback = LocalPlayback(this, serviceScope, stationRepository, okHttpClient,
+        playback = LocalPlayback(this, lifecycleScope, stationRepository, okHttpClient,
             dataStore, networkManager)
         playback.setCallback(this)
 
@@ -206,8 +202,6 @@ class MediaService : MediaBrowserServiceCompat(), Playback.Callback, LifecycleOw
         cleanupService()
 
         mediaSessionHelper.destroy()
-
-        serviceScope.cancel()
 
         dispatcher.onServicePreSuperOnDestroy()
         super.onDestroy()
@@ -252,7 +246,7 @@ class MediaService : MediaBrowserServiceCompat(), Playback.Callback, LifecycleOw
                     .autoRetry(connectivityObserver, coroutineDispatchers)
                     .catch { collector.process(it) }
                     .onEach { collector.process(it) }
-                    .launchWithDefaults(serviceScope, "Stations for Browsable Root")
+                    .launchWithDefaults(lifecycleScope, "Stations for Browsable Root")
             }
             SUGGESTED_ROOT -> {
                 val collector = MediaBrowserItemsCollector(parentId, stationRepository, mediaItems)
@@ -262,7 +256,7 @@ class MediaService : MediaBrowserServiceCompat(), Playback.Callback, LifecycleOw
                     .autoRetry(connectivityObserver, coroutineDispatchers)
                     .catch { collector.process(it) }
                     .onEach { collector.process(it) }
-                    .launchWithDefaults(serviceScope, "Stations for Suggested Root")
+                    .launchWithDefaults(lifecycleScope, "Stations for Suggested Root")
             }
             RECENT_ROOT -> {
                 val collector = MediaBrowserItemsCollector(parentId, stationRepository, mediaItems)
@@ -273,7 +267,7 @@ class MediaService : MediaBrowserServiceCompat(), Playback.Callback, LifecycleOw
                     .map { if (it != null) listOf(it) else emptyList() }
                     .catch { collector.process(it) }
                     .onEach { collector.process(it) }
-                    .launchWithDefaults(serviceScope, "Stations for Recent Root")
+                    .launchWithDefaults(lifecycleScope, "Stations for Recent Root")
             }
             EMPTY_ROOT -> {
                 Timber.d("onLoadChildren for empty root")
@@ -423,7 +417,7 @@ class MediaService : MediaBrowserServiceCompat(), Playback.Callback, LifecycleOw
 
     private fun launchPlayJob(name: String, block: suspend () -> Station) {
         cancel(playJob)
-        playJob = serviceScope.launchWithDefaults(name) {
+        playJob = lifecycleScope.launchWithDefaults(name) {
             suspendRunCatching(block)
                 .onFailure { processStopRequest() }
                 .onSuccess { result ->
@@ -594,13 +588,13 @@ class MediaService : MediaBrowserServiceCompat(), Playback.Callback, LifecycleOw
                 startAutoRequest(station.id, infoResponse)
                 startAutoVote(station, infoResponse)
             }
-            .launchWithDefaults(serviceScope, "Station Info for Media Notification")
+            .launchWithDefaults(lifecycleScope, "Station Info for Media Notification")
     }
 
     private fun startAutoRequest(stationId: Int, infoResponse: InfoResponse) {
         if (userRepository.isLoggedIn()) {
             cancel(autoRequestJob)
-            autoRequestJob = serviceScope.launchWithDefaults("Auto Request") {
+            autoRequestJob = lifecycleScope.launchWithDefaults("Auto Request") {
                 suspendRunCatching { stationRepository.autoRequestSongs(stationId, infoResponse) }
             }
         }
@@ -613,7 +607,7 @@ class MediaService : MediaBrowserServiceCompat(), Playback.Callback, LifecycleOw
         cancel(autoVoteJob)
 
         val event = infoResponse.futureEvents.getOrNull(0) ?: return
-        autoVoteJob = serviceScope.launchWithDefaults("Auto Vote") {
+        autoVoteJob = lifecycleScope.launchWithDefaults("Auto Vote") {
             suspendRunCatching {
                 withContext(coroutineDispatchers.compute) {
                     val rules = rulesRepository.get()
@@ -678,12 +672,12 @@ class MediaService : MediaBrowserServiceCompat(), Playback.Callback, LifecycleOw
             faveSongDelegate.faveSongState
                 .filter { it.success }
                 .onEach { handleFavoriteCurrentSongChange(station, it) }
-                .launchWithDefaults(serviceScope + job, "Fave Song State Changed in Media Service")
+                .launchWithDefaults(lifecycleScope + job, "Fave Song State Changed in Media Service")
 
             voteSongDelegate.voteSongState
                 .filter { it.stationId == station.id }
                 .onEach { handleVoteSongEvent(it) }
-                .launchWithDefaults(serviceScope + job, "Vote Song State Changed in Media Service")
+                .launchWithDefaults(lifecycleScope + job, "Vote Song State Changed in Media Service")
         }
     }
 
@@ -788,7 +782,7 @@ class MediaService : MediaBrowserServiceCompat(), Playback.Callback, LifecycleOw
                     processStopRequest()
                 }
             }
-            .launchWithDefaults(serviceScope, "Connectivity Check to Resume Playback")
+            .launchWithDefaults(lifecycleScope, "Connectivity Check to Resume Playback")
     }
 
     class LocalBinder(val service: WeakReference<MediaService>) : Binder()
