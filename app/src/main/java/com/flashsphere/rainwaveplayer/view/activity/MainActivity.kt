@@ -8,7 +8,6 @@ import android.provider.MediaStore
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
-import androidx.core.content.IntentCompat
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.lifecycleScope
 import com.flashsphere.rainwaveplayer.R
@@ -24,6 +23,7 @@ import com.flashsphere.rainwaveplayer.service.MediaServiceConnection
 import com.flashsphere.rainwaveplayer.ui.drawer.DrawerItemHandler
 import com.flashsphere.rainwaveplayer.util.Analytics
 import com.flashsphere.rainwaveplayer.util.CoroutineDispatchers
+import com.flashsphere.rainwaveplayer.util.IntentUtils
 import com.flashsphere.rainwaveplayer.util.OperationError
 import com.flashsphere.rainwaveplayer.util.isTv
 import com.flashsphere.rainwaveplayer.view.activity.delegate.MainActivityDelegate
@@ -105,7 +105,7 @@ class MainActivity : BaseActivity() {
             return
         }
 
-        IntentCompat.getParcelableExtra(intent, INTENT_EXTRA_PARAM_STATION, Station::class.java)?.let {
+        IntentUtils.getParcelableExtra(intent, INTENT_EXTRA_PARAM_STATION, Station::class.java)?.let {
             Timber.d("Intent has Station %s", it.name)
             mainViewModel.station(it)
             return
@@ -163,16 +163,16 @@ class MainActivity : BaseActivity() {
     private fun createDrawerItemHandler(): DrawerItemHandler = DrawerItemHandler(
         stationClick = { mainViewModel.station(it) },
         allFavesClick = {
-            startActivity(AllFavesActivity.getCallingIntent(this))
+            AllFavesActivity.startActivity(this)
         },
         recentVotesClick = {
             mainViewModel.station.value?.let {
-                startActivity(RecentVotesActivity.getCallingIntent(this, it))
+                RecentVotesActivity.startActivity(this, it)
             }
         },
         requestHistoryClick = {
             mainViewModel.station.value?.let {
-                startActivity(RequestHistoryActivity.getCallingIntent(this, it))
+                RequestHistoryActivity.startActivity(this, it)
             }
         },
         discordClick = {

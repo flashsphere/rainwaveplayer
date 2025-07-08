@@ -9,7 +9,6 @@ import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSiz
 import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.platform.LocalConfiguration
-import androidx.core.content.IntentCompat
 import com.flashsphere.rainwaveplayer.model.station.Station
 import com.flashsphere.rainwaveplayer.repository.UserRepository
 import com.flashsphere.rainwaveplayer.ui.composition.LocalUiScreenConfig
@@ -17,6 +16,7 @@ import com.flashsphere.rainwaveplayer.ui.composition.LocalUiSettings
 import com.flashsphere.rainwaveplayer.ui.composition.UiScreenConfig
 import com.flashsphere.rainwaveplayer.ui.composition.UiSettings
 import com.flashsphere.rainwaveplayer.ui.screen.RequestHistoryScreen
+import com.flashsphere.rainwaveplayer.util.IntentUtils
 import com.flashsphere.rainwaveplayer.view.viewmodel.UserPagedListViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
@@ -34,7 +34,7 @@ class RequestHistoryActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
 
         val station = viewModel.station.value
-            ?: IntentCompat.getParcelableExtra(intent, INTENT_EXTRA_PARAM_STATION, Station::class.java)?.apply {
+            ?: IntentUtils.getParcelableExtra(intent, INTENT_EXTRA_PARAM_STATION, Station::class.java)?.apply {
                 viewModel.station(this)
             }
         if (station == null) {
@@ -50,7 +50,7 @@ class RequestHistoryActivity : BaseActivity() {
                 LocalUiScreenConfig provides UiScreenConfig(configuration, windowSizeClass),
                 LocalUiSettings provides UiSettings(NavigationSuiteType.None, dataStore),
             ) {
-                RequestHistoryScreen(viewModel = viewModel, onBackPress = { finish() })
+                RequestHistoryScreen(viewModel = viewModel, onBackPress = this::finish)
             }
         }
     }
@@ -58,9 +58,10 @@ class RequestHistoryActivity : BaseActivity() {
     companion object {
         private const val INTENT_EXTRA_PARAM_STATION = "com.flashsphere.data.station"
 
-        fun getCallingIntent(context: Context, station: Station): Intent {
-            return Intent(context, RequestHistoryActivity::class.java)
+        fun startActivity(context: Context, station: Station) {
+            val intent = Intent(context, RequestHistoryActivity::class.java)
                 .putExtra(INTENT_EXTRA_PARAM_STATION, station)
+            context.startActivity(intent)
         }
     }
 }

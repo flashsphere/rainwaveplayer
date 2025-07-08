@@ -6,11 +6,11 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.os.Parcelable
-import androidx.core.content.IntentCompat
 import com.flashsphere.rainwaveplayer.R
 import com.flashsphere.rainwaveplayer.model.song.Song
 import com.flashsphere.rainwaveplayer.model.station.Station
 import com.flashsphere.rainwaveplayer.service.MediaService
+import com.flashsphere.rainwaveplayer.util.IntentUtils
 import com.flashsphere.rainwaveplayer.util.JobUtils.cancel
 import com.flashsphere.rainwaveplayer.util.PendingIntentUtils.getPendingIntentFlags
 import com.flashsphere.rainwaveplayer.view.viewmodel.FaveSongDelegate
@@ -29,7 +29,7 @@ class FavoriteSongIntentHandler(
             return false
         }
 
-        val favoriteSong = IntentCompat.getParcelableExtra(intent, EXTRA_FAVORITE_SONG, FavoriteSong::class.java)
+        val favoriteSong = IntentUtils.getParcelableExtra(intent, EXTRA_FAVORITE_SONG, FavoriteSong::class.java)
             ?: return true
 
         cancel(faveSongJob)

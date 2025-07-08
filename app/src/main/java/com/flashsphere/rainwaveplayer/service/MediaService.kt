@@ -62,6 +62,7 @@ import com.flashsphere.rainwaveplayer.util.Analytics
 import com.flashsphere.rainwaveplayer.util.CoroutineDispatchers
 import com.flashsphere.rainwaveplayer.util.ErrorUtils
 import com.flashsphere.rainwaveplayer.util.ErrorUtils.isRetryable
+import com.flashsphere.rainwaveplayer.util.IntentUtils
 import com.flashsphere.rainwaveplayer.util.JobUtils.cancel
 import com.flashsphere.rainwaveplayer.util.OperationError
 import com.flashsphere.rainwaveplayer.view.viewmodel.FaveSongDelegate
@@ -357,7 +358,7 @@ class MediaService : MediaBrowserServiceCompat(), Playback.Callback, LifecycleOw
                 findAndPlayStationUsingQuery(intent.getStringExtra(EXTRA_PARAM_QUERY))
             }
             ACTION_PLAY_FROM_STATION -> {
-                IntentCompat.getParcelableExtra(intent, EXTRA_PARAM_STATION, Station::class.java)?.let {
+                IntentUtils.getParcelableExtra(intent, EXTRA_PARAM_STATION, Station::class.java)?.let {
                     processPlayRequest(it)
                 }
             }

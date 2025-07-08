@@ -34,14 +34,15 @@ class AllFavesActivity : BaseActivity() {
                 LocalUiScreenConfig provides UiScreenConfig(configuration, windowSizeClass),
                 LocalUiSettings provides UiSettings(NavigationSuiteType.None, dataStore),
             ) {
-                AllFavesScreen(viewModel = viewModel, onBackPress = { finish() })
+                AllFavesScreen(viewModel = viewModel, onBackPress = this::finish)
             }
         }
     }
 
     companion object {
-        fun getCallingIntent(context: Context): Intent {
-            return Intent(context, AllFavesActivity::class.java)
+        fun startActivity(context: Context) {
+            val intent = Intent(context, AllFavesActivity::class.java)
+            context.startActivity(intent)
         }
     }
 }
