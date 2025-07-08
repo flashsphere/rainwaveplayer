@@ -9,11 +9,13 @@ import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSiz
 import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.platform.LocalConfiguration
+import com.flashsphere.rainwaveplayer.model.station.Station
 import com.flashsphere.rainwaveplayer.ui.composition.LocalUiScreenConfig
 import com.flashsphere.rainwaveplayer.ui.composition.LocalUiSettings
 import com.flashsphere.rainwaveplayer.ui.composition.UiScreenConfig
 import com.flashsphere.rainwaveplayer.ui.composition.UiSettings
 import com.flashsphere.rainwaveplayer.ui.screen.AllFavesScreen
+import com.flashsphere.rainwaveplayer.util.IntentUtils
 import com.flashsphere.rainwaveplayer.view.viewmodel.UserPagedListViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -25,6 +27,15 @@ class AllFavesActivity : BaseActivity() {
     @OptIn(ExperimentalMaterial3WindowSizeClassApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        val station = viewModel.station.value
+            ?: IntentUtils.getParcelableExtra(intent, INTENT_EXTRA_PARAM_STATION, Station::class.java)?.apply {
+                viewModel.station(this)
+            }
+        if (station == null) {
+            finish()
+            return
+        }
 
         setContent("AllFavesScreen") {
             val configuration = LocalConfiguration.current
@@ -40,8 +51,12 @@ class AllFavesActivity : BaseActivity() {
     }
 
     companion object {
-        fun startActivity(context: Context) {
+        private const val INTENT_EXTRA_PARAM_STATION = "com.flashsphere.data.station"
+
+        fun startActivity(context: Context, station: Station) {
             val intent = Intent(context, AllFavesActivity::class.java)
+                .putExtra(INTENT_EXTRA_PARAM_STATION, station)
+
             context.startActivity(intent)
         }
     }

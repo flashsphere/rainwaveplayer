@@ -8,6 +8,7 @@ import timber.log.Timber
 
 class AllFavesPagingSource(
     private val rainwaveService: RainwaveService,
+    private val stationId: Int,
 ) : PagingSource<Int, Song>() {
     override fun getRefreshKey(state: PagingState<Int, Song>): Int? {
         return null
@@ -18,7 +19,7 @@ class AllFavesPagingSource(
         Timber.d("key = %d, load size = %d", key, params.loadSize)
 
         return runCatching {
-            val response = rainwaveService.allFaves(params.loadSize, key)
+            val response = rainwaveService.allFaves(stationId, params.loadSize, key)
             val songs = response.songs
             LoadResult.Page(
                 data = songs,

@@ -81,64 +81,6 @@ import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun PagedSongs(
-    flow: Flow<PagingData<SongState>>,
-    events: Flow<SnackbarEvent>,
-    onFaveClick: (song: SongState) -> Unit,
-    onBackPress: () -> Unit
-) {
-    val scope = rememberCoroutineScope()
-    val scrollToTop = remember { mutableStateOf(false) }
-
-    val windowInsets = WindowInsets.systemBars.only(WindowInsetsSides.Horizontal + WindowInsetsSides.Bottom)
-        .union(WindowInsets.displayCutout.only(WindowInsetsSides.Horizontal))
-
-    AppScaffold(
-        modifier = Modifier.windowInsetsPadding(windowInsets),
-        navigationIcon = {
-            BackIcon(onBackPress)
-        },
-        appBarContent = {
-            AppBarTitle(
-                title = stringResource(id = R.string.all_faves),
-                onClick = { scope.launch { scrollToTop.value = true } },
-            )
-        },
-        appBarScrollBehavior = enterAlwaysScrollBehavior(scrollToTop = scrollToTop),
-        snackbarEvents = events,
-    ) {
-        val data = flow.collectAsLazyPagingItems()
-
-        val refreshLoadState = data.loadState.refresh
-        val refreshing = refreshLoadState is LoadState.Loading
-        val noResults = data.loadState.let {
-            it.source.refresh is LoadState.NotLoading && it.append.endOfPaginationReached &&
-                data.itemCount == 0
-        }
-        val retry = { data.refresh() }
-
-        PullToRefreshBox(
-            modifier = Modifier.fillMaxSize(),
-            isRefreshing = refreshing,
-            onRefresh = retry,
-            contentAlignment = Alignment.TopCenter
-        ) {
-            PagedSongList(data, onFaveClick, scrollToTop)
-
-            if (noResults) {
-                Text(
-                    text = stringResource(id = R.string.no_results),
-                    Modifier.padding(top = 20.dp)
-                )
-            }
-        }
-
-        PagedSongsError(data, snackbarHostState, retry)
-    }
-}
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
 fun PagedSongsWithStationSelector(
     flow: Flow<PagingData<SongState>>,
     stationsScreenStateFlow: StateFlow<StationsScreenState>,
@@ -378,21 +320,6 @@ class PagingDataPreviewProvider :
             )
         ),
     )
-}
-
-@Preview
-@Composable
-private fun PagedSongsPreview(
-    @PreviewParameter(PagingDataPreviewProvider::class) pagingData: PagingData<SongState>,
-) {
-    PreviewTheme {
-        PagedSongs(
-            flow = remember { MutableStateFlow(pagingData) },
-            events = remember { MutableSharedFlow() },
-            onFaveClick = {},
-            onBackPress = {}
-        )
-    }
 }
 
 @Preview

@@ -641,10 +641,10 @@ class StationRepository @Inject constructor(
         Timber.d("Completed auto request.")
     }
 
-    fun allFaves(pagingConfig: PagingConfig): Pager<Int, Song> {
+    fun allFaves(stationId: Int, pagingConfig: PagingConfig): Pager<Int, Song> {
         return Pager(
             config = pagingConfig,
-            pagingSourceFactory = { AllFavesPagingSource(rainwaveService) }
+            pagingSourceFactory = { AllFavesPagingSource(rainwaveService, stationId) }
         )
     }
 

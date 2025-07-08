@@ -10,7 +10,6 @@ import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.platform.LocalConfiguration
 import com.flashsphere.rainwaveplayer.model.station.Station
-import com.flashsphere.rainwaveplayer.repository.UserRepository
 import com.flashsphere.rainwaveplayer.ui.composition.LocalUiScreenConfig
 import com.flashsphere.rainwaveplayer.ui.composition.LocalUiSettings
 import com.flashsphere.rainwaveplayer.ui.composition.UiScreenConfig
@@ -19,13 +18,9 @@ import com.flashsphere.rainwaveplayer.ui.screen.RequestHistoryScreen
 import com.flashsphere.rainwaveplayer.util.IntentUtils
 import com.flashsphere.rainwaveplayer.view.viewmodel.UserPagedListViewModel
 import dagger.hilt.android.AndroidEntryPoint
-import javax.inject.Inject
 
 @AndroidEntryPoint
 class RequestHistoryActivity : BaseActivity() {
-
-    @Inject
-    lateinit var userRepository: UserRepository
 
     private val viewModel: UserPagedListViewModel by viewModels()
 

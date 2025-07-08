@@ -86,18 +86,21 @@ class UserPagedListViewModel @Inject constructor(
             .launchWithDefaults(viewModelScope, "Stations in Paged List")
     }
 
-    val allFaves: Flow<PagingData<SongState>> =
-        stationRepository.allFaves(PagingConfig(pageSize = 30, enablePlaceholders = false))
-            .flow
-            .map { pagingData -> pagingData.map { song -> SongState(song) } }
-            .cachedIn(viewModelScope)
-            .combine(updatedItems) { pagingData, updated ->
-                pagingData.map { song ->
-                    song.also {
-                        it.favorite.value = updated.getOrDefault(it.id, it.favorite.value)
+    @OptIn(ExperimentalCoroutinesApi::class)
+    val allFaves: Flow<PagingData<SongState>> = station.filterNotNull()
+        .flatMapLatest { station ->
+            stationRepository.allFaves(station.id, PagingConfig(pageSize = 30, enablePlaceholders = false))
+                .flow
+                .map { pagingData -> pagingData.map { song -> SongState(song) } }
+                .cachedIn(viewModelScope)
+                .combine(updatedItems) { pagingData, updated ->
+                    pagingData.map { song ->
+                        song.also {
+                            it.favorite.value = updated.getOrDefault(it.id, it.favorite.value)
+                        }
                     }
                 }
-            }
+        }
 
     @OptIn(ExperimentalCoroutinesApi::class)
     val recentVotes: Flow<PagingData<SongState>> = station.filterNotNull()

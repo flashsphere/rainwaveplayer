@@ -132,7 +132,8 @@ interface RainwaveService {
 
     @FormUrlEncoded
     @POST("all_faves")
-    suspend fun allFaves(@Field("per_page") perPage: Int,
+    suspend fun allFaves(@Field("sid") stationId: Int,
+                         @Field("per_page") perPage: Int,
                          @Field("page_start") pageStart: Int): AllFavesResponse
 
     @FormUrlEncoded

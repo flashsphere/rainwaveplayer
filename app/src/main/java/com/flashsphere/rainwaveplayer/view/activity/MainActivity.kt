@@ -163,7 +163,9 @@ class MainActivity : BaseActivity() {
     private fun createDrawerItemHandler(): DrawerItemHandler = DrawerItemHandler(
         stationClick = { mainViewModel.station(it) },
         allFavesClick = {
-            AllFavesActivity.startActivity(this)
+            mainViewModel.station.value?.let {
+                AllFavesActivity.startActivity(this, it)
+            }
         },
         recentVotesClick = {
             mainViewModel.station.value?.let {
