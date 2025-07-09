@@ -16,6 +16,7 @@ import com.flashsphere.rainwaveplayer.ui.rating.Rating
 import com.flashsphere.rainwaveplayer.ui.screen.PreviewTv
 import com.flashsphere.rainwaveplayer.ui.screen.PreviewTvTheme
 import com.flashsphere.rainwaveplayer.view.uistate.RatingState
+import com.flashsphere.rainwaveplayer.view.uistate.model.IdName
 
 @Composable
 fun TvRatingDialog(
@@ -61,8 +62,7 @@ private fun TvRatingDialogPreview() {
         TvRatingDialog(ratingState = remember {
             mutableStateOf(
                 RatingState(
-                    songId = 1,
-                    songTitle = "Song title",
+                    song = IdName(1, "Song title"),
                     rating = 3.5F,
                 )
             )

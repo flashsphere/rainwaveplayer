@@ -102,14 +102,17 @@ fun NavigationGraph(
         popEnterTransition = popEnterTransition,
         popExitTransition = popExitTransition,
     ) {
-        composable<NowPlayingRoute> {
-            StationInfoScreen(
-                navController = navController,
-                viewModel = mainViewModel,
-                scrollToTop = scrollToTop,
-                onMenuClick = openDrawer,
-            )
-            DrawerOpenBackHandler(drawerState, closeDrawer)
+        navigation<NowPlayingRoute>(startDestination = NowPlaying) {
+            composable<NowPlaying> {
+                StationInfoScreen(
+                    navController = navController,
+                    viewModel = mainViewModel,
+                    scrollToTop = scrollToTop,
+                    onMenuClick = openDrawer,
+                )
+                DrawerOpenBackHandler(drawerState, closeDrawer)
+            }
+            detailComposables(navController, mainViewModel.station)
         }
         composable<RequestsRoute> {
             RequestsScreen(

@@ -36,7 +36,7 @@ interface DetailRoute
 object NowPlayingRoute : Route {
     override val title: Int = R.string.now_playing
     override val icon: Int = R.drawable.ic_now_playing_white_24dp
-    override val startDestination = this
+    override val startDestination = NowPlaying
 }
 @Serializable object RequestsRoute : Route {
     override val title: Int = R.string.action_requests
@@ -54,6 +54,7 @@ object NowPlayingRoute : Route {
     override val startDestination = Search
 }
 
+@Serializable object NowPlaying: DetailRoute
 @Serializable object Library: DetailRoute
 @Serializable object Search: DetailRoute
 @Serializable data class AlbumDetail(val id: Int, val name: String): DetailRoute

@@ -23,6 +23,8 @@ class SongState(
     val votingAllowed: Boolean,
     val ratingAllowed: Boolean,
     val length: Long,
+    val albums: List<AlbumState>,
+    val artists: List<ArtistState>,
     override val key: String = "song-${id}",
 ): CategoryDetailItem, ArtistDetailItem {
     constructor(song: Song) : this(
@@ -40,5 +42,7 @@ class SongState(
         votingAllowed = song.votingAllowed,
         ratingAllowed = song.ratingAllowed,
         length = song.length,
+        albums = song.albums.map { AlbumState(it.id, it.name) },
+        artists = song.artists.map { ArtistState(it.id, it.name) },
     )
 }

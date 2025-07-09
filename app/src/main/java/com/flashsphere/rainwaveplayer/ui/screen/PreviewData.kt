@@ -50,6 +50,8 @@ val songStateData = listOf(SongState(
     votingAllowed = true,
     ratingAllowed = true,
     length = 123,
+    albums = listOf(AlbumState(2860, "Music System 2013")),
+    artists = listOf(ArtistState(1470, "Zebes System")),
 ), SongState(
     id = 4738,
     title = "Zelda: Link's Awakening - Tal Tal Heights",
@@ -65,6 +67,8 @@ val songStateData = listOf(SongState(
     votingAllowed = true,
     ratingAllowed = true,
     length = 123,
+    albums = listOf(AlbumState(262, "Super Smash Bros. Brawl")),
+    artists = listOf(ArtistState(10550, "Yusuke Takahama")),
 ), SongState(
     id = 6213,
     title = "To the Other Side of the Sea",
@@ -80,9 +84,15 @@ val songStateData = listOf(SongState(
     votingAllowed = false,
     ratingAllowed = false,
     length = 123,
+    albums = listOf(AlbumState(643, "Twinbee Yahho!")),
+    artists = listOf(
+        ArtistState(16516, "Akihiro Juichiya"),
+        ArtistState(16621, "Kazuhiro Senoo"),
+        ArtistState(9428, "Naoki Maeda")
+    ),
 ), SongState(
     id = 28756,
-    title = "Possessed by Disease",
+    title = "Song of the Ancients / Devola",
     albumName = "NieR Music Concert & Talk Live Soundtrack",
     artistName = "MONACA",
     rating = 3.9F,
@@ -95,6 +105,8 @@ val songStateData = listOf(SongState(
     votingAllowed = true,
     ratingAllowed = false,
     length = 123,
+    albums = listOf(AlbumState(3300, "NieR Music Concert & Talk Live Soundtrack")),
+    artists = listOf(ArtistState(22572, "MONACA")),
 ), SongState(
     id = 35738,
     title = "Airship",
@@ -110,12 +122,14 @@ val songStateData = listOf(SongState(
     votingAllowed = true,
     ratingAllowed = false,
     length = 123,
+    albums = listOf(AlbumState(3986, "Penny Arcade Adventures: On The Rain-Slick Precipice Of Darkness: Episode 4")),
+    artists = listOf(ArtistState(9262, "HyperDuck SoundWorks")),
 ))
 
 val albumStateData = listOf(
     AlbumState(
         id = 3763,
-        name = songStateData[2].albumName,
+        name = ".hack//G.U.",
         art = "/album_art/1_3763",
         rating = 3.9F,
         ratingUser = 3.9F,
@@ -127,8 +141,8 @@ val albumStateData = listOf(
         songs = mutableStateListOf(songStateData[1], songStateData[2]),
     ), AlbumState(
         id = 3764,
-        name = songStateData[4].albumName,
-        art = "/album_art/1_3763",
+        name = ".hack//Infection",
+        art = "/album_art/1_3764",
         rating = 3.9F,
         ratingUser = 0F,
         cool = false,

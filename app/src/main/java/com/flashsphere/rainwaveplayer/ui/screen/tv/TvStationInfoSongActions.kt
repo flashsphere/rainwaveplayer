@@ -239,7 +239,7 @@ private fun RateAction(
         val ratingState = remember { mutableStateOf<RatingState?>(null) }
         TvListItem(
             modifier = modifier,
-            onClick = { ratingState.value = RatingState(song.id, song.title, song.ratingUser.floatValue) },
+            onClick = { ratingState.value = RatingState(song) },
             text = stringResource(R.string.action_rate),
         )
         TvRatingDialog(

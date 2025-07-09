@@ -318,7 +318,7 @@ private fun RatingButton(
     }
     Button(
         modifier = modifier,
-        onClick = { ratingState.value = RatingState(song.id, song.title, song.ratingUser.floatValue) },
+        onClick = { ratingState.value = RatingState(song) },
         colors = color,
     ) {
         Text(text = Formatter.formatRating(rating))

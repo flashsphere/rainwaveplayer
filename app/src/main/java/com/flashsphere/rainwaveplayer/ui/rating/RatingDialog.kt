@@ -17,6 +17,7 @@ import com.flashsphere.rainwaveplayer.ui.alertdialog.CustomAlertDialog
 import com.flashsphere.rainwaveplayer.ui.screen.Preview
 import com.flashsphere.rainwaveplayer.ui.screen.PreviewTheme
 import com.flashsphere.rainwaveplayer.view.uistate.RatingState
+import com.flashsphere.rainwaveplayer.view.uistate.model.IdName
 
 @Composable
 fun RatingDialog(
@@ -76,8 +77,7 @@ private fun RatingDialogPreview() {
         RatingDialog(ratingState = remember {
             mutableStateOf(
                 RatingState(
-                    songId = 1,
-                    songTitle = "Song title",
+                    song = IdName(1, "Song title"),
                     rating = 3.5F,
                 )
             )

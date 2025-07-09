@@ -78,6 +78,7 @@ import com.flashsphere.rainwaveplayer.ui.AppScaffold
 import com.flashsphere.rainwaveplayer.ui.BackIcon
 import com.flashsphere.rainwaveplayer.ui.MenuIcon
 import com.flashsphere.rainwaveplayer.ui.PullToRefreshBox
+import com.flashsphere.rainwaveplayer.ui.ToastHandler
 import com.flashsphere.rainwaveplayer.ui.animateScrollToItem
 import com.flashsphere.rainwaveplayer.ui.animation.fadeIn
 import com.flashsphere.rainwaveplayer.ui.animation.fadeOut
@@ -108,7 +109,7 @@ import sh.calvin.reorderable.ReorderableCollectionItemScope
 import sh.calvin.reorderable.ReorderableItem
 import sh.calvin.reorderable.rememberReorderableLazyGridState
 
-var longPressHintShown = false
+var requestsLongPressHintShown = false
 
 @Composable
 fun RequestsScreen(
@@ -120,10 +121,9 @@ fun RequestsScreen(
 ) {
     val station = stationFlow.collectAsStateWithLifecycle().value ?: return
 
-    val scope = rememberCoroutineScope()
     val context = LocalContext.current
 
-    val toast = remember { mutableStateOf<Toast?>(null) }
+    val toastState = remember { mutableStateOf<Toast?>(null) }
 
     val requestsScreenState = viewModel.requestsScreenState.collectAsStateWithLifecycle().value
 
@@ -132,7 +132,6 @@ fun RequestsScreen(
 
         onStopOrDispose {
             viewModel.unsubscribeStationInfo()
-            scope.launch { toast.value?.cancel() }
         }
     }
 
@@ -149,10 +148,8 @@ fun RequestsScreen(
         onReorderItemToTop = { request, index ->
             if (index != 0) {
                 viewModel.reorderItemToTop(request, index)
-                scope.launch {
-                    toast.value?.cancel()
-                    longPressHintShown = true
-                }
+                requestsLongPressHintShown = true
+                toastState.value?.cancel()
             }
         },
         onRequestUnratedClick = viewModel::requestUnrated,
@@ -160,20 +157,17 @@ fun RequestsScreen(
         onResumeClick = viewModel::resumeQueue,
         onSuspendClick = viewModel::suspendQueue,
         onRequestClick = {
-            if (!longPressHintShown) {
-                longPressHintShown = true
-                scope.launch {
-                    toast.value = Toast.makeText(
-                        context,
-                        context.getString(R.string.requests_long_press_hint),
-                        Toast.LENGTH_LONG)
-                        .apply { show() }
-                }
+            if (!requestsLongPressHintShown) {
+                requestsLongPressHintShown = true
+                toastState.value = Toast.makeText(context, R.string.requests_long_press_hint,
+                    Toast.LENGTH_LONG)
             }
         },
         onMenuClick = onMenuClick,
         scrollToTop = scrollToTop,
     )
+
+    ToastHandler(state = toastState)
 }
 
 @OptIn(ExperimentalMaterial3Api::class)

@@ -1,19 +1,24 @@
 package com.flashsphere.rainwaveplayer.ui.screen
 
+import android.widget.Toast
 import androidx.activity.compose.ReportDrawnWhen
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.focusable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -23,20 +28,27 @@ import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.itemsIndexed
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowRight
 import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.filled.ArrowDropUp
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.ripple
 import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.key
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -91,6 +103,8 @@ import com.flashsphere.rainwaveplayer.ui.MenuIcon
 import com.flashsphere.rainwaveplayer.ui.OtherRequestor
 import com.flashsphere.rainwaveplayer.ui.PullToRefreshBox
 import com.flashsphere.rainwaveplayer.ui.SelfRequestor
+import com.flashsphere.rainwaveplayer.ui.ToastHandler
+import com.flashsphere.rainwaveplayer.ui.alertdialog.CustomAlertDialog
 import com.flashsphere.rainwaveplayer.ui.animateScrollToItem
 import com.flashsphere.rainwaveplayer.ui.appbar.AppBarActions
 import com.flashsphere.rainwaveplayer.ui.appbar.toAppBarAction
@@ -101,9 +115,12 @@ import com.flashsphere.rainwaveplayer.ui.enterAlwaysScrollBehavior
 import com.flashsphere.rainwaveplayer.ui.item.AlbumArt
 import com.flashsphere.rainwaveplayer.ui.item.HorizontalSeparator
 import com.flashsphere.rainwaveplayer.ui.itemsSpan
+import com.flashsphere.rainwaveplayer.ui.navigation.AlbumDetail
+import com.flashsphere.rainwaveplayer.ui.navigation.ArtistDetail
 import com.flashsphere.rainwaveplayer.ui.navigation.LibraryRoute
 import com.flashsphere.rainwaveplayer.ui.navigation.RequestsRoute
 import com.flashsphere.rainwaveplayer.ui.navigation.SearchRoute
+import com.flashsphere.rainwaveplayer.ui.navigation.navigateToDetail
 import com.flashsphere.rainwaveplayer.ui.rating.RatingDialog
 import com.flashsphere.rainwaveplayer.ui.rating.RatingText
 import com.flashsphere.rainwaveplayer.ui.theme.AppTypography
@@ -116,6 +133,7 @@ import com.flashsphere.rainwaveplayer.util.UserCredentials
 import com.flashsphere.rainwaveplayer.util.getTimeRemaining
 import com.flashsphere.rainwaveplayer.util.isLoggedIn
 import com.flashsphere.rainwaveplayer.view.uistate.RatingState
+import com.flashsphere.rainwaveplayer.view.uistate.SongActionState
 import com.flashsphere.rainwaveplayer.view.uistate.StationInfoScreenState
 import com.flashsphere.rainwaveplayer.view.uistate.event.SnackbarEvent
 import com.flashsphere.rainwaveplayer.view.uistate.model.AlbumState
@@ -144,6 +162,8 @@ import kotlinx.coroutines.launch
 import timber.log.Timber
 import kotlin.math.max
 import kotlin.time.Duration.Companion.seconds
+
+var stationInfoLongPressHintShown = false
 
 @Composable
 fun StationInfoScreen(
@@ -208,9 +228,12 @@ private fun StationInfoScreen(
     onMenuClick: () -> Unit,
     onPlaybackClick: () -> Unit,
 ) {
+    val context = LocalContext.current
     val focusRequester = remember { FocusRequester() }
     val scope = rememberCoroutineScope()
     val ratingState = rememberSaveable { mutableStateOf<RatingState?>(null) }
+    val songActionsState = rememberSaveable { mutableStateOf<SongActionState?>(null) }
+    val toastState = remember { mutableStateOf<Toast?>(null) }
 
     LaunchedEffect(Unit) {
         focusRequester.requestFocus()
@@ -283,18 +306,49 @@ private fun StationInfoScreen(
                     onPreviousPlayedHeaderClick = onPreviousPlayedHeaderClick,
                     onVoteClick = onVoteClick,
                     onRateClick = { song, i ->
-                        ratingState.value = RatingState(song.id, song.title, song.ratingUser.floatValue)
+                        ratingState.value = RatingState(song)
                     },
                     onFaveSongClick = onFaveSongClick,
-                    onFaveAlbumClick = onFaveAlbumClick)
+                    onFaveAlbumClick = onFaveAlbumClick,
+                    onSongActionsClick = {
+                        songActionsState.value = SongActionState(it)
+                        stationInfoLongPressHintShown = true
+                        toastState.value = null
+                    },
+                    showLongPressHint = {
+                        if (!stationInfoLongPressHintShown) {
+                            stationInfoLongPressHintShown = true
+                            toastState.value = Toast.makeText(context, R.string.tv_song_long_press_hint,
+                                Toast.LENGTH_LONG)
+                        }
+                    },
+                )
             }
 
             CastInfo(modifier = Modifier.align(Alignment.BottomStart), castState = castState)
         }
 
+        SongActionsDialog(
+            state = songActionsState,
+            onRateClick = {
+                songActionsState.value = null
+                ratingState.value = it.toRatingState()
+            },
+            onAlbumClick = {
+                songActionsState.value = null
+                navController.navigateToDetail(it)
+            },
+            onArtistClick = {
+                songActionsState.value = null
+                navController.navigateToDetail(it)
+            },
+        )
+
         RatingDialog(ratingState = ratingState,
             onRemoveRating = onRemoveRatingClick,
             onRate = onRateClick)
+
+        ToastHandler(state = toastState)
 
         AppError(error = screenState.error, onRetry = onRetry)
     }
@@ -337,7 +391,9 @@ private fun StationInfoList(
     onVoteClick: (item: ComingUpSongItem) -> Unit,
     onRateClick: (song: SongState, position: Int) -> Unit,
     onFaveSongClick: (song: SongState, position: Int) -> Unit,
-    onFaveAlbumClick: (album: AlbumState, position: Int) -> Unit
+    onFaveAlbumClick: (album: AlbumState, position: Int) -> Unit,
+    onSongActionsClick: (SongState) -> Unit,
+    showLongPressHint: () -> Unit,
 ) {
     val scope = rememberCoroutineScope()
     val gridState = rememberLazyGridState()
@@ -390,8 +446,15 @@ private fun StationInfoList(
                 }
                 is PreviouslyPlayedSongItem -> {
                     Box(modifier = Modifier.animateItem()) {
-                        val onClick = if (isLoggedIn && item.data.song.ratingAllowed) {
-                            { onRateClick(item.data.song, i) }
+                        val onClick = when {
+                            !isLoggedIn -> null
+                            item.data.song.ratingAllowed -> {
+                                { onRateClick(item.data.song, i) }
+                            }
+                            else -> { showLongPressHint }
+                        }
+                        val onLongClick = if (isLoggedIn) {
+                            { onSongActionsClick(item.data.song) }
                         } else {
                             null
                         }
@@ -399,6 +462,7 @@ private fun StationInfoList(
                             item = item.data,
                             index = i,
                             onClick = onClick,
+                            onLongClick = onLongClick,
                             onFaveSongClick = onFaveSongClick,
                             onFaveAlbumClick = onFaveAlbumClick,
                             showGlobalRating = !LocalUiSettings.current.hideRatingsUntilRated,
@@ -412,8 +476,15 @@ private fun StationInfoList(
                 }
                 is NowPlayingSongItem -> {
                     Box(modifier = Modifier.animateItem()) {
-                        val onClick = if (isLoggedIn && item.data.song.ratingAllowed) {
-                            { onRateClick(item.data.song, i) }
+                        val onClick = when {
+                            !isLoggedIn -> null
+                            item.data.song.ratingAllowed -> {
+                                { onRateClick(item.data.song, i) }
+                            }
+                            else -> { showLongPressHint }
+                        }
+                        val onLongClick = if (isLoggedIn) {
+                            { onSongActionsClick(item.data.song) }
                         } else {
                             null
                         }
@@ -421,6 +492,7 @@ private fun StationInfoList(
                             item = item.data,
                             index = i,
                             onClick = onClick,
+                            onLongClick = onLongClick,
                             onFaveSongClick = onFaveSongClick,
                             onFaveAlbumClick = onFaveAlbumClick,
                             showGlobalRating = !LocalUiSettings.current.hideRatingsUntilRated,
@@ -435,8 +507,15 @@ private fun StationInfoList(
                 is ComingUpSongItem -> {
                     Box(modifier = Modifier.animateItem()) {
                         val song = item.data.song
-                        val onClick = if (isLoggedIn && song.votingAllowed && !song.voted.value) {
-                            { onVoteClick(item) }
+                        val onClick = when {
+                            !isLoggedIn -> null
+                            song.votingAllowed && !song.voted.value -> {
+                                { onVoteClick(item) }
+                            }
+                            else -> { showLongPressHint }
+                        }
+                        val onLongClick = if (isLoggedIn) {
+                            { onSongActionsClick(item.data.song) }
                         } else {
                             null
                         }
@@ -444,6 +523,7 @@ private fun StationInfoList(
                             item = item.data,
                             index = i,
                             onClick = onClick,
+                            onLongClick = onLongClick,
                             onFaveSongClick = onFaveSongClick,
                             onFaveAlbumClick = onFaveAlbumClick,
                             showGlobalRating = !LocalUiSettings.current.hideRatingsUntilRated,
@@ -551,6 +631,7 @@ private fun StationInfoSong(
     index: Int,
     showGlobalRating: Boolean,
     onClick: (() -> Unit)?,
+    onLongClick: (() -> Unit)?,
     onFaveSongClick: (song: SongState, position: Int) -> Unit,
     onFaveAlbumClick: (album: AlbumState, position: Int) -> Unit,
 ) {
@@ -567,7 +648,11 @@ private fun StationInfoSong(
         .then(background)
         .fillMaxWidth()
         .height(IntrinsicSize.Max)
-        .clickable(enabled = onClick != null, onClick = { onClick?.invoke() })
+        .combinedClickable(
+            enabled = (onClick != null || onLongClick != null),
+            onClick = { onClick?.invoke() },
+            onLongClick = { onLongClick?.invoke() },
+        )
         .padding(start = 8.dp, top = 4.dp, end = 8.dp, bottom = 4.dp)) {
 
         AlbumImage(item = item)
@@ -766,5 +851,115 @@ private fun StationInfoScreenPreview(
             onMenuClick = {},
             onPlaybackClick = {},
         )
+    }
+}
+
+@Composable
+private fun SongActionsDialog(
+    state: MutableState<SongActionState?>,
+    onRateClick: (SongActionState) -> Unit,
+    onAlbumClick: (AlbumDetail) -> Unit,
+    onArtistClick: (ArtistDetail) -> Unit,
+) {
+    val song = state.value ?: return
+
+    CustomAlertDialog(
+        onDismissRequest = { state.value = null },
+        content = {
+            Column(Modifier.padding(top = 24.dp, bottom = 16.dp)) {
+                SongActions(modifier = Modifier.weight(weight = 1F, fill = false),
+                    song = song, onRateClick = onRateClick, onAlbumClick = onAlbumClick,
+                    onArtistClick = onArtistClick)
+
+                TextButton(
+                    onClick = { state.value = null },
+                    modifier = Modifier.align(Alignment.End).padding(end = 24.dp),
+                ) {
+                    Text(text = stringResource(id = R.string.action_close))
+                }
+            }
+        },
+    )
+}
+
+@Composable
+private fun SongActions(
+    modifier: Modifier = Modifier,
+    song: SongActionState,
+    onRateClick: (SongActionState) -> Unit,
+    onAlbumClick: (AlbumDetail) -> Unit,
+    onArtistClick: (ArtistDetail) -> Unit,
+) {
+    Column(modifier.verticalScroll(rememberScrollState())) {
+        Text(text = song.songTitle, modifier = Modifier.padding(horizontal = 24.dp),
+            style = AppTypography.titleLarge)
+
+        if (song.ratingAllowed) {
+            Spacer(Modifier.height(4.dp))
+            SongActionItem({ onRateClick(song) }) {
+                Text(stringResource(R.string.action_rate), modifier = Modifier.weight(1F),
+                    style = AppTypography.bodyLarge)
+                Icon(imageVector = Icons.AutoMirrored.Filled.ArrowRight,
+                    contentDescription = null)
+            }
+        }
+        SongActionHeaderItem(text = stringResource(R.string.albums))
+        song.albums.forEach {
+            key("album-${it.id}") {
+                SongActionItem({ onAlbumClick(AlbumDetail(it.id, it.name)) }) {
+                    Text(it.name, modifier = Modifier.weight(1F),
+                        style = AppTypography.bodyLarge)
+                    Icon(imageVector = Icons.AutoMirrored.Filled.ArrowRight,
+                        contentDescription = null)
+                }
+            }
+        }
+        SongActionHeaderItem(text = stringResource(R.string.artists))
+        song.artists.forEach {
+            key("artist-${it.id}") {
+                SongActionItem({ onArtistClick(ArtistDetail(it.id, it.name)) }) {
+                    Text(it.name, modifier = Modifier.weight(1F),
+                        style = AppTypography.bodyLarge)
+                    Icon(imageVector = Icons.AutoMirrored.Filled.ArrowRight,
+                        contentDescription = null)
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun SongActionHeaderItem(text: String) {
+    Column(Modifier.padding(horizontal = 24.dp).padding(top = 16.dp)) {
+        Text(text = text.uppercase(), style = AppTypography.bodySmall)
+        Spacer(Modifier.height(4.dp))
+        HorizontalDivider()
+    }
+}
+
+@Composable
+private fun SongActionItem(
+    onClick: () -> Unit,
+    content: @Composable RowScope.() -> Unit,
+) {
+    Row(modifier = Modifier.heightIn(36.dp).clickable(onClick = onClick).padding(vertical = 10.dp, horizontal = 24.dp),
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        content()
+    }
+}
+
+@Preview
+@Composable
+private fun SongActionsDialogPreview() {
+    PreviewTheme {
+        Surface {
+            SongActionsDialog(
+                state = remember { mutableStateOf(SongActionState(songStateData[4])) },
+                onRateClick = {},
+                onAlbumClick = {},
+                onArtistClick = {},
+            )
+        }
     }
 }
