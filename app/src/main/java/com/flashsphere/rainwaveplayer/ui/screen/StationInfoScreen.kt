@@ -4,9 +4,7 @@ import android.widget.Toast
 import androidx.activity.compose.ReportDrawnWhen
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.focusable
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
@@ -163,8 +161,6 @@ import timber.log.Timber
 import kotlin.math.max
 import kotlin.time.Duration.Companion.seconds
 
-var stationInfoLongPressHintShown = false
-
 @Composable
 fun StationInfoScreen(
     navController: NavHostController,
@@ -312,15 +308,7 @@ private fun StationInfoScreen(
                     onFaveAlbumClick = onFaveAlbumClick,
                     onSongActionsClick = {
                         songActionsState.value = SongActionState(it)
-                        stationInfoLongPressHintShown = true
                         toastState.value = null
-                    },
-                    showLongPressHint = {
-                        if (!stationInfoLongPressHintShown) {
-                            stationInfoLongPressHintShown = true
-                            toastState.value = Toast.makeText(context, R.string.tv_song_long_press_hint,
-                                Toast.LENGTH_LONG)
-                        }
                     },
                 )
             }
@@ -393,7 +381,6 @@ private fun StationInfoList(
     onFaveSongClick: (song: SongState, position: Int) -> Unit,
     onFaveAlbumClick: (album: AlbumState, position: Int) -> Unit,
     onSongActionsClick: (SongState) -> Unit,
-    showLongPressHint: () -> Unit,
 ) {
     val scope = rememberCoroutineScope()
     val gridState = rememberLazyGridState()
@@ -447,13 +434,12 @@ private fun StationInfoList(
                 is PreviouslyPlayedSongItem -> {
                     Box(modifier = Modifier.animateItem()) {
                         val onClick = when {
-                            !isLoggedIn -> null
-                            item.data.song.ratingAllowed -> {
+                            isLoggedIn && item.data.song.ratingAllowed -> {
                                 { onRateClick(item.data.song, i) }
                             }
-                            else -> { showLongPressHint }
+                            else -> null
                         }
-                        val onLongClick = if (isLoggedIn) {
+                        val onMoreClick = if (isLoggedIn) {
                             { onSongActionsClick(item.data.song) }
                         } else {
                             null
@@ -462,7 +448,7 @@ private fun StationInfoList(
                             item = item.data,
                             index = i,
                             onClick = onClick,
-                            onLongClick = onLongClick,
+                            onMoreClick = onMoreClick,
                             onFaveSongClick = onFaveSongClick,
                             onFaveAlbumClick = onFaveAlbumClick,
                             showGlobalRating = !LocalUiSettings.current.hideRatingsUntilRated,
@@ -477,13 +463,12 @@ private fun StationInfoList(
                 is NowPlayingSongItem -> {
                     Box(modifier = Modifier.animateItem()) {
                         val onClick = when {
-                            !isLoggedIn -> null
-                            item.data.song.ratingAllowed -> {
+                            isLoggedIn && item.data.song.ratingAllowed -> {
                                 { onRateClick(item.data.song, i) }
                             }
-                            else -> { showLongPressHint }
+                            else -> null
                         }
-                        val onLongClick = if (isLoggedIn) {
+                        val onMoreClick = if (isLoggedIn) {
                             { onSongActionsClick(item.data.song) }
                         } else {
                             null
@@ -492,7 +477,7 @@ private fun StationInfoList(
                             item = item.data,
                             index = i,
                             onClick = onClick,
-                            onLongClick = onLongClick,
+                            onMoreClick = onMoreClick,
                             onFaveSongClick = onFaveSongClick,
                             onFaveAlbumClick = onFaveAlbumClick,
                             showGlobalRating = !LocalUiSettings.current.hideRatingsUntilRated,
@@ -508,13 +493,12 @@ private fun StationInfoList(
                     Box(modifier = Modifier.animateItem()) {
                         val song = item.data.song
                         val onClick = when {
-                            !isLoggedIn -> null
-                            song.votingAllowed && !song.voted.value -> {
+                            isLoggedIn && song.votingAllowed && !song.voted.value -> {
                                 { onVoteClick(item) }
                             }
-                            else -> { showLongPressHint }
+                            else -> null
                         }
-                        val onLongClick = if (isLoggedIn) {
+                        val onMoreClick = if (isLoggedIn) {
                             { onSongActionsClick(item.data.song) }
                         } else {
                             null
@@ -523,7 +507,7 @@ private fun StationInfoList(
                             item = item.data,
                             index = i,
                             onClick = onClick,
-                            onLongClick = onLongClick,
+                            onMoreClick = onMoreClick,
                             onFaveSongClick = onFaveSongClick,
                             onFaveAlbumClick = onFaveAlbumClick,
                             showGlobalRating = !LocalUiSettings.current.hideRatingsUntilRated,
@@ -631,7 +615,7 @@ private fun StationInfoSong(
     index: Int,
     showGlobalRating: Boolean,
     onClick: (() -> Unit)?,
-    onLongClick: (() -> Unit)?,
+    onMoreClick: (() -> Unit)?,
     onFaveSongClick: (song: SongState, position: Int) -> Unit,
     onFaveAlbumClick: (album: AlbumState, position: Int) -> Unit,
 ) {
@@ -648,11 +632,7 @@ private fun StationInfoSong(
         .then(background)
         .fillMaxWidth()
         .height(IntrinsicSize.Max)
-        .combinedClickable(
-            enabled = (onClick != null || onLongClick != null),
-            onClick = { onClick?.invoke() },
-            onLongClick = { onLongClick?.invoke() },
-        )
+        .clickable(enabled = onClick != null, onClick = { onClick?.invoke() })
         .padding(start = 8.dp, top = 4.dp, end = 8.dp, bottom = 4.dp)) {
 
         AlbumImage(item = item)
@@ -698,6 +678,18 @@ private fun StationInfoSong(
                     Text(text = song.artistName, style = AppTypography.bodySmall,
                         lineHeight = LocalUiScreenConfig.current.songItemArtistLineHeight,
                         modifier = Modifier.weight(1F))
+                }
+            }
+
+            if (onMoreClick != null) {
+                Box(modifier = Modifier
+                    .clickable(interactionSource = null, indication = ripple(bounded = false), onClick = onMoreClick)
+                    .align(Alignment.BottomStart)
+                ) {
+                    Icon(painter = painterResource(R.drawable.ic_more_vert_20dp),
+                        tint = colorResource(id = R.color.unfavorite),
+                        contentDescription = stringResource(id = R.string.action_more),
+                        modifier = Modifier.padding(start = 4.dp, end = 4.dp))
                 }
             }
         }
