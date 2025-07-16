@@ -29,6 +29,7 @@ import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
 import com.flashsphere.rainwaveplayer.R
 import com.flashsphere.rainwaveplayer.ui.FaveSong
+import com.flashsphere.rainwaveplayer.ui.Tooltip
 import com.flashsphere.rainwaveplayer.ui.composition.LocalUiScreenConfig
 import com.flashsphere.rainwaveplayer.ui.rating.RatingText
 import com.flashsphere.rainwaveplayer.ui.screen.Preview
@@ -76,18 +77,18 @@ fun LibrarySongItem(
         .clickable(song.requestable && onClick != null, onClick = { onClick?.invoke(song) }),
         verticalAlignment = Alignment.CenterVertically,
     ) {
-        Box(modifier = Modifier
-            .width(LocalUiScreenConfig.current.listItemLineHeight)
-            .fillMaxHeight()
-            .clickable { onFaveClick(song) }
-        ) {
-            Icon(painter = painterResource(id = faveDrawable),
-                tint = colorResource(id = faveColor),
-                contentDescription = stringResource(id = faveDesc),
-                modifier = Modifier
-                    .wrapContentSize()
-                    .align(Alignment.Center)
-            )
+        Tooltip(stringResource(id = faveDesc)) {
+            Box(modifier = Modifier
+                .width(LocalUiScreenConfig.current.listItemLineHeight)
+                .fillMaxHeight()
+                .clickable { onFaveClick(song) }
+            ) {
+                Icon(painter = painterResource(id = faveDrawable),
+                    tint = colorResource(id = faveColor),
+                    contentDescription = stringResource(id = faveDesc),
+                    modifier = Modifier.wrapContentSize().align(Alignment.Center)
+                )
+            }
         }
         Column(modifier = Modifier
             .padding(LocalUiScreenConfig.current.itemPadding)

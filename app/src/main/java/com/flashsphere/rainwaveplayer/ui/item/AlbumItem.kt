@@ -27,6 +27,7 @@ import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
 import com.flashsphere.rainwaveplayer.R
 import com.flashsphere.rainwaveplayer.ui.FaveAlbum
+import com.flashsphere.rainwaveplayer.ui.Tooltip
 import com.flashsphere.rainwaveplayer.ui.composition.LocalUiScreenConfig
 import com.flashsphere.rainwaveplayer.ui.rating.RatingText
 import com.flashsphere.rainwaveplayer.ui.screen.Preview
@@ -58,18 +59,18 @@ fun AlbumItem(
             .clickable { onClick(album) },
             verticalAlignment = Alignment.CenterVertically,
     ) {
-        Box(modifier = Modifier
-            .width(LocalUiScreenConfig.current.listItemLineHeight)
-            .fillMaxHeight()
-            .clickable { onFaveClick(album) }
-        ) {
-            Icon(painter = painterResource(id = faveDrawable),
-                tint = colorResource(id = faveColor),
-                contentDescription = stringResource(id = faveDesc),
-                modifier = Modifier
-                    .wrapContentSize()
-                    .align(Alignment.Center)
-            )
+        Tooltip(stringResource(id = faveDesc)) {
+            Box(modifier = Modifier
+                .width(LocalUiScreenConfig.current.listItemLineHeight)
+                .fillMaxHeight()
+                .clickable { onFaveClick(album) }
+            ) {
+                Icon(painter = painterResource(id = faveDrawable),
+                    tint = colorResource(id = faveColor),
+                    contentDescription = stringResource(id = faveDesc),
+                    modifier = Modifier.wrapContentSize().align(Alignment.Center)
+                )
+            }
         }
         Text(text = album.name,
             style = AppTypography.bodyMedium,

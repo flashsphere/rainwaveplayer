@@ -102,6 +102,7 @@ import com.flashsphere.rainwaveplayer.ui.OtherRequestor
 import com.flashsphere.rainwaveplayer.ui.PullToRefreshBox
 import com.flashsphere.rainwaveplayer.ui.SelfRequestor
 import com.flashsphere.rainwaveplayer.ui.ToastHandler
+import com.flashsphere.rainwaveplayer.ui.Tooltip
 import com.flashsphere.rainwaveplayer.ui.alertdialog.CustomAlertDialog
 import com.flashsphere.rainwaveplayer.ui.animateScrollToItem
 import com.flashsphere.rainwaveplayer.ui.appbar.AppBarActions
@@ -224,7 +225,6 @@ private fun StationInfoScreen(
     onMenuClick: () -> Unit,
     onPlaybackClick: () -> Unit,
 ) {
-    val context = LocalContext.current
     val focusRequester = remember { FocusRequester() }
     val scope = rememberCoroutineScope()
     val ratingState = rememberSaveable { mutableStateOf<RatingState?>(null) }
@@ -682,14 +682,19 @@ private fun StationInfoSong(
             }
 
             if (onMoreClick != null) {
-                Box(modifier = Modifier
-                    .clickable(interactionSource = null, indication = ripple(bounded = false), onClick = onMoreClick)
-                    .align(Alignment.BottomStart)
-                ) {
-                    Icon(painter = painterResource(R.drawable.ic_more_vert_20dp),
-                        tint = colorResource(id = R.color.unfavorite),
-                        contentDescription = stringResource(id = R.string.action_more),
-                        modifier = Modifier.padding(start = 4.dp, end = 4.dp))
+                Box(modifier = Modifier.align(Alignment.BottomStart)) {
+                    Tooltip(stringResource(id = R.string.action_more)) {
+                        Box(modifier = Modifier.clickable(
+                            interactionSource = null,
+                            indication = ripple(bounded = false),
+                            onClick = onMoreClick)
+                        ) {
+                            Icon(painter = painterResource(id = R.drawable.ic_more_vert_20dp),
+                                tint = colorResource(id = R.color.unfavorite),
+                                contentDescription = stringResource(id = R.string.action_more),
+                                modifier = Modifier.padding(start = 4.dp, end = 4.dp))
+                        }
+                    }
                 }
             }
         }
@@ -759,15 +764,20 @@ private fun AlbumImage(modifier: Modifier = Modifier, item: StationInfoSongData)
 private fun FaveIcon(modifier: Modifier = Modifier, fave: Fave, onFaveClick: () -> Unit) {
     val (faveDrawable, faveColor, faveDesc) = fave
 
-    Box(modifier = modifier.clickable(
-        interactionSource = null,
-        indication = ripple(bounded = false),
-        onClick = onFaveClick)) {
-            Icon(painter = painterResource(id = faveDrawable),
-                tint = colorResource(id = faveColor),
-                contentDescription = stringResource(id = faveDesc),
-                modifier = Modifier.padding(start = 4.dp, end = 4.dp))
+    Box(modifier = modifier) {
+        Tooltip(stringResource(id = faveDesc)) {
+            Box(modifier = Modifier.clickable(
+                interactionSource = null,
+                indication = ripple(bounded = false),
+                onClick = onFaveClick)
+            ) {
+                Icon(painter = painterResource(id = faveDrawable),
+                    tint = colorResource(id = faveColor),
+                    contentDescription = stringResource(id = faveDesc),
+                    modifier = Modifier.padding(start = 4.dp, end = 4.dp))
+            }
         }
+    }
 }
 
 @Composable
