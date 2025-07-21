@@ -29,6 +29,7 @@ import okio.Path.Companion.toOkioPath
 import timber.log.Timber
 import timber.log.Timber.DebugTree
 import javax.inject.Inject
+import kotlin.time.ExperimentalTime
 
 @HiltAndroidApp
 class RainwaveApp : Application(), SingletonImageLoader.Factory {
@@ -82,7 +83,7 @@ class RainwaveApp : Application(), SingletonImageLoader.Factory {
         }
     }
 
-    @OptIn(ExperimentalCoilApi::class)
+    @OptIn(ExperimentalCoilApi::class, ExperimentalTime::class)
     override fun newImageLoader(context: PlatformContext): ImageLoader {
         return ImageLoader.Builder(this)
             .components {
