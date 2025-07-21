@@ -6,6 +6,6 @@ import kotlinx.coroutines.CoroutineScope
 data class CoroutineDispatchers(
     val scope: CoroutineScope,
     val compute: CoroutineDispatcher,
-    val network: CoroutineDispatcher,
+    val io: CoroutineDispatcher,
     val main: CoroutineDispatcher,
 )

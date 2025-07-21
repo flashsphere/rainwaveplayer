@@ -134,7 +134,7 @@ class StationRepository @Inject constructor(
         Timber.d("categoriesCache.size = %d", categoriesCache.size)
     }
 
-    private suspend fun fetchStationsFromApi(): List<Station> = withContext(coroutineDispatchers.network) {
+    private suspend fun fetchStationsFromApi(): List<Station> = withContext(coroutineDispatchers.io) {
         val resources = context.resources
         rainwaveService.fetchStations().stations.map { s ->
             val name = when (s.id) {
@@ -216,11 +216,11 @@ class StationRepository @Inject constructor(
     }
 
     private suspend fun getStationsWithLastPlayed(currentStation: Station?): Pair<List<Station>, Station> =
-        withContext(coroutineDispatchers.network) {
+        withContext(coroutineDispatchers.io) {
             Pair(getStations(), currentStation ?: getLastPlayedStationWithDefault())
         }
 
-    suspend fun getLastPlayedStationWithDefault(): Station = withContext(coroutineDispatchers.network) {
+    suspend fun getLastPlayedStationWithDefault(): Station = withContext(coroutineDispatchers.io) {
         Timber.d("getLastPlayedStationWithDefault")
         getLastPlayedStationWithoutDefault().let {
             if (it == null) {
@@ -232,7 +232,7 @@ class StationRepository @Inject constructor(
         }
     }
 
-    suspend fun getLastPlayedStationWithoutDefault(): Station? = withContext(coroutineDispatchers.network) {
+    suspend fun getLastPlayedStationWithoutDefault(): Station? = withContext(coroutineDispatchers.io) {
         Timber.d("getLastPlayedStationWithoutDefault")
         val stationId = dataStore.get(LAST_PLAYED)
 
@@ -249,7 +249,7 @@ class StationRepository @Inject constructor(
     }
 
     suspend fun getPrevStation(currentStation: Station? = null): Station =
-        withContext(coroutineDispatchers.network) {
+        withContext(coroutineDispatchers.io) {
             val (stations, station) = getStationsWithLastPlayed(currentStation)
             var prevIndex = stations.indexOf(station) - 1
             if (prevIndex < 0) {
@@ -260,7 +260,7 @@ class StationRepository @Inject constructor(
         }
 
     suspend fun getNextStation(currentStation: Station? = null): Station =
-        withContext(coroutineDispatchers.network) {
+        withContext(coroutineDispatchers.io) {
             val (stations, station) = getStationsWithLastPlayed(currentStation)
             var nextIndex = stations.indexOf(station) + 1
             if (nextIndex >= stations.size) {
@@ -271,7 +271,7 @@ class StationRepository @Inject constructor(
         }
 
     suspend fun getStationWithQuery(query: String?): Station =
-        withContext(coroutineDispatchers.network){
+        withContext(coroutineDispatchers.io){
             if (query.isNullOrBlank()) {
                 getLastPlayedStationWithDefault()
             } else {
@@ -291,7 +291,7 @@ class StationRepository @Inject constructor(
         }
 
     suspend fun getStationWithId(id: String?): Station =
-        withContext(coroutineDispatchers.network) {
+        withContext(coroutineDispatchers.io) {
             if (id.isNullOrBlank()) {
                 getLastPlayedStationWithDefault()
             } else {
@@ -334,7 +334,7 @@ class StationRepository @Inject constructor(
         }
     }
 
-    suspend fun vote(stationId: Int, entryId: Int): VoteResponse = withContext(coroutineDispatchers.network) {
+    suspend fun vote(stationId: Int, entryId: Int): VoteResponse = withContext(coroutineDispatchers.io) {
         rainwaveService.vote(stationId, entryId).also { response ->
             if (response.result.success) {
                 getCurrentStationInfo(stationId)?.futureEvents?.let { events ->
@@ -347,7 +347,7 @@ class StationRepository @Inject constructor(
         }
     }
 
-    suspend fun getSuggestedStations(): List<Station> = withContext(coroutineDispatchers.network) {
+    suspend fun getSuggestedStations(): List<Station> = withContext(coroutineDispatchers.io) {
         Timber.d("getSuggestedStations")
 
         val stationId = dataStore.getBlocking(LAST_PLAYED)
@@ -377,7 +377,7 @@ class StationRepository @Inject constructor(
     suspend fun getAllAlbums(stationId: Int, refresh: Boolean): AllAlbums {
         val value = allAlbumCache[stationId]
         return if (value == null || refresh) {
-            withContext(coroutineDispatchers.network) {
+            withContext(coroutineDispatchers.io) {
                 rainwaveService.fetchAllAlbums(stationId).also {
                     allAlbumCache[stationId] = it
                 }
@@ -390,7 +390,7 @@ class StationRepository @Inject constructor(
     suspend fun getAllArtists(stationId: Int, refresh: Boolean): AllArtists {
         val value = allArtistsCache[stationId]
         return if (value == null || refresh) {
-            withContext(coroutineDispatchers.network) {
+            withContext(coroutineDispatchers.io) {
                 rainwaveService.fetchAllArtists(stationId).also {
                     allArtistsCache[stationId] = it
                 }
@@ -403,7 +403,7 @@ class StationRepository @Inject constructor(
     suspend fun getAllCategories(stationId: Int, refresh: Boolean): AllCategories {
         val value = categoriesCache[stationId]
         return if (value == null || refresh) {
-            withContext(coroutineDispatchers.network) {
+            withContext(coroutineDispatchers.io) {
                 rainwaveService.fetchAllGroups(stationId).also {
                     categoriesCache[stationId] = it
                 }
@@ -414,12 +414,12 @@ class StationRepository @Inject constructor(
     }
 
     suspend fun getAlbum(stationId: Int, albumId: Int): AlbumResponse =
-        withContext(coroutineDispatchers.network) {
+        withContext(coroutineDispatchers.io) {
             rainwaveService.fetchAlbum(stationId, albumId)
         }
 
     suspend fun getArtist(stationId: Int, artistId: Int): Pair<Map<Int, Station>, Artist> =
-        withContext(coroutineDispatchers.network) {
+        withContext(coroutineDispatchers.io) {
             val deferredArtist = async { rainwaveService.fetchArtist(stationId, artistId).artist }
             val deferredStations = async { getStations() }
 
@@ -429,12 +429,12 @@ class StationRepository @Inject constructor(
         }
 
     suspend fun getCategory(stationId: Int, categoryId: Int): CategoryResponse =
-        withContext(coroutineDispatchers.network) {
+        withContext(coroutineDispatchers.io) {
             rainwaveService.fetchGroup(stationId, categoryId)
         }
 
     suspend fun favoriteAlbum(stationId: Int, albumId: Int, fave: Boolean): FaveAlbumResponse =
-        withContext(coroutineDispatchers.network) {
+        withContext(coroutineDispatchers.io) {
             rainwaveService.favoriteAlbum(stationId, albumId, fave).also { response ->
                 if (response.result.success) {
                     getCurrentStationInfo(stationId)?.albumsMap?.let { albums ->
@@ -449,7 +449,7 @@ class StationRepository @Inject constructor(
         }
 
     suspend fun favoriteSong(songId: Int, fave: Boolean): FaveSongResponse =
-        withContext(coroutineDispatchers.network) {
+        withContext(coroutineDispatchers.io) {
             rainwaveService.favoriteSong(songId, fave).also { response ->
                 if (response.result.success) {
                     stationInfoProviderCache.forEach { _, v ->
@@ -462,7 +462,7 @@ class StationRepository @Inject constructor(
         }
 
     suspend fun requestSong(stationId: Int, songId: Int): RequestSongResponse =
-        withContext(coroutineDispatchers.network) {
+        withContext(coroutineDispatchers.io) {
             val requestSongResponse = rainwaveService.requestSong(stationId, songId)
             if (requestSongResponse.result.success) {
                 updateRequests(stationId, requestSongResponse.requests)
@@ -488,14 +488,14 @@ class StationRepository @Inject constructor(
     }
 
     suspend fun orderRequests(stationId: Int, order: String): OrderRequestsResponse =
-        withContext(coroutineDispatchers.network) {
+        withContext(coroutineDispatchers.io) {
             rainwaveService.orderRequests(stationId, order).also {
                 updateRequests(stationId, it.requests)
             }
         }
 
     suspend fun deleteRequest(stationId: Int, songId: Int): DeleteRequestResponse =
-        withContext(coroutineDispatchers.network) {
+        withContext(coroutineDispatchers.io) {
             rainwaveService.deleteRequest(stationId, songId).also {
                 if (it.result.success) {
                     updateRequests(stationId, it.requests)
@@ -504,28 +504,28 @@ class StationRepository @Inject constructor(
         }
 
     suspend fun pauseRequestResponse(stationId: Int): PauseRequestResponse =
-        withContext(coroutineDispatchers.network) {
+        withContext(coroutineDispatchers.io) {
             rainwaveService.pauseRequestQueue(stationId).also {
                 it.user?.let { user -> updateUser(stationId, user) }
             }
         }
 
     suspend fun resumeRequestResponse(stationId: Int): ResumeRequestResponse =
-        withContext(coroutineDispatchers.network) {
+        withContext(coroutineDispatchers.io) {
             rainwaveService.resumeRequestQueue(stationId).also {
                 it.user?.let { user -> updateUser(stationId, user) }
             }
         }
 
     suspend fun clearRequests(stationId: Int): ClearRequestsResponse =
-        withContext(coroutineDispatchers.network) {
+        withContext(coroutineDispatchers.io) {
             rainwaveService.clearRequests(stationId).also {
                 updateRequests(stationId, it.requests)
             }
         }
 
     suspend fun requestFave(stationId: Int): RequestFaveResponse =
-        withContext(coroutineDispatchers.network) {
+        withContext(coroutineDispatchers.io) {
             rainwaveService.requestFave(stationId).also {
                 if (it.result.success) {
                     updateRequests(stationId, it.requests)
@@ -534,7 +534,7 @@ class StationRepository @Inject constructor(
         }
 
     suspend fun requestUnrated(stationId: Int): RequestUnratedResponse =
-        withContext(coroutineDispatchers.network) {
+        withContext(coroutineDispatchers.io) {
             rainwaveService.requestUnrated(stationId).also {
                 if (it.result.success) {
                     updateRequests(stationId, it.requests)
@@ -564,14 +564,14 @@ class StationRepository @Inject constructor(
     }
 
     suspend fun removeSongRating(stationId: Int, songId: Int): RateSongResponse =
-        withContext(coroutineDispatchers.network) {
+        withContext(coroutineDispatchers.io) {
             rainwaveService.clearRating(stationId, songId).also { response ->
                 updateInfoResponse(stationId, songId, response)
             }
         }
 
     suspend fun rateSong(stationId: Int, songId: Int, rating: Float): RateSongResponse =
-        withContext(coroutineDispatchers.network) {
+        withContext(coroutineDispatchers.io) {
             rainwaveService.rateSong(stationId, songId, rating).also { response ->
                 updateInfoResponse(stationId, songId, response)
             }
@@ -592,7 +592,7 @@ class StationRepository @Inject constructor(
     }
 
     suspend fun search(stationId: Int, query: String): SearchResponse =
-        withContext(coroutineDispatchers.network) {
+        withContext(coroutineDispatchers.io) {
             rainwaveService.search(stationId, query)
         }
 

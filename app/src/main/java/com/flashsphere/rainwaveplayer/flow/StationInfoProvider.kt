@@ -121,7 +121,7 @@ class StationInfoProvider(
 
     private fun createFetchStationInfoFlow(): Flow<InfoResponse> {
         return flow { emit(rainwaveService.fetchStationInfo(stationId)) }
-            .flowOn(coroutineDispatchers.network)
+            .flowOn(coroutineDispatchers.io)
             .onEach { infoResponse ->
                 val userCredentials = userRepository.getCredentials() ?: return@onEach
 

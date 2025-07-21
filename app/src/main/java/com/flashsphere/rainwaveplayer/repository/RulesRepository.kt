@@ -22,7 +22,7 @@ class RulesRepository @Inject constructor(
     private var rules: List<Rule>? = null
 
     suspend fun get(): List<Rule> {
-        return this.rules ?: withContext(coroutineDispatchers.network) {
+        return this.rules ?: withContext(coroutineDispatchers.io) {
             val rulesJson = dataStore.get(AUTO_VOTE_RULES)
             Timber.d("rulesJson = %s", rulesJson)
             if (rulesJson.isNotEmpty()) {
@@ -35,7 +35,7 @@ class RulesRepository @Inject constructor(
     }
 
     suspend fun save(rules: List<Rule>) {
-        withContext(coroutineDispatchers.network) {
+        withContext(coroutineDispatchers.io) {
             val rulesJson = runCatching { json.encodeToString(rules) }
                 .getOrElse { "" }
             Timber.d("rulesJson = %s", rulesJson)

@@ -143,7 +143,7 @@ object ApplicationModule {
         return CoroutineDispatchers(
             scope = CoroutineScope(SupervisorJob() + Dispatchers.Default + coroutineExceptionHandler),
             compute = Dispatchers.Default,
-            network = Dispatchers.IO,
+            io = Dispatchers.IO,
             main = Dispatchers.Main.immediate,
         )
     }

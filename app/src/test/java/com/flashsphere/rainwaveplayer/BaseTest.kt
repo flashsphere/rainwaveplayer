@@ -70,7 +70,7 @@ abstract class BaseTest {
         coroutineDispatchers = CoroutineDispatchers(
             scope = testScope,
             compute = testDispatcher,
-            network = testDispatcher,
+            io = testDispatcher,
             main = testDispatcher,
         )
     }

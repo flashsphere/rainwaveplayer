@@ -20,11 +20,11 @@ class SavedStationsStore @Inject constructor(
 ) {
     private val file = context.cacheDir.resolve("stations.json")
 
-    suspend fun exists(): Boolean = withContext(coroutineDispatchers.network) {
+    suspend fun exists(): Boolean = withContext(coroutineDispatchers.io) {
         runCatching { file.exists() }.getOrElse { false }
     }
 
-    suspend fun save(stations: List<Station>) = withContext(coroutineDispatchers.network) {
+    suspend fun save(stations: List<Station>) = withContext(coroutineDispatchers.io) {
         val savedStations = SavedStations(
             timestamp = System.currentTimeMillis(),
             stations = stations.toList()
@@ -39,7 +39,7 @@ class SavedStationsStore @Inject constructor(
         }.isSuccess
     }
 
-    suspend fun get(): SavedStations? = withContext(coroutineDispatchers.network) {
+    suspend fun get(): SavedStations? = withContext(coroutineDispatchers.io) {
         val savedStations = runCatching {
             if (!file.exists()) {
                 return@withContext null
@@ -63,7 +63,7 @@ class SavedStationsStore @Inject constructor(
         return@withContext savedStations
     }
 
-    private suspend fun deleteFile() = withContext(coroutineDispatchers.network) {
+    private suspend fun deleteFile() = withContext(coroutineDispatchers.io) {
         runCatching {
             if (file.exists()) {
                 Timber.d("Deleting stations json")

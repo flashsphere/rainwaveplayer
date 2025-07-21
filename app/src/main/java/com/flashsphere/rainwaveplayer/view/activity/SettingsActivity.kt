@@ -731,7 +731,7 @@ class SettingsActivity : BaseActivity() {
 
     private fun clearCache() {
         lifecycleScope.launch {
-            withContext(coroutineDispatchers.network) {
+            withContext(coroutineDispatchers.io) {
                 imageLoader.diskCache?.clear()
             }
             savedStationsStore.remove()
