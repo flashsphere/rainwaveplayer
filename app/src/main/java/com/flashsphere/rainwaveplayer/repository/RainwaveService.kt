@@ -39,7 +39,7 @@ interface RainwaveService {
     @FormUrlEncoded
     @POST("vote")
     suspend fun vote(@Field("sid") stationId: Int,
-             @Field("entry_id") entryId: Int): VoteResponse
+                     @Field("entry_id") entryId: Int): VoteResponse
 
     @FormUrlEncoded
     @POST("all_albums")
@@ -71,23 +71,23 @@ interface RainwaveService {
     @FormUrlEncoded
     @POST("fave_album")
     suspend fun favoriteAlbum(@Field("sid") stationId: Int,
-                      @Field("album_id") albumId: Int,
-                      @Field("fave") favorite: Boolean): FaveAlbumResponse
+                              @Field("album_id") albumId: Int,
+                              @Field("fave") favorite: Boolean): FaveAlbumResponse
 
     @FormUrlEncoded
     @POST("fave_song")
     suspend fun favoriteSong(@Field("song_id") songId: Int,
-                     @Field("fave") favorite: Boolean): FaveSongResponse
+                             @Field("fave") favorite: Boolean): FaveSongResponse
 
     @FormUrlEncoded
     @POST("request")
     suspend fun requestSong(@Field("sid") stationId: Int,
-                    @Field("song_id") songId: Int): RequestSongResponse
+                            @Field("song_id") songId: Int): RequestSongResponse
 
     @FormUrlEncoded
     @POST("order_requests")
     suspend fun orderRequests(@Field("sid") stationId: Int,
-                      @Field("order") songIds: String): OrderRequestsResponse
+                              @Field("order") songIds: String): OrderRequestsResponse
 
     @FormUrlEncoded
     @POST("delete_request")

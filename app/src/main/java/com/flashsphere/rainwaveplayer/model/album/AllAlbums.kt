@@ -16,7 +16,7 @@ data class AllAlbums(
 
 @Serializable
 private class AllAlbumsSurrogate(
-    val all_albums: List<Album> = emptyList()
+    val all_albums: List<@Serializable(with = AlbumSerializer::class) Album> = emptyList()
 )
 
 object AllAlbumsSerializer : KSerializer<AllAlbums> {

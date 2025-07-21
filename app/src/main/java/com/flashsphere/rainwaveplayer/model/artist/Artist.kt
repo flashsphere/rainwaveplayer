@@ -4,23 +4,20 @@ import com.flashsphere.rainwaveplayer.model.album.ALBUM_NAME_COMPARATOR
 import com.flashsphere.rainwaveplayer.model.album.Album
 import com.flashsphere.rainwaveplayer.model.song.SONG_TITLE_COMPARATOR
 import com.flashsphere.rainwaveplayer.model.song.Song
+import com.flashsphere.rainwaveplayer.model.song.SongSerializer
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.Serializable
-import kotlinx.serialization.builtins.ListSerializer
-import kotlinx.serialization.builtins.MapSerializer
-import kotlinx.serialization.builtins.serializer
 import kotlinx.serialization.descriptors.SerialDescriptor
 import kotlinx.serialization.encoding.Decoder
 import kotlinx.serialization.encoding.Encoder
-import kotlinx.serialization.json.JsonTransformingSerializer
 import java.util.Locale
 import java.util.SortedMap
 
 val ARTIST_NAME_COMPARATOR = compareBy<Artist> { it.name.lowercase(Locale.ENGLISH) }.thenBy { it.id }
 
-@Serializable(with = ArtistSerializer::class)
+@Serializable
 class Artist(
-    internal val id: Int = 0,
+    val id: Int = 0,
     val name: String = "",
     val groupedSongs: Map<Int, Map<Album, List<Song>>> = emptyMap(),
 )
@@ -29,12 +26,8 @@ class Artist(
 private class ArtistSurrogate(
     val id: Int = 0,
     val name: String = "",
-    @Serializable(with = ArtistAllSongsSerializer::class)
-    val all_songs: Map<String, Map<String, List<Song>>> = emptyMap(),
+    val all_songs: Map<String, Map<String, List<@Serializable(with = SongSerializer::class) Song>>> = emptyMap(),
 )
-
-object ArtistAllSongsSerializer : JsonTransformingSerializer<Map<String, Map<String, List<Song>>>>(
-    MapSerializer(String.serializer(), MapSerializer(String.serializer(), ListSerializer(Song.serializer()))))
 
 object ArtistSerializer : KSerializer<Artist> {
     override val descriptor: SerialDescriptor = ArtistSurrogate.serializer().descriptor

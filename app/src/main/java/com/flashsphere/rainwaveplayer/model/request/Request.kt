@@ -1,6 +1,7 @@
 package com.flashsphere.rainwaveplayer.model.request
 
 import com.flashsphere.rainwaveplayer.model.album.Album
+import com.flashsphere.rainwaveplayer.model.album.AlbumSerializer
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.Transient
@@ -26,7 +27,7 @@ class Request(
     val good: Boolean = false,
 
     @SerialName("albums")
-    val albums: List<Album> = emptyList(),
+    val albums: List<@Serializable(with = AlbumSerializer::class) Album> = emptyList(),
 
     @SerialName("rating")
     val rating: Float = 0F,

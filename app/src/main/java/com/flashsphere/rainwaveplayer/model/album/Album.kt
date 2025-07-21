@@ -2,14 +2,13 @@ package com.flashsphere.rainwaveplayer.model.album
 
 import com.flashsphere.rainwaveplayer.model.song.SONG_TITLE_COMPARATOR
 import com.flashsphere.rainwaveplayer.model.song.Song
+import com.flashsphere.rainwaveplayer.model.song.SongSerializer
 import com.flashsphere.rainwaveplayer.repository.RainwaveService
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.Serializable
-import kotlinx.serialization.builtins.ListSerializer
 import kotlinx.serialization.descriptors.SerialDescriptor
 import kotlinx.serialization.encoding.Decoder
 import kotlinx.serialization.encoding.Encoder
-import kotlinx.serialization.json.JsonTransformingSerializer
 import java.math.BigDecimal
 import java.math.RoundingMode
 import java.util.Locale
@@ -20,9 +19,9 @@ val ALBUM_NAME_COMPARATOR = compareBy<Album> { it.name.lowercase(Locale.ENGLISH)
 const val ART_PATH_SUFFIX = "_320.jpg"
 const val NO_ART_PATH = "/static/images4/noart_1.jpg"
 
-@Serializable(with = AlbumSerializer::class)
+@Serializable
 class Album(
-    internal val id: Int = 0,
+    val id: Int = 0,
     val name: String = "",
     val art: String = "",
     val rating: Float = 0F,
@@ -46,12 +45,9 @@ private class AlbumSurrogate(
     val cool: Boolean = false,
     val rating_histogram: Map<String, Int> = emptyMap(),
     val rating_count: Int = 0,
-    @Serializable(with = AlbumSongListSerializer::class)
-    val songs: List<Song> = emptyList(),
+    val songs: List<@Serializable(with = SongSerializer::class) Song> = emptyList(),
     val fave: Boolean = false,
 )
-
-object AlbumSongListSerializer : JsonTransformingSerializer<List<Song>>(ListSerializer(Song.serializer()))
 
 object AlbumSerializer : KSerializer<Album> {
     override val descriptor: SerialDescriptor = AlbumSurrogate.serializer().descriptor

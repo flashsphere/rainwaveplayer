@@ -4,6 +4,7 @@ import com.flashsphere.rainwaveplayer.model.album.ALBUM_NAME_COMPARATOR
 import com.flashsphere.rainwaveplayer.model.album.Album
 import com.flashsphere.rainwaveplayer.model.song.SONG_TITLE_COMPARATOR
 import com.flashsphere.rainwaveplayer.model.song.Song
+import com.flashsphere.rainwaveplayer.model.song.SongSerializer
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.descriptors.SerialDescriptor
@@ -13,9 +14,9 @@ import java.util.Locale
 
 val CATEGORY_NAME_COMPARATOR = compareBy<Category> { it.name.lowercase(Locale.ENGLISH) }.thenBy { it.id }
 
-@Serializable(with = CategorySerializer::class)
+@Serializable
 class Category(
-    internal val id: Int = 0,
+    val id: Int = 0,
     val name: String = "",
     val songs: Map<Album, List<Song>> = emptyMap(),
 )
@@ -24,7 +25,7 @@ class Category(
 private class CategorySurrogate(
     val id: Int = 0,
     val name: String = "",
-    val all_songs_for_sid: Map<String, List<Song>> = emptyMap(),
+    val all_songs_for_sid: Map<String, List<@Serializable(with = SongSerializer::class) Song>> = emptyMap(),
 )
 
 object CategorySerializer : KSerializer<Category> {

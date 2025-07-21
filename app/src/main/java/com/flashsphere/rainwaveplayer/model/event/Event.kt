@@ -1,6 +1,7 @@
 package com.flashsphere.rainwaveplayer.model.event
 
 import com.flashsphere.rainwaveplayer.model.song.Song
+import com.flashsphere.rainwaveplayer.model.song.SongSerializer
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.descriptors.SerialDescriptor
@@ -28,7 +29,7 @@ private class EventSurrogate(
     val start_actual: Long = 0,
     val end: Long = 0,
     val voting_allowed: Boolean = false,
-    var songs: List<Song> = emptyList(),
+    var songs: List<@Serializable(with = SongSerializer::class) Song> = emptyList(),
 )
 
 object EventSerializer : KSerializer<Event> {

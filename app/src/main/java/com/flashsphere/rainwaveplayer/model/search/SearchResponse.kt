@@ -3,8 +3,11 @@ package com.flashsphere.rainwaveplayer.model.search
 import com.flashsphere.rainwaveplayer.model.HasResponseResult
 import com.flashsphere.rainwaveplayer.model.ResponseResult
 import com.flashsphere.rainwaveplayer.model.album.Album
+import com.flashsphere.rainwaveplayer.model.album.AlbumSerializer
 import com.flashsphere.rainwaveplayer.model.artist.Artist
+import com.flashsphere.rainwaveplayer.model.artist.ArtistSerializer
 import com.flashsphere.rainwaveplayer.model.song.Song
+import com.flashsphere.rainwaveplayer.model.song.SongSerializer
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.descriptors.SerialDescriptor
@@ -22,9 +25,9 @@ class SearchResponse(
 @Serializable
 private class SearchResponseSurrogate(
     val search_results: ResponseResult? = null,
-    val artists: List<Artist> = emptyList(),
-    val albums: List<Album> = emptyList(),
-    val songs: List<Song> = emptyList(),
+    val artists: List<@Serializable(with = ArtistSerializer::class) Artist> = emptyList(),
+    val albums: List<@Serializable(with = AlbumSerializer::class) Album> = emptyList(),
+    val songs: List<@Serializable(with = SongSerializer::class) Song> = emptyList(),
 )
 
 object SearchResponseSerializer : KSerializer<SearchResponse> {

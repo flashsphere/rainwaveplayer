@@ -4,5 +4,6 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 class AlbumResponse(
+    @Serializable(with = AlbumSerializer::class)
     val album: Album
 )

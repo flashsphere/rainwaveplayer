@@ -20,7 +20,7 @@ class SongAdapterTest {
     @Test
     fun adapter_works() {
         val jsonString = readFile(this.javaClass, "/json/song.json")
-        val song = json.decodeFromString<Song>(jsonString)
+        val song = json.decodeFromString(SongSerializer, jsonString)
 
         assertThat(song.id).isEqualTo(1073)
         assertThat(song.title).isEqualTo("Ada's Theme")
@@ -49,7 +49,7 @@ class SongAdapterTest {
             "album_id": 116
           }""".trimIndent()
 
-        val song = json.decodeFromString<Song>(jsonString)
+        val song = json.decodeFromString(SongSerializer, jsonString)
         assertThat(song.id).isEqualTo(1073)
         assertThat(song.title).isEqualTo("Ada's Theme")
 

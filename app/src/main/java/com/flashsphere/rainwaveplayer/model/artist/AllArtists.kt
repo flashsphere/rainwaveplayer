@@ -13,7 +13,7 @@ class AllArtists(
 
 @Serializable
 private class AllArtistsSurrogate(
-    val all_artists: List<Artist> = emptyList()
+    val all_artists: List<@Serializable(with = ArtistSerializer::class) Artist> = emptyList()
 )
 
 object AllArtistsSerializer : KSerializer<AllArtists> {

@@ -13,7 +13,7 @@ class AllCategories(
 
 @Serializable
 private class AllCategoriesSurrogate(
-    val all_groups: List<Category> = emptyList()
+    val all_groups: List<@Serializable(with = CategorySerializer::class) Category> = emptyList()
 )
 
 object AllCategoriesSerializer : KSerializer<AllCategories> {

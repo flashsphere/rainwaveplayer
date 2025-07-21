@@ -6,5 +6,6 @@ import kotlinx.serialization.Serializable
 @Serializable
 class CategoryResponse(
     @SerialName("group")
+    @Serializable(with = CategorySerializer::class)
     val category: Category
 )
