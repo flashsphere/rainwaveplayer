@@ -323,11 +323,9 @@ private fun StationInfoScreen(
                 ratingState.value = it.toRatingState()
             },
             onAlbumClick = {
-                songActionsState.value = null
                 navController.navigateToDetail(it)
             },
             onArtistClick = {
-                songActionsState.value = null
                 navController.navigateToDetail(it)
             },
         )
