@@ -26,7 +26,6 @@ import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.itemsIndexed
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowRight
@@ -228,7 +227,7 @@ private fun StationInfoScreen(
     val focusRequester = remember { FocusRequester() }
     val scope = rememberCoroutineScope()
     val ratingState = rememberSaveable { mutableStateOf<RatingState?>(null) }
-    val songActionsState = rememberSaveable { mutableStateOf<SongActionState?>(null) }
+    val songActionsState = rememberSaveable(stateSaver = SongActionState.Saver) { mutableStateOf(null) }
     val toastState = remember { mutableStateOf<Toast?>(null) }
 
     LaunchedEffect(Unit) {
@@ -890,7 +889,7 @@ private fun SongActions(
     onAlbumClick: (AlbumDetail) -> Unit,
     onArtistClick: (ArtistDetail) -> Unit,
 ) {
-    Column(modifier.verticalScroll(rememberScrollState())) {
+    Column(modifier.verticalScroll(song.scrollState)) {
         Text(text = song.songTitle, modifier = Modifier.padding(horizontal = 24.dp),
             style = AppTypography.titleLarge)
 
