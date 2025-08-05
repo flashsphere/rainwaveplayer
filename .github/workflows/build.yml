@@ -27,7 +27,7 @@ jobs:
       - name: Write gradle config to gradle.properties
         run: |
           echo "" >> gradle.properties
-          echo "org.gradle.daemon=false" >> gradle.properties
+          echo "org.gradle.configuration-cache=true" >> gradle.properties
           echo "" >> gradle.properties
       - name: Write keystore secrets to environment
         run: |
