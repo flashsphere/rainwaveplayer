@@ -3,6 +3,7 @@ package com.flashsphere.rainwaveplayer.ui.rating
 import android.content.res.ColorStateList
 import android.view.KeyEvent
 import android.view.KeyEvent.ACTION_DOWN
+import android.view.KeyEvent.KEYCODE_DPAD_CENTER
 import android.view.KeyEvent.KEYCODE_DPAD_LEFT
 import android.view.KeyEvent.KEYCODE_DPAD_RIGHT
 import android.view.KeyEvent.KEYCODE_ENTER
@@ -57,7 +58,7 @@ fun Rating(
                     setOnKeyListener(object : View.OnKeyListener {
                         override fun onKey(v: View?, keyCode: Int, event: KeyEvent): Boolean {
                             if (event.action != ACTION_DOWN) return false
-                            if (event.keyCode != KEYCODE_ENTER) return false
+                            if (event.keyCode != KEYCODE_ENTER && event.keyCode != KEYCODE_DPAD_CENTER) return false
                             onEnterPress()
                             return true
                         }
@@ -68,7 +69,10 @@ fun Rating(
         update = { ratingBar ->
             ratingBar.rating = ratingState.value.rating
         },
-        modifier = modifier
-            .wrapContentSize()
+        onRelease = {
+            it.onRatingBarChangeListener = null
+            it.setOnKeyListener(null)
+        },
+        modifier = modifier.wrapContentSize(),
     )
 }
