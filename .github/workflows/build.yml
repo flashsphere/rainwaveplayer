@@ -11,7 +11,7 @@ jobs:
     name: Build
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - uses: actions/setup-java@v4
         with:
           java-version: '21'
@@ -24,11 +24,6 @@ jobs:
         run: |
           echo "${{ secrets.KEYSTORE_FILE_BASE64 }}" > keystore.jks.asc
           gpg -d --passphrase "${{ secrets.KEYSTORE_FILE_PASSPHRASE }}" --batch keystore.jks.asc > app/keystore.jks
-      - name: Write gradle config to gradle.properties
-        run: |
-          echo "" >> gradle.properties
-          echo "org.gradle.configuration-cache=true" >> gradle.properties
-          echo "" >> gradle.properties
       - name: Write keystore secrets to environment
         run: |
           echo "ORG_GRADLE_PROJECT_RAINWAVE_TEST_CREDENTIALS=${{ secrets.RAINWAVE_TEST_CREDENTIALS }}" >> "$GITHUB_ENV"
