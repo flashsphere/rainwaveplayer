@@ -40,6 +40,7 @@ import com.flashsphere.rainwaveplayer.ui.navigation.ArtistDetail
 import com.flashsphere.rainwaveplayer.ui.navigation.CategoryDetail
 import com.flashsphere.rainwaveplayer.ui.navigation.Library
 import com.flashsphere.rainwaveplayer.ui.navigation.LibraryRoute
+import com.flashsphere.rainwaveplayer.ui.navigation.NowPlaying
 import com.flashsphere.rainwaveplayer.ui.navigation.NowPlayingRoute
 import com.flashsphere.rainwaveplayer.ui.navigation.RequestsRoute
 import com.flashsphere.rainwaveplayer.ui.navigation.Search
@@ -76,15 +77,17 @@ fun TvNavigationGraph(
         popEnterTransition = { slideIntoContainer(Down, tween(300)) },
         popExitTransition = { slideOutOfContainer(Down, tween(300)) },
     ) {
-        composable<NowPlayingRoute> {
-            CompositionLocalProvider(
-                LocalLastFocused provides rememberSaveable { mutableStateOf(LastFocused()) }
-            ) {
-                DrawerStateHandler()
-                TvStationInfoScreen(
-                    navController = navController,
-                    viewModel = mainViewModel,
-                )
+        navigation<NowPlayingRoute>(startDestination = NowPlaying) {
+            composable<NowPlaying> {
+                CompositionLocalProvider(
+                    LocalLastFocused provides rememberSaveable { mutableStateOf(LastFocused()) }
+                ) {
+                    DrawerStateHandler()
+                    TvStationInfoScreen(
+                        navController = navController,
+                        viewModel = mainViewModel,
+                    )
+                }
             }
         }
         composable<RequestsRoute> {
