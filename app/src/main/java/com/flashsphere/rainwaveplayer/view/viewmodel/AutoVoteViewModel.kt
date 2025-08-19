@@ -36,7 +36,9 @@ class AutoVoteViewModel @Inject constructor(
     }
 
     fun reorderRule(fromIndex: Int, toIndex: Int) {
-        rules.add(toIndex, rules.removeAt(fromIndex))
+        val fromItem = rules[fromIndex]
+        rules[fromIndex] = rules[toIndex]
+        rules[toIndex] = fromItem
     }
 
     fun deleteRule(rule: Rule, index: Int): Boolean {

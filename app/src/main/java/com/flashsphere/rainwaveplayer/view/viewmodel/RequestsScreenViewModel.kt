@@ -112,7 +112,9 @@ class RequestsScreenViewModel @Inject constructor(
 
     fun reorderRequestItem(fromIndex: Int, toIndex: Int) {
         val requests = _requestsScreenState.value.requests ?: return
-        requests.add(toIndex, requests.removeAt(fromIndex))
+        val fromItem = requests[fromIndex]
+        requests[fromIndex] = requests[toIndex]
+        requests[toIndex] = fromItem
     }
 
     fun reorderItemToTop(request: RequestState, index: Int) {
