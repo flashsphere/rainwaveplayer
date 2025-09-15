@@ -13,10 +13,24 @@ class TrustedCertificateStore(context: Context) {
     val certificates = listOf(
         TrustedCertificate(context, R.raw.e5, false),
         TrustedCertificate(context, R.raw.e6, false),
+        TrustedCertificate(context, R.raw.e7, false),
+        TrustedCertificate(context, R.raw.e8, false),
+        TrustedCertificate(context, R.raw.e9, false),
+        TrustedCertificate(context, R.raw.int_ye1, false),
+        TrustedCertificate(context, R.raw.int_ye2, false),
+        TrustedCertificate(context, R.raw.int_ye3, false),
         TrustedCertificate(context, R.raw.r10, false),
         TrustedCertificate(context, R.raw.r11, false),
+        TrustedCertificate(context, R.raw.r12, false),
+        TrustedCertificate(context, R.raw.r13, false),
+        TrustedCertificate(context, R.raw.r14, false),
+        TrustedCertificate(context, R.raw.int_yr1, false),
+        TrustedCertificate(context, R.raw.int_yr2, false),
+        TrustedCertificate(context, R.raw.int_yr3, false),
         TrustedCertificate(context, R.raw.isrgrootx1, true),
         TrustedCertificate(context, R.raw.isrgrootx2, true),
+        TrustedCertificate(context, R.raw.root_ye, true),
+        TrustedCertificate(context, R.raw.root_yr, true),
     )
 
     val rootCertificates = certificates.filter { it.root }
