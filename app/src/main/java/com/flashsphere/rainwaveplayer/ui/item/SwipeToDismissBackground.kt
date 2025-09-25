@@ -20,21 +20,23 @@ import com.flashsphere.rainwaveplayer.R
 
 @Composable
 fun SwipeToDismissBackground(state: SwipeToDismissBoxState) {
-    if (state.dismissDirection != SwipeToDismissBoxValue.Settled) {
-        Row(modifier = Modifier.fillMaxSize()
-            .background(MaterialTheme.colorScheme.errorContainer)
-            .padding(horizontal = 16.dp),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceBetween
-        ) {
-            Icon(
-                imageVector = Icons.Filled.Delete,
-                contentDescription = stringResource(R.string.action_delete)
-            )
-            Icon(
-                imageVector = Icons.Filled.Delete,
-                contentDescription = stringResource(R.string.action_delete)
-            )
-        }
+    val horizontalArrangement = when (state.dismissDirection) {
+        SwipeToDismissBoxValue.StartToEnd -> Arrangement.Start
+        SwipeToDismissBoxValue.EndToStart -> Arrangement.End
+        else -> null
+    }
+
+    if (horizontalArrangement == null) return
+
+    Row(modifier = Modifier.fillMaxSize()
+        .background(MaterialTheme.colorScheme.errorContainer)
+        .padding(horizontal = 16.dp),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = horizontalArrangement
+    ) {
+        Icon(
+            imageVector = Icons.Filled.Delete,
+            contentDescription = stringResource(R.string.action_delete)
+        )
     }
 }

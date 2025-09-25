@@ -100,7 +100,7 @@ fun PullToRefreshBox(
             modifier = Modifier.align(Alignment.TopCenter),
             isRefreshing = isRefreshing,
             state = state,
-            threshold = 60.dp
+            maxDistance = 60.dp,
         )
     },
     content: @Composable BoxScope.() -> Unit

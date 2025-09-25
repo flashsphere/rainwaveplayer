@@ -80,16 +80,7 @@ fun AppScaffold(
             .fillMaxSize()
             .nestedScroll(appBarScrollBehavior.nestedScrollConnection),
         snackbarHost = {
-            val swipeToDismissBoxState = rememberSwipeToDismissBoxState(
-                confirmValueChange = { value ->
-                    if (value != SwipeToDismissBoxValue.Settled) {
-                        snackbarHostState.currentSnackbarData?.dismiss()
-                        true
-                    } else {
-                        false
-                    }
-                }
-            )
+            val swipeToDismissBoxState = rememberSwipeToDismissBoxState()
 
             LaunchedEffect(swipeToDismissBoxState.currentValue) {
                 if (swipeToDismissBoxState.currentValue != SwipeToDismissBoxValue.Settled) {
@@ -101,6 +92,11 @@ fun AppScaffold(
                 state = swipeToDismissBoxState,
                 backgroundContent = {},
                 content = { SnackbarHost(hostState = snackbarHostState) },
+                onDismiss = {
+                    if (it != SwipeToDismissBoxValue.Settled) {
+                        snackbarHostState.currentSnackbarData?.dismiss()
+                    }
+                },
             )
         },
         topBar = {

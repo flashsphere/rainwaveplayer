@@ -225,7 +225,12 @@ private fun RuleItem(
 
     SwipeToDismissBox(
         state = dismissState,
-        backgroundContent = { SwipeToDismissBackground(dismissState) }
+        backgroundContent = { SwipeToDismissBackground(dismissState) },
+        onDismiss = {
+            if (it != SwipeToDismissBoxValue.Settled) {
+                onDelete(currentRule, currentIndex)
+            }
+        },
     ) {
         Row(modifier = Modifier.background(MaterialTheme.colorScheme.surface)
             .fillMaxWidth()

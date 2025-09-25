@@ -399,7 +399,12 @@ private fun RequestItem(
 
     SwipeToDismissBox(
         state = dismissState,
-        backgroundContent = { SwipeToDismissBackground(dismissState) }
+        backgroundContent = { SwipeToDismissBackground(dismissState) },
+        onDismiss = {
+            if (it != SwipeToDismissBoxValue.Settled) {
+                onDelete(currentItem, currentIndex)
+            }
+        },
     ) {
         Row(modifier = Modifier.then(bgColor).fillMaxWidth()
             .combinedClickable(

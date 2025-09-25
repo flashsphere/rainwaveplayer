@@ -6,7 +6,6 @@ import androidx.compose.animation.scaleIn
 import androidx.compose.animation.scaleOut
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material.icons.Icons
@@ -15,10 +14,8 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.ScrollableTabRow
+import androidx.compose.material3.PrimaryScrollableTabRow
 import androidx.compose.material3.Tab
-import androidx.compose.material3.TabRowDefaults
-import androidx.compose.material3.TabRowDefaults.tabIndicatorOffset
 import androidx.compose.material3.Text
 import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteType
 import androidx.compose.runtime.Composable
@@ -156,15 +153,12 @@ fun LibraryScreen(
         snackbarEvents = viewModel.snackbarEvents,
     ) {
         Column {
-            ScrollableTabRow(selectedTabIndex = pagerState.currentPage,
+            PrimaryScrollableTabRow(
+                selectedTabIndex = pagerState.currentPage,
                 containerColor = MaterialTheme.colorScheme.primaryContainer,
                 contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
                 edgePadding = 0.dp,
-                indicator = { tabPositions -> TabRowDefaults.SecondaryIndicator(
-                    Modifier
-                        .tabIndicatorOffset(tabPositions[pagerState.currentPage])
-                        .padding(start = 16.dp, end = 16.dp))
-                }) {
+            ) {
                 tabs.forEachIndexed { i, entry ->
                     key(i) {
                         Tab(selected = pagerState.currentPage == i,
