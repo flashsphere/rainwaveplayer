@@ -167,7 +167,7 @@ class Api24AnyNetworkManager(context: Context) : NetworkManager {
         if (selectedNetwork != connectivityManager.boundNetworkForProcess) {
             Timber.tag(TAG).d("Using network %s", selectedNetwork)
             connectivityManager.bindProcessToNetwork(selectedNetwork)
-            logNetworkCapabilities(availableNetworks[selectedNetwork])
+            logNetworkCapabilities(selectedNetwork)
         }
         _connectivityFlow.value = selectedNetwork != null
         if (currentNetwork != selectedNetwork) {
@@ -176,8 +176,10 @@ class Api24AnyNetworkManager(context: Context) : NetworkManager {
         }
     }
 
-    private fun logNetworkCapabilities(capabilities: NetworkCapabilities?) {
-        capabilities?.let {
+    private fun logNetworkCapabilities(network: Network?) {
+        if (network == null) return
+
+        availableNetworks[network]?.let {
             Timber.tag(TAG).d("""
                 is ethernet = %s
                 is wifi = %s
