@@ -7,7 +7,7 @@ import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSiz
 import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.platform.LocalConfiguration
-import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.flashsphere.rainwaveplayer.repository.UserRepository
 import com.flashsphere.rainwaveplayer.ui.composition.LocalUiScreenConfig
 import com.flashsphere.rainwaveplayer.ui.composition.LocalUserCredentials
