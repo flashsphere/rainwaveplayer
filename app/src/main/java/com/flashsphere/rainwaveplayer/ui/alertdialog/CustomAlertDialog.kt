@@ -29,7 +29,7 @@ import com.flashsphere.rainwaveplayer.ui.theme.AppTypography
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CustomAlertDialog(
-    modifier: Modifier = Modifier.width(IntrinsicSize.Max),
+    modifier: Modifier = Modifier,
     properties: DialogProperties = DialogProperties(),
     onDismissRequest: () -> Unit,
     content: @Composable () -> Unit,
@@ -51,7 +51,7 @@ fun CustomAlertDialog(
 
 @Composable
 fun CustomAlertDialog(
-    modifier: Modifier = Modifier.width(IntrinsicSize.Max),
+    modifier: Modifier = Modifier,
     properties: DialogProperties = DialogProperties(),
     onDismissRequest: () -> Unit,
     title: @Composable (BoxScope.() -> Unit)?,
@@ -59,7 +59,7 @@ fun CustomAlertDialog(
     buttons: @Composable RowScope.() -> Unit,
 ) {
     CustomAlertDialog(
-        modifier = modifier,
+        modifier = Modifier.width(IntrinsicSize.Max).then(modifier),
         properties = properties,
         onDismissRequest = onDismissRequest,
     ) {

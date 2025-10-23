@@ -4,7 +4,6 @@ import android.text.format.DateFormat
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
@@ -94,7 +93,7 @@ private fun TimePickerDialog(
     CustomAlertDialog(
         onDismissRequest = onDismissRequest,
         properties = DialogProperties(usePlatformDefaultWidth = false),
-        modifier = Modifier.width(IntrinsicSize.Min).height(IntrinsicSize.Min),
+        modifier = Modifier.width(IntrinsicSize.Min),
         title = null,
         content = {
             if (clockLayout.value) {
