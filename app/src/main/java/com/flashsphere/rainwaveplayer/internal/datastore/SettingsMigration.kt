@@ -38,6 +38,10 @@ class SettingsMigration(private val context: Context) : DataMigration<Preference
         if (version <= 8) {
             mutablePrefs.remove(PreferencesKeys.SYSTEM_RESUMPTION)
         }
+        if (version <= 9) {
+            mutablePrefs.remove(PreferencesKeys.CRASH_REPORTING)
+            mutablePrefs.remove(PreferencesKeys.ANALYTICS)
+        }
 
         mutablePrefs[PreferencesKeys.VERSION.key] = PreferencesKeys.VERSION.defaultValue
         return mutablePrefs.toPreferences()

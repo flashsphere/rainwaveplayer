@@ -14,8 +14,10 @@ import androidx.datastore.preferences.core.Preferences
 import com.flashsphere.rainwaveplayer.app.RainwaveApp
 import com.flashsphere.rainwaveplayer.service.MediaService
 import com.flashsphere.rainwaveplayer.util.Analytics
+import com.flashsphere.rainwaveplayer.util.Analytics.Companion.EVENT_SCREEN_VIEW
+import com.flashsphere.rainwaveplayer.util.Analytics.Companion.SCREEN_CLASS
+import com.flashsphere.rainwaveplayer.util.Analytics.Companion.SCREEN_NAME
 import com.flashsphere.rainwaveplayer.util.ClassUtils.getSimpleClassName
-import com.google.firebase.analytics.FirebaseAnalytics
 import com.jakewharton.processphoenix.ProcessPhoenix
 import timber.log.Timber
 import javax.inject.Inject
@@ -65,15 +67,15 @@ abstract class BaseActivity : AppCompatActivity() {
 
     private fun trackScreenView(screenName: String, screenClass: String = screenName, bundle: Bundle? = null) {
         val params = Bundle().also {
-            it.putString(FirebaseAnalytics.Param.SCREEN_NAME, screenName)
-            it.putString(FirebaseAnalytics.Param.SCREEN_CLASS, screenClass)
+            it.putString(SCREEN_NAME, screenName)
+            it.putString(SCREEN_CLASS, screenClass)
 
             if (bundle != null) {
                 it.putAll(bundle)
             }
         }
 
-        analytics.logEvent(FirebaseAnalytics.Event.SCREEN_VIEW, params)
+        analytics.logEvent(EVENT_SCREEN_VIEW, params)
     }
 
     fun startMediaPlaybackFromSearch(query: String) {

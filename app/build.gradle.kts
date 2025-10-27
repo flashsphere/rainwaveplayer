@@ -1,4 +1,3 @@
-import com.google.firebase.crashlytics.buildtools.gradle.CrashlyticsExtension
 
 plugins {
     alias(libs.plugins.idea.ext)
@@ -8,8 +7,6 @@ plugins {
     alias(libs.plugins.kotlin.parcelize)
     alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.dagger.hilt)
-    alias(libs.plugins.gms)
-    alias(libs.plugins.firebase.crashlytics)
     alias(libs.plugins.ksp)
     alias(libs.plugins.androidx.baselineprofile)
 }
@@ -91,10 +88,6 @@ android {
             resValue("string", "cast_app_id", "4AD422FD")
 
             buildConfigField("String", "TEST_CREDENTIALS", "\"${project.properties["RAINWAVE_TEST_CREDENTIALS"]}\"")
-
-            configure<CrashlyticsExtension> {
-                mappingFileUploadEnabled = false
-            }
         }
         release {
             isDebuggable = false
@@ -106,10 +99,6 @@ android {
             signingConfig = signingConfigs["release"]
 
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard/proguard-rules.pro")
-
-            configure<CrashlyticsExtension> {
-                mappingFileUploadEnabled = true
-            }
         }
     }
     bundle {
@@ -226,10 +215,6 @@ dependencies {
 
     implementation(libs.timber)
     implementation(libs.process.phoenix)
-
-    implementation(platform(libs.google.firebase))
-    implementation(libs.google.firebase.analytics)
-    implementation(libs.google.firebase.crashlytics)
 
 //    debugImplementation(libs.leakcanary)
 

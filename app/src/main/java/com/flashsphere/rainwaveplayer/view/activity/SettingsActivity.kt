@@ -420,38 +420,6 @@ class SettingsActivity : BaseActivity() {
                         .launchIn(lifecycleScope)
                 })
             }
-            add(CheckBoxPreferenceItem(
-                scope = lifecycleScope,
-                dataStore = dataStore,
-                key = ANALYTICS,
-                title = getString(R.string.settings_usage_statistics),
-                options = listOf(
-                    PreferenceItemValue(
-                        value = true,
-                        label = getString(R.string.settings_usage_statistics_desc),
-                    ),
-                    PreferenceItemValue(
-                        value = false,
-                        label = getString(R.string.settings_usage_statistics_desc),
-                    ),
-                )
-            ))
-            add(CheckBoxPreferenceItem(
-                scope = lifecycleScope,
-                dataStore = dataStore,
-                key = CRASH_REPORTING,
-                title = getString(R.string.settings_crash_reporting),
-                options = listOf(
-                    PreferenceItemValue(
-                        value = true,
-                        label = getString(R.string.settings_crash_reporting_desc),
-                    ),
-                    PreferenceItemValue(
-                        value = false,
-                        label = getString(R.string.settings_crash_reporting_desc),
-                    ),
-                )
-            ))
             add(BasicPreferenceItem(
                 title = getString(R.string.settings_clear_cache),
                 summary = getString(R.string.settings_clear_cache_summary),
@@ -602,38 +570,6 @@ class SettingsActivity : BaseActivity() {
             ))
 
             add(PreferenceCategoryItem(title = getString(R.string.settings_other)))
-            add(CheckBoxPreferenceItem(
-                scope = lifecycleScope,
-                dataStore = dataStore,
-                key = ANALYTICS,
-                title = getString(R.string.settings_usage_statistics),
-                options = listOf(
-                    PreferenceItemValue(
-                        value = true,
-                        label = getString(R.string.settings_usage_statistics_desc),
-                    ),
-                    PreferenceItemValue(
-                        value = false,
-                        label = getString(R.string.settings_usage_statistics_desc),
-                    ),
-                )
-            ))
-            add(CheckBoxPreferenceItem(
-                scope = lifecycleScope,
-                dataStore = dataStore,
-                key = CRASH_REPORTING,
-                title = getString(R.string.settings_crash_reporting),
-                options = listOf(
-                    PreferenceItemValue(
-                        value = true,
-                        label = getString(R.string.settings_crash_reporting_desc),
-                    ),
-                    PreferenceItemValue(
-                        value = false,
-                        label = getString(R.string.settings_crash_reporting_desc),
-                    ),
-                )
-            ))
             add(BasicPreferenceItem(
                 title = getString(R.string.settings_clear_cache),
                 summary = getString(R.string.settings_clear_cache_summary),

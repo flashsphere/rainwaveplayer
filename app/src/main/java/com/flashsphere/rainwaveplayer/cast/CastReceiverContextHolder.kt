@@ -11,14 +11,12 @@ import com.flashsphere.rainwaveplayer.service.MediaService
 import com.flashsphere.rainwaveplayer.util.CoroutineDispatchers
 import com.flashsphere.rainwaveplayer.util.PreferenceKey
 import com.flashsphere.rainwaveplayer.util.PreferencesKeys.ADD_REQUEST_TO_TOP
-import com.flashsphere.rainwaveplayer.util.PreferencesKeys.ANALYTICS
 import com.flashsphere.rainwaveplayer.util.PreferencesKeys.API_KEY
 import com.flashsphere.rainwaveplayer.util.PreferencesKeys.AUTO_REQUEST_CLEAR
 import com.flashsphere.rainwaveplayer.util.PreferencesKeys.AUTO_REQUEST_FAVE
 import com.flashsphere.rainwaveplayer.util.PreferencesKeys.AUTO_REQUEST_UNRATED
 import com.flashsphere.rainwaveplayer.util.PreferencesKeys.AUTO_VOTE_RULES
 import com.flashsphere.rainwaveplayer.util.PreferencesKeys.BUFFER_MIN
-import com.flashsphere.rainwaveplayer.util.PreferencesKeys.CRASH_REPORTING
 import com.flashsphere.rainwaveplayer.util.PreferencesKeys.HIDE_RATING_UNTIL_RATED
 import com.flashsphere.rainwaveplayer.util.PreferencesKeys.SSL_RELAY
 import com.flashsphere.rainwaveplayer.util.PreferencesKeys.USER_ID
@@ -81,8 +79,6 @@ class CastReceiverContextHolder @Inject constructor(
             importPreference(prefs, AUTO_REQUEST_UNRATED, jsonPreferences) { it.jsonPrimitive.boolean }
             importPreference(prefs, AUTO_REQUEST_CLEAR, jsonPreferences) { it.jsonPrimitive.boolean }
             importPreference(prefs, BUFFER_MIN, jsonPreferences) { it.jsonPrimitive.float }
-            importPreference(prefs, CRASH_REPORTING, jsonPreferences) { it.jsonPrimitive.boolean }
-            importPreference(prefs, ANALYTICS, jsonPreferences) { it.jsonPrimitive.boolean }
             importPreference(prefs, SSL_RELAY, jsonPreferences) { it.jsonPrimitive.boolean }
             importPreference(prefs, USE_OGG, jsonPreferences) { it.jsonPrimitive.boolean }
             importPreference(prefs, AUTO_VOTE_RULES, jsonPreferences) { it.jsonPrimitive.content }

@@ -4,8 +4,6 @@ appVersionName = "1.23.7"
 androidGradlePlugin = "8.13.0"
 kotlin = "2.2.20"
 dagger = "2.57.2"
-gmsPlugin = "4.4.4"
-firebaseCrashlyticsPlugin = "3.0.6"
 ksp = "2.3.0"
 ideaExt = "1.3"
 androidxBaselineProfile = "1.4.1"
@@ -47,7 +45,6 @@ kotlinxCoroutines = "1.10.2"
 okhttp3 = "4.12.0"
 coil = "3.3.0"
 timber = "5.0.1"
-firebaseBom = "34.4.0"
 leakcanary = "2.14"
 desugarJdkLibs = "2.1.5"
 junit = "4.13.2"
@@ -132,9 +129,6 @@ coil-cachecontrol = { group = "io.coil-kt.coil3", name = "coil-network-cache-con
 coil-compose = { group = "io.coil-kt.coil3", name = "coil-compose" }
 timber = { group = "com.jakewharton.timber", name = "timber", version.ref = "timber" }
 process-phoenix = { group = "com.jakewharton", name = "process-phoenix", version.ref = "processPhoenix" }
-google-firebase = { group = "com.google.firebase", name = "firebase-bom", version.ref = "firebaseBom" }
-google-firebase-analytics = { group = "com.google.firebase", name = "firebase-analytics" }
-google-firebase-crashlytics = { group = "com.google.firebase", name = "firebase-crashlytics" }
 leakcanary = { group = "com.squareup.leakcanary", name = "leakcanary-android", version.ref = "leakcanary" }
 desugarJdkLibs = { group = "com.android.tools", name = "desugar_jdk_libs", version.ref = "desugarJdkLibs" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
@@ -152,8 +146,6 @@ kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "ko
 kotlin-parcelize = { id = "org.jetbrains.kotlin.plugin.parcelize", version.ref = "kotlin" }
 kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
 dagger-hilt = { id = "com.google.dagger.hilt.android", version.ref = "dagger" }
-gms = { id = "com.google.gms.google-services", version.ref = "gmsPlugin" }
-firebase-crashlytics = { id = "com.google.firebase.crashlytics", version.ref = "firebaseCrashlyticsPlugin" }
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 androidx-baselineprofile = { id = "androidx.baselineprofile", version.ref = "androidxBaselineProfile"}
 idea-ext = { id = "org.jetbrains.gradle.plugin.idea-ext", version.ref = "ideaExt" }

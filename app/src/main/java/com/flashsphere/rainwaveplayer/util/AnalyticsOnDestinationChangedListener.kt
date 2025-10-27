@@ -3,7 +3,9 @@ package com.flashsphere.rainwaveplayer.util
 import android.os.Bundle
 import androidx.navigation.NavController
 import androidx.navigation.NavDestination
-import com.google.firebase.analytics.FirebaseAnalytics
+import com.flashsphere.rainwaveplayer.util.Analytics.Companion.EVENT_SCREEN_VIEW
+import com.flashsphere.rainwaveplayer.util.Analytics.Companion.SCREEN_CLASS
+import com.flashsphere.rainwaveplayer.util.Analytics.Companion.SCREEN_NAME
 
 class AnalyticsOnDestinationChangedListener(
     private val analytics: Analytics,
@@ -15,8 +17,8 @@ class AnalyticsOnDestinationChangedListener(
     ) {
         val params = Bundle().also {
             val route = destination.route?.substringBefore("/")
-            it.putString(FirebaseAnalytics.Param.SCREEN_NAME, route?.substringAfterLast("."))
-            it.putString(FirebaseAnalytics.Param.SCREEN_CLASS, route)
+            it.putString(SCREEN_NAME, route?.substringAfterLast("."))
+            it.putString(SCREEN_CLASS, route)
 
             arguments?.let { bundle ->
                 destination.arguments.forEach { (t, u) ->
@@ -24,6 +26,6 @@ class AnalyticsOnDestinationChangedListener(
                 }
             }
         }
-        analytics.logEvent(FirebaseAnalytics.Event.SCREEN_VIEW, params)
+        analytics.logEvent(EVENT_SCREEN_VIEW, params)
     }
 }

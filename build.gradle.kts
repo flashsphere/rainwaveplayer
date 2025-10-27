@@ -9,8 +9,6 @@ plugins {
     alias(libs.plugins.kotlin.parcelize) apply false
     alias(libs.plugins.kotlin.serialization) apply false
     alias(libs.plugins.dagger.hilt) apply false
-    alias(libs.plugins.gms) apply false
-    alias(libs.plugins.firebase.crashlytics) apply false
     alias(libs.plugins.ksp) apply false
     alias(libs.plugins.androidx.baselineprofile) apply false
 }
