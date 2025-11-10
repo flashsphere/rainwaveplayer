@@ -1,0 +1,2 @@
+#!/bin/sh
+./emulator_pixel5_api34 & ./emulator_androidtv_api34
