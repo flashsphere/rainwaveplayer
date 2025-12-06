@@ -1,2 +1,3 @@
 #!/bin/sh
-./emulator_pixel5_api34 & ./emulator_androidtv_api34
+SCRIPTDIR=`dirname $0`
+$SCRIPTDIR/emulator_pixel5_api34 & $SCRIPTDIR/emulator_androidtv_api34
