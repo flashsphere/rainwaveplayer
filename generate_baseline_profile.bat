@@ -1,1 +1,1 @@
-.\gradlew --no-daemon clean && .\gradlew --no-daemon :app:generateReleaseBaseline
+.\gradlew clean && .\gradlew :app:generateReleaseBaseline

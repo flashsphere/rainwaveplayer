@@ -1,3 +1,4 @@
 #!/bin/sh
 SCRIPTDIR=`dirname $0`
 $SCRIPTDIR/emulator_pixel5_api34 & $SCRIPTDIR/emulator_androidtv_api34
+exit

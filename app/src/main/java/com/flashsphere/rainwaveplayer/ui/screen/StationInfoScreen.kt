@@ -602,7 +602,7 @@ private fun ComingUpHeader(item: ComingUpHeaderItem) {
             style = AppTypography.bodyMedium,
             fontSize = 13.sp,
             lineHeight = 13.sp,
-            modifier = Modifier.padding(top = 8.dp))
+            modifier = Modifier.padding(top = 8.dp).testTag("coming_up_header"))
     }
 }
 

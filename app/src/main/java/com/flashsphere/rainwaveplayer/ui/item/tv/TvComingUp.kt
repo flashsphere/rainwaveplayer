@@ -12,6 +12,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.key
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
 import androidx.tv.material3.Text
 import com.flashsphere.rainwaveplayer.R
@@ -68,7 +69,7 @@ fun TvComingUpHeader(
 ) {
     val eventName = item.getEventName(LocalContext.current, LocalUserCredentials.current.isLoggedIn())
     Box(modifier = modifier) {
-        Text(text = eventName.uppercase())
+        Text(modifier = Modifier.testTag("coming_up_header"), text = eventName.uppercase())
     }
 }
 

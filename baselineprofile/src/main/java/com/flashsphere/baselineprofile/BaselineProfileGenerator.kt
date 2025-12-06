@@ -81,8 +81,12 @@ class BaselineProfileGenerator {
             }
         }
 
-        device.wait(Until.findObject(By.textContains("VOTE NOW")), TIMEOUT).let {
-            checkNotNull(it) { "UI element containing 'VOTE NOW' text not found!" }
+        device.wait(Until.findObject(By.res("coming_up_header")), TIMEOUT).let { header ->
+            checkNotNull(header) { "coming_up_header not found!" }
+
+            header.wait(Until.textContains("VOTE NOW"), TIMEOUT).let {
+                check(it) { "coming_up_header text does not contain 'VOTE NOW', is '${header.text}'"}
+            }
         }
     }
 
