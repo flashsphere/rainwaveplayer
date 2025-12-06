@@ -154,12 +154,16 @@ dependencies {
     implementation(libs.androidx.webkit)
     implementation(libs.androidx.collection)
     implementation(libs.androidx.lifecycle.vm)
+    implementation(libs.androidx.lifecycle.vm.navigation3)
     implementation(libs.androidx.lifecycle.vm.compose)
     implementation(libs.androidx.lifecycle.runtime.compose)
     implementation(libs.androidx.lifecycle.process)
     implementation(libs.androidx.lifecycle.service)
-    implementation(libs.androidx.navigation.compose)
-    implementation(libs.androidx.hilt.nav.compose)
+    implementation(libs.androidx.navigation3.runtime)
+    implementation(libs.androidx.navigation3.ui)
+    implementation(libs.androidx.hilt.nav.compose) {
+        exclude(group = "androidx.navigation")
+    }
     implementation(libs.androidx.splashscreen)
     implementation(libs.androidx.paging.compose)
     implementation(libs.androidx.startup)

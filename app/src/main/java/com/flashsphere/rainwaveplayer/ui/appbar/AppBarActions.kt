@@ -14,17 +14,17 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.key
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.navigation.NavHostController
 import com.flashsphere.rainwaveplayer.R
 import com.flashsphere.rainwaveplayer.ui.Tooltip
-import com.flashsphere.rainwaveplayer.ui.navigation.Route
-import com.flashsphere.rainwaveplayer.ui.navigation.navigateToRoute
+import com.flashsphere.rainwaveplayer.ui.navigation.Navigator
+import com.flashsphere.rainwaveplayer.ui.navigation.TopLevelRoute
 import com.flashsphere.rainwaveplayer.ui.screen.Preview
 import com.flashsphere.rainwaveplayer.ui.screen.PreviewTheme
 
@@ -77,13 +77,15 @@ data class AppBarAction(
 )
 
 @Composable
-fun toAppBarAction(navController: NavHostController, routes: List<Route>): List<AppBarAction> {
+fun toAppBarAction(navigator: Navigator, routes: List<TopLevelRoute>): List<AppBarAction> {
     return routes.map { route ->
-        AppBarAction(
-            icon = painterResource(route.icon),
-            text = stringResource(route.title),
-            onClick = remember(route) { { navController.navigateToRoute(route) } }
-        )
+        key(route) {
+            AppBarAction(
+                icon = painterResource(route.icon),
+                text = stringResource(route.title),
+                onClick = { navigator.navigate(route) }
+            )
+        }
     }
 }
 

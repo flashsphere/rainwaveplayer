@@ -69,7 +69,6 @@ import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.LifecycleStartEffect
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.navigation.NavHostController
 import com.flashsphere.rainwaveplayer.R
 import com.flashsphere.rainwaveplayer.model.station.Station
 import com.flashsphere.rainwaveplayer.ui.AppBarTitle
@@ -89,9 +88,10 @@ import com.flashsphere.rainwaveplayer.ui.composition.LocalUiSettings
 import com.flashsphere.rainwaveplayer.ui.enterAlwaysScrollBehavior
 import com.flashsphere.rainwaveplayer.ui.item.AlbumArt
 import com.flashsphere.rainwaveplayer.ui.item.SwipeToDismissBackground
-import com.flashsphere.rainwaveplayer.ui.navigation.LibraryRoute
-import com.flashsphere.rainwaveplayer.ui.navigation.NowPlayingRoute
-import com.flashsphere.rainwaveplayer.ui.navigation.SearchRoute
+import com.flashsphere.rainwaveplayer.ui.navigation.Library
+import com.flashsphere.rainwaveplayer.ui.navigation.Navigator
+import com.flashsphere.rainwaveplayer.ui.navigation.NowPlaying
+import com.flashsphere.rainwaveplayer.ui.navigation.Search
 import com.flashsphere.rainwaveplayer.ui.rememberNoFlingSwipeToDismissBoxState
 import com.flashsphere.rainwaveplayer.ui.theme.AppTypography
 import com.flashsphere.rainwaveplayer.util.OperationError
@@ -113,7 +113,7 @@ var requestsLongPressHintShown = false
 
 @Composable
 fun RequestsScreen(
-    navController: NavHostController,
+    navigator: Navigator,
     viewModel: RequestsScreenViewModel,
     stationFlow: StateFlow<Station?>,
     onMenuClick: () -> Unit,
@@ -136,7 +136,7 @@ fun RequestsScreen(
     }
 
     RequestsScreen(
-        navController = navController,
+        navigator = navigator,
         station = station,
         requestsScreenState = requestsScreenState,
         events = viewModel.snackbarEvents,
@@ -173,7 +173,7 @@ fun RequestsScreen(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun RequestsScreen(
-    navController: NavHostController,
+    navigator: Navigator,
     station: Station,
     requestsScreenState: RequestsScreenState,
     events: Flow<SnackbarEvent>,
@@ -221,7 +221,7 @@ private fun RequestsScreen(
         appBarScrollBehavior = scrollBehavior,
         navigationIcon = {
             if (LocalUiSettings.current.navigationSuiteType == NavigationSuiteType.None) {
-                BackIcon(onBackClick = { navController.popBackStack() })
+                BackIcon(onBackClick = { navigator.goBack() })
             } else {
                 MenuIcon(onMenuClick = onMenuClick)
             }
@@ -236,8 +236,8 @@ private fun RequestsScreen(
         },
         appBarActions = {
             if (LocalUiSettings.current.navigationSuiteType == NavigationSuiteType.None) {
-                AppBarActions(toAppBarAction(navController,
-                    listOf(NowPlayingRoute, LibraryRoute, SearchRoute)))
+                AppBarActions(toAppBarAction(navigator,
+                    listOf(NowPlaying, Library, Search)))
             }
         },
         snackbarEvents = events,
@@ -611,11 +611,9 @@ private class RequestsPreviewParameter : PreviewParameterProvider<RequestsScreen
 private fun RequestsScreenPreview(
     @PreviewParameter(RequestsPreviewParameter::class) requestsScreenState: RequestsScreenState
 ) {
-    val context = LocalContext.current
-    val navHostController = remember { NavHostController(context) }
     PreviewTheme {
         RequestsScreen(
-            navController = navHostController,
+            navigator = rememberPreviewNavigator(),
             station = stations[0],
             requestsScreenState = requestsScreenState,
             events = remember { MutableSharedFlow() },

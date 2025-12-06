@@ -26,7 +26,6 @@ import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.LifecycleStartEffect
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.navigation.NavHostController
 import com.flashsphere.rainwaveplayer.ui.AppBarTitle
 import com.flashsphere.rainwaveplayer.ui.AppError
 import com.flashsphere.rainwaveplayer.ui.AppScaffold
@@ -40,7 +39,7 @@ import com.flashsphere.rainwaveplayer.ui.item.LibrarySongItem
 import com.flashsphere.rainwaveplayer.ui.itemSpan
 import com.flashsphere.rainwaveplayer.ui.itemsSpan
 import com.flashsphere.rainwaveplayer.ui.navigation.AlbumDetail
-import com.flashsphere.rainwaveplayer.ui.navigation.navigateToDetail
+import com.flashsphere.rainwaveplayer.ui.navigation.Navigator
 import com.flashsphere.rainwaveplayer.ui.scrollToItem
 import com.flashsphere.rainwaveplayer.ui.theme.AppTypography
 import com.flashsphere.rainwaveplayer.util.ClassUtils.getSimpleClassName
@@ -59,7 +58,7 @@ import kotlinx.coroutines.launch
 
 @Composable
 fun CategoryDetailScreen(
-    navController: NavHostController,
+    navigator: Navigator,
     viewModel: CategoryScreenViewModel,
 ) {
     LifecycleStartEffect(Unit) {
@@ -73,8 +72,8 @@ fun CategoryDetailScreen(
         onSongClick = { song -> viewModel.requestSong(song) },
         onFaveSongClick = { song -> viewModel.faveSong(song) },
         onRefresh = { viewModel.getCategory() },
-        onBackClick = { navController.popBackStack() },
-        onAlbumClick = { navController.navigateToDetail(AlbumDetail(it.id, it.name)) },
+        onBackClick = { navigator.goBack() },
+        onAlbumClick = { navigator.navigate(AlbumDetail(it.id, it.name)) },
     )
 }
 
@@ -172,7 +171,7 @@ fun CategoryDetailList(
             span = itemsSpan(gridColumnCount) { _, item ->
                 if (item is AlbumState) GridItemSpan(gridColumnCount) else GridItemSpan(1)
             }
-        ) { i, item ->
+        ) { _, item ->
             when (item) {
                 is AlbumState -> {
                     Box(modifier = Modifier.animateItem()) {

@@ -19,7 +19,6 @@ import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.LifecycleStartEffect
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.navigation.NavHostController
 import androidx.tv.material3.Surface
 import com.flashsphere.rainwaveplayer.R
 import com.flashsphere.rainwaveplayer.model.MediaPlayerStatus
@@ -34,6 +33,7 @@ import com.flashsphere.rainwaveplayer.ui.composition.LocalLastFocused
 import com.flashsphere.rainwaveplayer.ui.item.tv.TvComingUp
 import com.flashsphere.rainwaveplayer.ui.item.tv.TvNowPlaying
 import com.flashsphere.rainwaveplayer.ui.item.tv.TvPreviouslyPlayed
+import com.flashsphere.rainwaveplayer.ui.navigation.Navigator
 import com.flashsphere.rainwaveplayer.ui.screen.PreviewTv
 import com.flashsphere.rainwaveplayer.ui.screen.PreviewTvTheme
 import com.flashsphere.rainwaveplayer.ui.screen.stationInfoData
@@ -50,7 +50,7 @@ import kotlinx.coroutines.flow.StateFlow
 
 @Composable
 fun TvStationInfoScreen(
-    navController: NavHostController,
+    navigator: Navigator,
     viewModel: MainViewModel,
 ) {
     val station = viewModel.station.collectAsStateWithLifecycle().value ?: return

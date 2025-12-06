@@ -31,7 +31,6 @@ import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.navigation.NavHostController
 import com.flashsphere.rainwaveplayer.R
 import com.flashsphere.rainwaveplayer.model.station.Station
 import com.flashsphere.rainwaveplayer.ui.AppBarTitle
@@ -46,9 +45,10 @@ import com.flashsphere.rainwaveplayer.ui.appbar.AppBarActions
 import com.flashsphere.rainwaveplayer.ui.appbar.toAppBarAction
 import com.flashsphere.rainwaveplayer.ui.composition.LocalUiSettings
 import com.flashsphere.rainwaveplayer.ui.enterAlwaysScrollBehavior
-import com.flashsphere.rainwaveplayer.ui.navigation.NowPlayingRoute
-import com.flashsphere.rainwaveplayer.ui.navigation.RequestsRoute
-import com.flashsphere.rainwaveplayer.ui.navigation.SearchRoute
+import com.flashsphere.rainwaveplayer.ui.navigation.Navigator
+import com.flashsphere.rainwaveplayer.ui.navigation.NowPlaying
+import com.flashsphere.rainwaveplayer.ui.navigation.Requests
+import com.flashsphere.rainwaveplayer.ui.navigation.Search
 import com.flashsphere.rainwaveplayer.view.viewmodel.LibraryScreenViewModel
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
@@ -56,7 +56,7 @@ import kotlinx.coroutines.launch
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LibraryScreen(
-    navController: NavHostController,
+    navigator: Navigator,
     viewModel: LibraryScreenViewModel,
     stationFlow: StateFlow<Station?>,
     onMenuClick: () -> Unit,
@@ -91,7 +91,7 @@ fun LibraryScreen(
             if (filterActivated.value) {
                 BackIcon(onBackClick = { filterActivated.value = false })
             } else if (LocalUiSettings.current.navigationSuiteType == NavigationSuiteType.None) {
-                BackIcon(onBackClick = { navController.popBackStack() })
+                BackIcon(onBackClick = { navigator.goBack() })
             } else {
                 MenuIcon(onMenuClick = onMenuClick)
             }
@@ -123,11 +123,11 @@ fun LibraryScreen(
                 val overflowActions = mutableListOf<AppBarAction>()
 
                 if (filterActivated.value) {
-                    overflowActions.addAll(toAppBarAction(navController,
-                        listOf(NowPlayingRoute, RequestsRoute, SearchRoute)))
+                    overflowActions.addAll(toAppBarAction(navigator,
+                        listOf(NowPlaying, Requests, Search)))
                 } else {
-                    actions.addAll(toAppBarAction(navController,
-                        listOf(NowPlayingRoute, RequestsRoute, SearchRoute)))
+                    actions.addAll(toAppBarAction(navigator,
+                        listOf(NowPlaying, Requests, Search)))
                 }
                 AppBarActions(
                     actions = actions,
@@ -183,7 +183,7 @@ fun LibraryScreen(
                 when (tabs[index]) {
                     LibraryType.Albums -> {
                         AlbumLibraryTab(
-                            navController = navController,
+                            navigator = navigator,
                             station = station,
                             viewModel = viewModel,
                             scrollToTop = scrollToTop,
@@ -191,7 +191,7 @@ fun LibraryScreen(
                     }
                     LibraryType.Artists -> {
                         ArtistLibraryTab(
-                            navController = navController,
+                            navigator = navigator,
                             station = station,
                             viewModel = viewModel,
                             scrollToTop = scrollToTop,
@@ -199,7 +199,7 @@ fun LibraryScreen(
                     }
                     LibraryType.Categories -> {
                         CategoryLibraryTab(
-                            navController = navController,
+                            navigator = navigator,
                             station = station,
                             viewModel = viewModel,
                             scrollToTop = scrollToTop,

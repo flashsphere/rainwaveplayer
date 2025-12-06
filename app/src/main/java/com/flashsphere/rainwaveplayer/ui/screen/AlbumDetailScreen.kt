@@ -59,7 +59,6 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.lifecycle.compose.LifecycleStartEffect
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.navigation.NavHostController
 import com.flashsphere.rainwaveplayer.R
 import com.flashsphere.rainwaveplayer.model.station.Station
 import com.flashsphere.rainwaveplayer.ui.AppBarTitle
@@ -75,6 +74,7 @@ import com.flashsphere.rainwaveplayer.ui.item.AlbumArt
 import com.flashsphere.rainwaveplayer.ui.item.LibrarySongItem
 import com.flashsphere.rainwaveplayer.ui.itemSpan
 import com.flashsphere.rainwaveplayer.ui.navigation.AlbumDetail
+import com.flashsphere.rainwaveplayer.ui.navigation.Navigator
 import com.flashsphere.rainwaveplayer.ui.scrollToItem
 import com.flashsphere.rainwaveplayer.ui.theme.AppTypography
 import com.flashsphere.rainwaveplayer.util.Formatter.formatRating
@@ -93,7 +93,7 @@ import androidx.appcompat.R as AppCompatR
 
 @Composable
 fun AlbumDetailScreen(
-    navController: NavHostController,
+    navigator: Navigator,
     viewModel: AlbumScreenViewModel,
     stationFlow: StateFlow<Station?>,
     albumDetail: AlbumDetail,
@@ -113,7 +113,7 @@ fun AlbumDetailScreen(
         onSongClick = { song -> viewModel.requestSong(song) },
         onFaveSongClick = { song -> viewModel.faveSong(song) },
         onRefresh = { viewModel.getAlbum() },
-        onBackClick = { navController.popBackStack() }
+        onBackClick = { navigator.goBack() }
     )
 }
 

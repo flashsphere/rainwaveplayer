@@ -28,7 +28,6 @@ import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.LifecycleStartEffect
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.navigation.NavHostController
 import com.flashsphere.rainwaveplayer.R
 import com.flashsphere.rainwaveplayer.model.station.Station
 import com.flashsphere.rainwaveplayer.ui.AppError
@@ -41,7 +40,7 @@ import com.flashsphere.rainwaveplayer.ui.item.RequestLineItem
 import com.flashsphere.rainwaveplayer.ui.navigation.AlbumDetail
 import com.flashsphere.rainwaveplayer.ui.navigation.ArtistDetail
 import com.flashsphere.rainwaveplayer.ui.navigation.CategoryDetail
-import com.flashsphere.rainwaveplayer.ui.navigation.navigateToDetail
+import com.flashsphere.rainwaveplayer.ui.navigation.Navigator
 import com.flashsphere.rainwaveplayer.ui.scrollToItem
 import com.flashsphere.rainwaveplayer.util.JobUtils.cancel
 import com.flashsphere.rainwaveplayer.util.OperationError
@@ -59,7 +58,7 @@ import kotlinx.coroutines.flow.filter
 
 @Composable
 fun AlbumLibraryTab(
-    navController: NavHostController,
+    navigator: Navigator,
     station: Station,
     viewModel: LibraryScreenViewModel,
     scrollToTop: MutableState<Boolean>,
@@ -82,7 +81,7 @@ fun AlbumLibraryTab(
                 album = item,
                 showGlobalRating = !LocalUiSettings.current.hideRatingsUntilRated,
                 onClick = { album ->
-                    navController.navigateToDetail(AlbumDetail(album.id, album.name))
+                    navigator.navigate(AlbumDetail(album.id, album.name))
                 },
                 onFaveClick = { album -> viewModel.faveAlbum(station, album) },
             )
@@ -91,7 +90,7 @@ fun AlbumLibraryTab(
 
 @Composable
 fun ArtistLibraryTab(
-    navController: NavHostController,
+    navigator: Navigator,
     station: Station,
     viewModel: LibraryScreenViewModel,
     scrollToTop: MutableState<Boolean>,
@@ -107,14 +106,14 @@ fun ArtistLibraryTab(
         onRefresh = { job.value = viewModel.getAllArtists(station, true) },
         itemContent = { _, item: ArtistState ->
             LibraryItem(title = item.name, onClick = {
-                navController.navigateToDetail(ArtistDetail(item.id, item.name))
+                navigator.navigate(ArtistDetail(item.id, item.name))
             })
         })
 }
 
 @Composable
 fun CategoryLibraryTab(
-    navController: NavHostController,
+    navigator: Navigator,
     station: Station,
     viewModel: LibraryScreenViewModel,
     scrollToTop: MutableState<Boolean>,
@@ -130,7 +129,7 @@ fun CategoryLibraryTab(
         onRefresh = { job.value = viewModel.getAllCategories(station, true) },
         itemContent = { _, item: CategoryState ->
             LibraryItem(title = item.name, onClick = {
-                navController.navigateToDetail(CategoryDetail(item.id, item.name))
+                navigator.navigate(CategoryDetail(item.id, item.name))
             })
         })
 }

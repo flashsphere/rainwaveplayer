@@ -27,7 +27,6 @@ import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.LifecycleStartEffect
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.navigation.NavHostController
 import com.flashsphere.rainwaveplayer.R
 import com.flashsphere.rainwaveplayer.ui.AppBarTitle
 import com.flashsphere.rainwaveplayer.ui.AppError
@@ -42,7 +41,7 @@ import com.flashsphere.rainwaveplayer.ui.item.LibrarySongItem
 import com.flashsphere.rainwaveplayer.ui.itemSpan
 import com.flashsphere.rainwaveplayer.ui.itemsSpan
 import com.flashsphere.rainwaveplayer.ui.navigation.AlbumDetail
-import com.flashsphere.rainwaveplayer.ui.navigation.navigateToDetail
+import com.flashsphere.rainwaveplayer.ui.navigation.Navigator
 import com.flashsphere.rainwaveplayer.ui.scrollToItem
 import com.flashsphere.rainwaveplayer.ui.theme.AppTypography
 import com.flashsphere.rainwaveplayer.util.ClassUtils.getSimpleClassName
@@ -62,7 +61,7 @@ import kotlinx.coroutines.launch
 
 @Composable
 fun ArtistDetailScreen(
-    navController: NavHostController,
+    navigator: Navigator,
     viewModel: ArtistScreenViewModel,
 ) {
     LifecycleStartEffect(Unit) {
@@ -76,8 +75,8 @@ fun ArtistDetailScreen(
         onSongClick = { song -> viewModel.requestSong(song) },
         onFaveSongClick = { song -> viewModel.faveSong(song) },
         onRefresh = { viewModel.getArtist() },
-        onBackClick = { navController.popBackStack() },
-        onAlbumClick = { navController.navigateToDetail(AlbumDetail(it.id, it.name)) },
+        onBackClick = { navigator.goBack() },
+        onAlbumClick = { navigator.navigate(AlbumDetail(it.id, it.name)) },
     )
 }
 

@@ -35,7 +35,6 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.lifecycle.compose.LifecycleStartEffect
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.navigation.NavHostController
 import androidx.tv.material3.MaterialTheme
 import androidx.tv.material3.Surface
 import androidx.tv.material3.Text
@@ -49,6 +48,7 @@ import com.flashsphere.rainwaveplayer.ui.composition.LocalTvUiSettings
 import com.flashsphere.rainwaveplayer.ui.item.AlbumArt
 import com.flashsphere.rainwaveplayer.ui.item.tv.TvSongListItem
 import com.flashsphere.rainwaveplayer.ui.navigation.AlbumDetail
+import com.flashsphere.rainwaveplayer.ui.navigation.Navigator
 import com.flashsphere.rainwaveplayer.ui.saveLastFocused
 import com.flashsphere.rainwaveplayer.ui.screen.PreviewTv
 import com.flashsphere.rainwaveplayer.ui.screen.PreviewTvTheme
@@ -64,7 +64,7 @@ import androidx.appcompat.R as AppCompatR
 
 @Composable
 fun TvAlbumDetailScreen(
-    navController: NavHostController,
+    navigator: Navigator,
     viewModel: AlbumScreenViewModel,
     stationFlow: StateFlow<Station?>,
     detail: AlbumDetail,

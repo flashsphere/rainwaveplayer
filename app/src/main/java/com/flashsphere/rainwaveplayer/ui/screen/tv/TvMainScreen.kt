@@ -13,11 +13,9 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.key
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -34,9 +32,6 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.semantics.testTagsAsResourceId
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.navigation.NavDestination.Companion.hasRoute
-import androidx.navigation.NavDestination.Companion.hierarchy
-import androidx.navigation.NavHostController
 import androidx.tv.material3.DrawerValue
 import androidx.tv.material3.Icon
 import androidx.tv.material3.MaterialTheme
@@ -58,21 +53,20 @@ import com.flashsphere.rainwaveplayer.ui.composition.LocalUserCredentials
 import com.flashsphere.rainwaveplayer.ui.drawer.DrawerItemHandler
 import com.flashsphere.rainwaveplayer.ui.drawer.tv.TvNavigationDrawerItem
 import com.flashsphere.rainwaveplayer.ui.item.tv.TvListItem
-import com.flashsphere.rainwaveplayer.ui.navigation.NowPlayingRoute
-import com.flashsphere.rainwaveplayer.ui.navigation.navigateToRoute
+import com.flashsphere.rainwaveplayer.ui.navigation.Navigator
+import com.flashsphere.rainwaveplayer.ui.navigation.NowPlaying
 import com.flashsphere.rainwaveplayer.ui.navigation.topLevelRoutes
-import com.flashsphere.rainwaveplayer.ui.navigation.tv.TvNavigationGraph
+import com.flashsphere.rainwaveplayer.ui.navigation.tv.TvNavigationDisplay
 import com.flashsphere.rainwaveplayer.ui.theme.tv.TvAppTheme
 import com.flashsphere.rainwaveplayer.util.isLoggedIn
 import com.flashsphere.rainwaveplayer.view.activity.tv.TvWebViewActivity
 import com.flashsphere.rainwaveplayer.view.uistate.model.UserState
 import com.flashsphere.rainwaveplayer.view.viewmodel.MainViewModel
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.map
 
 @Composable
 fun TvMainScreen(
-    navController: NavHostController,
+    navigator: Navigator,
     viewModel: MainViewModel,
     drawerItemHandler: DrawerItemHandler,
 ) {
@@ -87,7 +81,7 @@ fun TvMainScreen(
                     onRetry = { viewModel.getStations() })
             } else if (stationsScreenState.stations != null) {
                 TvMainScreenLoaded(
-                    navController = navController,
+                    navigator = navigator,
                     viewModel = viewModel,
                     stations = stationsScreenState.stations,
                     drawerItemHandler = drawerItemHandler,
@@ -100,7 +94,7 @@ fun TvMainScreen(
 
 @Composable
 private fun TvMainScreenLoaded(
-    navController: NavHostController,
+    navigator: Navigator,
     viewModel: MainViewModel,
     stations: SnapshotStateList<Station>,
     drawerItemHandler: DrawerItemHandler,
@@ -116,7 +110,7 @@ private fun TvMainScreenLoaded(
             drawerState = drawerState,
             drawerContent = {
                 NavigationDrawerContent(
-                    navController = navController,
+                    navigator = navigator,
                     stations = stations,
                     selectedStation = station,
                     userFlow = viewModel.user,
@@ -126,9 +120,9 @@ private fun TvMainScreenLoaded(
             },
             scrimBrush = SolidColor(MaterialTheme.colorScheme.scrim.copy(alpha = 0.8f))
         ) {
-            TvNavigationGraph(
+            TvNavigationDisplay(
                 mainViewModel = viewModel,
-                navController = navController,
+                navigator = navigator,
             )
         }
     }
@@ -136,7 +130,7 @@ private fun TvMainScreenLoaded(
 
 @Composable
 private fun NavigationDrawerScope.NavigationDrawerContent(
-    navController: NavHostController,
+    navigator: Navigator,
     stations: SnapshotStateList<Station>,
     selectedStation: Station,
     userFlow: StateFlow<UserState?>,
@@ -151,7 +145,7 @@ private fun NavigationDrawerScope.NavigationDrawerContent(
         if (userCredentials.isLoggedIn()) {
             topLevelRoutes
         } else {
-            listOf(NowPlayingRoute)
+            listOf(NowPlaying)
         }
     }
     val showStationDialog = remember { mutableStateOf(false) }
@@ -194,27 +188,22 @@ private fun NavigationDrawerScope.NavigationDrawerContent(
         Column(Modifier.align(Alignment.Center)) {
             routes.forEachIndexed { i, route ->
                 key(i) {
-                    var containsCurrentRoute by remember { mutableStateOf(false) }
-                    var isRouteOnTop by remember { mutableStateOf(false) }
-
-                    LaunchedEffect(Unit) {
-                        navController.currentBackStackEntryFlow
-                            .map { it.destination }
-                            .collect { destination ->
-                                containsCurrentRoute = destination.hierarchy.any { it.hasRoute(route::class) }
-                                isRouteOnTop = destination.hasRoute(route.startDestination::class)
-                            }
-                    }
-
                     TvNavigationDrawerItem(
-                        selected = containsCurrentRoute,
+                        selected = navigator.state.topLevelRoute == route,
                         onClick = {
+                            val containsCurrentRoute = navigator.state.topLevelRoute == route
+                            val isRouteOnTop = if (navigator.state.topLevelRoute == route) {
+                                navigator.state.backStacks[route]?.size == 1
+                            } else {
+                                false
+                            }
+
                             if (isRouteOnTop) {
                                 closeDrawer()
                             } else if (containsCurrentRoute) {
-                                navController.popBackStack(route.startDestination, false)
+                                navigator.goBackToTopLevel()
                             } else {
-                                navController.navigateToRoute(route)
+                                navigator.navigate(route)
                             }
                         },
                         leadingContent = {

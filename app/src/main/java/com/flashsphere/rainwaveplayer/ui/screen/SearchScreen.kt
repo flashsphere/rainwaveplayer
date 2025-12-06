@@ -32,14 +32,12 @@ import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.LifecycleStartEffect
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.navigation.NavHostController
 import com.flashsphere.rainwaveplayer.R
 import com.flashsphere.rainwaveplayer.model.station.Station
 import com.flashsphere.rainwaveplayer.ui.AppError
@@ -58,10 +56,10 @@ import com.flashsphere.rainwaveplayer.ui.item.LibrarySongItem
 import com.flashsphere.rainwaveplayer.ui.itemsSpan
 import com.flashsphere.rainwaveplayer.ui.navigation.AlbumDetail
 import com.flashsphere.rainwaveplayer.ui.navigation.ArtistDetail
-import com.flashsphere.rainwaveplayer.ui.navigation.LibraryRoute
-import com.flashsphere.rainwaveplayer.ui.navigation.NowPlayingRoute
-import com.flashsphere.rainwaveplayer.ui.navigation.RequestsRoute
-import com.flashsphere.rainwaveplayer.ui.navigation.navigateToDetail
+import com.flashsphere.rainwaveplayer.ui.navigation.Library
+import com.flashsphere.rainwaveplayer.ui.navigation.Navigator
+import com.flashsphere.rainwaveplayer.ui.navigation.NowPlaying
+import com.flashsphere.rainwaveplayer.ui.navigation.Requests
 import com.flashsphere.rainwaveplayer.ui.scrollToItem
 import com.flashsphere.rainwaveplayer.ui.theme.AppTypography
 import com.flashsphere.rainwaveplayer.util.ClassUtils.getSimpleClassName
@@ -87,7 +85,7 @@ import kotlinx.coroutines.flow.filter
 
 @Composable
 fun SearchScreen(
-    navController: NavHostController,
+    navigator: Navigator,
     viewModel: SearchScreenViewModel,
     stationFlow: StateFlow<Station?>,
     scrollToTop: MutableState<Boolean>,
@@ -104,21 +102,21 @@ fun SearchScreen(
     }
 
     SearchScreen(
-        navController = navController,
+        navigator = navigator,
         searchTextFieldState = viewModel.searchTextFieldState,
         screenStateFlow = viewModel.searchState,
         search = { viewModel.search() },
         events = viewModel.snackbarEvents,
         onAlbumClick = { album ->
-            navController.navigateToDetail(AlbumDetail(album.id, album.name))
+            navigator.navigate(AlbumDetail(album.id, album.name))
         },
         onFaveAlbumClick = { album -> viewModel.faveAlbum(album) },
         onArtistClick = { artist ->
-            navController.navigateToDetail(ArtistDetail(artist.id, artist.name))
+            navigator.navigate(ArtistDetail(artist.id, artist.name))
         },
         onSongClick = { song -> viewModel.requestSong(song) },
         onFaveSongClick = { song -> viewModel.faveSong(song) },
-        onBackClick = { navController.popBackStack() },
+        onBackClick = { navigator.goBack() },
         scrollToTop = scrollToTop,
     )
 }
@@ -126,7 +124,7 @@ fun SearchScreen(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun SearchScreen(
-    navController: NavHostController,
+    navigator: Navigator,
     searchTextFieldState: TextFieldState,
     screenStateFlow: StateFlow<SearchScreenState>,
     search: () -> Unit,
@@ -158,8 +156,8 @@ private fun SearchScreen(
         appBarScrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(),
         appBarActions = {
             if (LocalUiSettings.current.navigationSuiteType == NavigationSuiteType.None) {
-                AppBarActions(overflowActions = toAppBarAction(navController,
-                    listOf(NowPlayingRoute, RequestsRoute, LibraryRoute)))
+                AppBarActions(overflowActions = toAppBarAction(navigator,
+                    listOf(NowPlaying, Requests, Library)))
             }
         },
         snackbarEvents = events,
@@ -308,14 +306,12 @@ fun SearchSong(
 private fun SearchScreenPreview(
     @PreviewParameter(SearchScreenPreviewProvider::class) searchState: SearchScreenState
 ) {
-    val context = LocalContext.current
-    val navHostController = remember { NavHostController(context) }
     val textFieldState = rememberTextFieldState("some query")
     val searchScreenState  = remember { MutableStateFlow(searchState) }
     val events  = remember { MutableSharedFlow<SnackbarEvent>() }
     PreviewTheme {
         SearchScreen(
-            navController = navHostController,
+            navigator = rememberPreviewNavigator(),
             searchTextFieldState = textFieldState,
             screenStateFlow = searchScreenState,
             search = {},

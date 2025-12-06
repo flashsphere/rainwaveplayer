@@ -3,93 +3,77 @@ package com.flashsphere.rainwaveplayer.ui.navigation
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.key
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
-import androidx.navigation.NavDestination.Companion.hasRoute
-import androidx.navigation.NavDestination.Companion.hierarchy
-import androidx.navigation.NavHostController
+import androidx.navigation3.runtime.NavKey
 import com.flashsphere.rainwaveplayer.R
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import kotlinx.serialization.Serializable
 
-val topLevelRoutes = listOf(NowPlayingRoute, RequestsRoute, LibraryRoute, SearchRoute)
-val drawerGesturesEnabledTopLevelRoutes = listOf(NowPlayingRoute, RequestsRoute, LibraryRoute)
+interface Route : NavKey
 
-interface Route {
+interface TopLevelRoute : Route {
     @get:StringRes
     val title: Int
     @get:DrawableRes
     val icon: Int
-    val startDestination: Any
 }
 
-interface DetailRoute
+interface DetailRoute : Route {
+    val id: Int
+    val name: String
+}
 
 @Serializable
-object NowPlayingRoute : Route {
+object NowPlaying : TopLevelRoute {
     override val title: Int = R.string.now_playing
     override val icon: Int = R.drawable.ic_now_playing_white_24dp
-    override val startDestination = NowPlaying
 }
-@Serializable object RequestsRoute : Route {
+@Serializable object Requests : TopLevelRoute {
     override val title: Int = R.string.action_requests
     override val icon: Int = R.drawable.ic_requests_white_24dp
-    override val startDestination = this
 }
-@Serializable object LibraryRoute : Route {
+@Serializable object Library : TopLevelRoute {
     override val title: Int = R.string.action_library
     override val icon: Int = R.drawable.ic_library_music_white_24dp
-    override val startDestination = Library
 }
-@Serializable object SearchRoute : Route {
+@Serializable object Search : TopLevelRoute {
     override val title: Int = R.string.action_search
     override val icon: Int = R.drawable.ic_search_white_24dp
-    override val startDestination = Search
 }
 
-@Serializable object NowPlaying: DetailRoute
-@Serializable object Library: DetailRoute
-@Serializable object Search: DetailRoute
-@Serializable data class AlbumDetail(val id: Int, val name: String): DetailRoute
-@Serializable data class ArtistDetail(val id: Int, val name: String): DetailRoute
-@Serializable data class CategoryDetail(val id: Int, val name: String): DetailRoute
+@Serializable data class AlbumDetail(override val id: Int, override val name: String): DetailRoute
+@Serializable data class ArtistDetail(override val id: Int, override val name: String): DetailRoute
+@Serializable data class CategoryDetail(override val id: Int, override val name: String): DetailRoute
+
+val topLevelRoutes = setOf(NowPlaying, Requests, Library, Search)
+val drawerGesturesEnabledTopLevelRoutes = setOf(NowPlaying, Requests, Library)
 
 @Composable
 fun Routes(
-    navController: NavHostController,
+    navigator: Navigator,
     scrollToTop: MutableState<Boolean>,
-    itemContent: @Composable (route: Route, selected: Boolean, onClick: () -> Unit) -> Unit,
+    itemContent: @Composable (route: TopLevelRoute, selected: Boolean, onClick: () -> Unit) -> Unit,
 ) {
     val scope = rememberCoroutineScope()
 
     topLevelRoutes.forEachIndexed { i, route ->
         key(i) {
-            var containsCurrentRoute by remember { mutableStateOf(false) }
-            var isRouteOnTop by remember { mutableStateOf(false) }
+            itemContent(route, navigator.state.topLevelRoute == route) {
+                val containsCurrentRoute = navigator.state.topLevelRoute == route
+                val isRouteOnTop = if (navigator.state.topLevelRoute == route) {
+                    navigator.state.backStacks[route]?.size == 1
+                } else {
+                    false
+                }
 
-            LaunchedEffect(route) {
-                navController.currentBackStackEntryFlow
-                    .map { it.destination }
-                    .collect { destination ->
-                        containsCurrentRoute = destination.hierarchy.any { it.hasRoute(route::class) }
-                        isRouteOnTop = destination.hasRoute(route.startDestination::class)
-                    }
-            }
-
-            itemContent(route, containsCurrentRoute) {
                 if (isRouteOnTop) {
                     scope.launch { scrollToTop.value = true }
                 } else if (containsCurrentRoute) {
-                    navController.popBackStack(route.startDestination, false)
+                    navigator.goBackToTopLevel()
                 } else {
-                    navController.navigateToRoute(route)
+                    navigator.navigate(route)
                 }
             }
         }

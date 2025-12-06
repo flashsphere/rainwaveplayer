@@ -24,7 +24,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.LifecycleStartEffect
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.navigation.NavHostController
 import androidx.tv.material3.LocalContentColor
 import androidx.tv.material3.MaterialTheme
 import androidx.tv.material3.Surface
@@ -37,13 +36,14 @@ import com.flashsphere.rainwaveplayer.model.station.Station
 import com.flashsphere.rainwaveplayer.ui.LibraryType
 import com.flashsphere.rainwaveplayer.ui.composition.LastFocused
 import com.flashsphere.rainwaveplayer.ui.composition.LocalLastFocused
+import com.flashsphere.rainwaveplayer.ui.navigation.Navigator
 import com.flashsphere.rainwaveplayer.ui.saveLastFocused
 import com.flashsphere.rainwaveplayer.view.viewmodel.LibraryScreenViewModel
 import kotlinx.coroutines.flow.StateFlow
 
 @Composable
 fun TvLibraryScreen(
-    navController: NavHostController,
+    navigator: Navigator,
     viewModel: LibraryScreenViewModel,
     stationFlow: StateFlow<Station?>,
 ) {
@@ -68,17 +68,17 @@ fun TvLibraryScreen(
 
             when(selectedLibrary.value) {
                 LibraryType.Albums -> TvAlbumLibraryTab(
-                    navController = navController,
+                    navigator = navigator,
                     viewModel = viewModel,
                     station = station,
                 )
                 LibraryType.Artists ->  TvArtistLibraryTab(
-                    navController = navController,
+                    navigator = navigator,
                     viewModel = viewModel,
                     station = station,
                 )
                 LibraryType.Categories -> TvCategoryLibraryTab(
-                    navController = navController,
+                    navigator = navigator,
                     viewModel = viewModel,
                     station = station,
                 )

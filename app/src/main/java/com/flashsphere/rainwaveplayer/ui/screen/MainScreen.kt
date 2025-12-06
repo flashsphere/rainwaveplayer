@@ -26,16 +26,15 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.semantics.testTagsAsResourceId
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.navigation.NavDestination.Companion.hasRoute
-import androidx.navigation.NavHostController
 import com.flashsphere.rainwaveplayer.R
 import com.flashsphere.rainwaveplayer.ui.ErrorWithRetry
 import com.flashsphere.rainwaveplayer.ui.composition.LocalUiSettings
 import com.flashsphere.rainwaveplayer.ui.drawer.DrawerItemHandler
 import com.flashsphere.rainwaveplayer.ui.drawer.NavigationDrawerContent
 import com.flashsphere.rainwaveplayer.ui.navigation.BottomNavigation
-import com.flashsphere.rainwaveplayer.ui.navigation.NavigationGraph
+import com.flashsphere.rainwaveplayer.ui.navigation.NavigationDisplay
 import com.flashsphere.rainwaveplayer.ui.navigation.NavigationSuiteScaffold
+import com.flashsphere.rainwaveplayer.ui.navigation.Navigator
 import com.flashsphere.rainwaveplayer.ui.navigation.SideNavigation
 import com.flashsphere.rainwaveplayer.ui.navigation.drawerGesturesEnabledTopLevelRoutes
 import com.flashsphere.rainwaveplayer.ui.sleeptimer.SleepTimerDialog
@@ -45,7 +44,7 @@ import com.flashsphere.rainwaveplayer.view.viewmodel.MainViewModel
 
 @Composable
 fun MainScreen(
-    navController: NavHostController,
+    navigator: Navigator,
     mainViewModel: MainViewModel,
     drawerItemHandler: DrawerItemHandler,
 ) {
@@ -61,7 +60,7 @@ fun MainScreen(
             }
         } else {
             MainScreenLoaded(
-                navController = navController,
+                navigator = navigator,
                 mainViewModel = mainViewModel,
                 drawerItemHandler = drawerItemHandler,
             )
@@ -83,7 +82,7 @@ private fun MainScreenLoading() {
 
 @Composable
 private fun MainScreenLoaded(
-    navController: NavHostController,
+    navigator: Navigator,
     mainViewModel: MainViewModel,
     drawerItemHandler: DrawerItemHandler,
 ) {
@@ -94,12 +93,9 @@ private fun MainScreenLoaded(
     val gesturesEnabled = remember { mutableStateOf(false) }
 
     LaunchedEffect(Unit) {
-        navController.currentBackStackEntryFlow
-            .collect { navBackStackEntry ->
-                val currentRoute = navBackStackEntry.destination
-                gesturesEnabled.value = drawerGesturesEnabledTopLevelRoutes.any {
-                    currentRoute.hasRoute(it.startDestination::class)
-                }
+        navigator.currentRouteFlow
+            .collect { currentRoute ->
+                gesturesEnabled.value = drawerGesturesEnabledTopLevelRoutes.contains(currentRoute)
             }
     }
 
@@ -131,7 +127,7 @@ private fun MainScreenLoaded(
                 when (navSuiteType) {
                     NavigationSuiteType.NavigationRail -> {
                         SideNavigation(
-                            navController = navController,
+                            navigator = navigator,
                             alwaysShowLabel = LocalUiSettings.current.bottomNavPreference == BottomNavPreference.Labeled,
                             scrollToTop = scrollToTop,
                             userFlow = mainViewModel.user,
@@ -141,7 +137,7 @@ private fun MainScreenLoaded(
                     }
                     NavigationSuiteType.NavigationBar -> {
                         BottomNavigation(
-                            navController = navController,
+                            navigator = navigator,
                             alwaysShowLabel = LocalUiSettings.current.bottomNavPreference == BottomNavPreference.Labeled,
                             scrollToTop = scrollToTop,
                         )
@@ -150,8 +146,8 @@ private fun MainScreenLoaded(
                 }
             }
         ) {
-            NavigationGraph(
-                navController = navController,
+            NavigationDisplay(
+                navigator = navigator,
                 navSuiteType = navSuiteType,
                 mainViewModel = mainViewModel,
                 drawerState = drawerState,

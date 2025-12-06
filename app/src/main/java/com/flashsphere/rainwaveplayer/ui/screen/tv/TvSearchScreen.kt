@@ -32,7 +32,6 @@ import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.LifecycleStartEffect
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.navigation.NavHostController
 import androidx.tv.material3.MaterialTheme
 import androidx.tv.material3.Surface
 import androidx.tv.material3.Text
@@ -50,7 +49,7 @@ import com.flashsphere.rainwaveplayer.ui.item.tv.TvSongListItem
 import com.flashsphere.rainwaveplayer.ui.itemsSpan
 import com.flashsphere.rainwaveplayer.ui.navigation.AlbumDetail
 import com.flashsphere.rainwaveplayer.ui.navigation.ArtistDetail
-import com.flashsphere.rainwaveplayer.ui.navigation.navigateToDetail
+import com.flashsphere.rainwaveplayer.ui.navigation.Navigator
 import com.flashsphere.rainwaveplayer.ui.saveLastFocused
 import com.flashsphere.rainwaveplayer.ui.screen.PreviewTv
 import com.flashsphere.rainwaveplayer.ui.screen.PreviewTvTheme
@@ -76,7 +75,7 @@ import kotlinx.coroutines.flow.StateFlow
 
 @Composable
 fun TvSearchScreen(
-    navController: NavHostController,
+    navigator: Navigator,
     viewModel: SearchScreenViewModel,
     stationFlow: StateFlow<Station?>,
 ) {
@@ -96,10 +95,10 @@ fun TvSearchScreen(
         screenStateFlow = viewModel.searchState,
         search = { viewModel.search() },
         onAlbumClick = { album ->
-            navController.navigateToDetail(AlbumDetail(album.id, album.name))
+            navigator.navigate(AlbumDetail(album.id, album.name))
         },
         onArtistClick = { artist ->
-            navController.navigateToDetail(ArtistDetail(artist.id, artist.name))
+            navigator.navigate(ArtistDetail(artist.id, artist.name))
         },
         onSongClick = { song -> viewModel.requestSong(song) },
         onFaveSongClick = { song -> viewModel.faveSong(song) },

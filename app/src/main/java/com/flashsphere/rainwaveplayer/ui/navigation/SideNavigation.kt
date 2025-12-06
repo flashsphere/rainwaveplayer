@@ -18,13 +18,12 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.navigation.NavHostController
-import androidx.navigation.compose.rememberNavController
 import com.flashsphere.rainwaveplayer.R
 import com.flashsphere.rainwaveplayer.ui.Tooltip
 import com.flashsphere.rainwaveplayer.ui.item.UserAvatar
 import com.flashsphere.rainwaveplayer.ui.screen.PreviewTablet
 import com.flashsphere.rainwaveplayer.ui.screen.PreviewTheme
+import com.flashsphere.rainwaveplayer.ui.screen.rememberPreviewNavigator
 import com.flashsphere.rainwaveplayer.ui.screen.userStateData
 import com.flashsphere.rainwaveplayer.view.uistate.model.UserState
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -32,7 +31,7 @@ import kotlinx.coroutines.flow.StateFlow
 
 @Composable
 fun SideNavigation(
-    navController: NavHostController,
+    navigator: Navigator,
     alwaysShowLabel: Boolean,
     scrollToTop: MutableState<Boolean>,
     userFlow: StateFlow<UserState?>,
@@ -47,7 +46,7 @@ fun SideNavigation(
     ) {
         Spacer(Modifier.weight(1F))
         Routes(
-            navController = navController,
+            navigator = navigator,
             scrollToTop = scrollToTop,
         ) { route, selected, onClick ->
             SideNavigationItem(
@@ -86,7 +85,7 @@ fun SideNavigation(
 
 @Composable
 private fun SideNavigationItem(
-    route: Route,
+    route: TopLevelRoute,
     alwaysShowLabel: Boolean,
     selected: Boolean,
     onClick: () -> Unit,
@@ -112,7 +111,7 @@ private fun SideNavigationWithLabelPreview() {
     PreviewTheme {
         Surface {
             SideNavigation(
-                navController = rememberNavController(),
+                navigator = rememberPreviewNavigator(),
                 alwaysShowLabel = true,
                 scrollToTop = remember { mutableStateOf(false) },
                 userFlow = remember { MutableStateFlow(userStateData[1]) },
@@ -129,7 +128,7 @@ private fun SideNavigationWithoutLabelPreview() {
     PreviewTheme {
         Surface {
             SideNavigation(
-                navController = rememberNavController(),
+                navigator = rememberPreviewNavigator(),
                 alwaysShowLabel = false,
                 scrollToTop = remember { mutableStateOf(false) },
                 userFlow = remember { MutableStateFlow(null) },

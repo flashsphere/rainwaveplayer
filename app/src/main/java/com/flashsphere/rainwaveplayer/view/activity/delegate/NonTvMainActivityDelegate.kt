@@ -9,9 +9,9 @@ import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSiz
 import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.remember
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.lifecycle.lifecycleScope
-import androidx.navigation.compose.rememberNavController
 import com.flashsphere.rainwaveplayer.cast.CastSessionManagerListener
 import com.flashsphere.rainwaveplayer.coroutine.launchWithDefaults
 import com.flashsphere.rainwaveplayer.model.station.Station
@@ -22,6 +22,10 @@ import com.flashsphere.rainwaveplayer.ui.composition.LocalUserCredentials
 import com.flashsphere.rainwaveplayer.ui.composition.UiScreenConfig
 import com.flashsphere.rainwaveplayer.ui.composition.UiSettings
 import com.flashsphere.rainwaveplayer.ui.drawer.DrawerItemHandler
+import com.flashsphere.rainwaveplayer.ui.navigation.Navigator
+import com.flashsphere.rainwaveplayer.ui.navigation.NowPlaying
+import com.flashsphere.rainwaveplayer.ui.navigation.rememberNavigationState
+import com.flashsphere.rainwaveplayer.ui.navigation.topLevelRoutes
 import com.flashsphere.rainwaveplayer.ui.screen.MainScreen
 import com.flashsphere.rainwaveplayer.util.AnalyticsOnDestinationChangedListener
 import com.flashsphere.rainwaveplayer.util.JobUtils.cancel
@@ -65,10 +69,15 @@ class NonTvMainActivityDelegate(
         }
 
         activity.setContent("MainScreen") {
-            val navController = rememberNavController()
-            DisposableEffect(navController) {
-                navController.addOnDestinationChangedListener(analyticsOnDestinationChangedListener)
-                onDispose { navController.removeOnDestinationChangedListener(analyticsOnDestinationChangedListener) }
+            val navigationState = rememberNavigationState(
+                startRoute = NowPlaying,
+                topLevelRoutes = topLevelRoutes
+            )
+            val navigator = remember { Navigator(navigationState) }
+
+            DisposableEffect(navigator) {
+                navigator.addOnDestinationChangedListener(analyticsOnDestinationChangedListener)
+                onDispose { navigator.removeOnDestinationChangedListener(analyticsOnDestinationChangedListener) }
             }
 
             val configuration = LocalConfiguration.current
@@ -86,7 +95,7 @@ class NonTvMainActivityDelegate(
                 LocalUiSettings provides UiSettings(navSuiteType, activity.dataStore),
             ) {
                 MainScreen(
-                    navController = navController,
+                    navigator = navigator,
                     mainViewModel = mainViewModel,
                     drawerItemHandler = drawerItemHandler,
                 )

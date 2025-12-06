@@ -83,7 +83,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.LifecycleStartEffect
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.navigation.NavHostController
 import com.flashsphere.rainwaveplayer.R
 import com.flashsphere.rainwaveplayer.flow.tickerFlow
 import com.flashsphere.rainwaveplayer.model.MediaPlayerStatus
@@ -115,10 +114,10 @@ import com.flashsphere.rainwaveplayer.ui.item.HorizontalSeparator
 import com.flashsphere.rainwaveplayer.ui.itemsSpan
 import com.flashsphere.rainwaveplayer.ui.navigation.AlbumDetail
 import com.flashsphere.rainwaveplayer.ui.navigation.ArtistDetail
-import com.flashsphere.rainwaveplayer.ui.navigation.LibraryRoute
-import com.flashsphere.rainwaveplayer.ui.navigation.RequestsRoute
-import com.flashsphere.rainwaveplayer.ui.navigation.SearchRoute
-import com.flashsphere.rainwaveplayer.ui.navigation.navigateToDetail
+import com.flashsphere.rainwaveplayer.ui.navigation.Library
+import com.flashsphere.rainwaveplayer.ui.navigation.Navigator
+import com.flashsphere.rainwaveplayer.ui.navigation.Requests
+import com.flashsphere.rainwaveplayer.ui.navigation.Search
 import com.flashsphere.rainwaveplayer.ui.rating.RatingDialog
 import com.flashsphere.rainwaveplayer.ui.rating.RatingText
 import com.flashsphere.rainwaveplayer.ui.theme.AppTypography
@@ -163,7 +162,7 @@ import kotlin.time.Duration.Companion.seconds
 
 @Composable
 fun StationInfoScreen(
-    navController: NavHostController,
+    navigator: Navigator,
     viewModel: MainViewModel,
     scrollToTop: MutableState<Boolean>,
     onMenuClick: () -> Unit,
@@ -181,7 +180,7 @@ fun StationInfoScreen(
     }
 
     StationInfoScreen(
-        navController = navController,
+        navigator = navigator,
         station = station,
         stationInfoScreenStateFlow = viewModel.stationInfoScreenState,
         userStateFlow = viewModel.user,
@@ -205,7 +204,7 @@ fun StationInfoScreen(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun StationInfoScreen(
-    navController: NavHostController,
+    navigator: Navigator,
     station: Station,
     stationInfoScreenStateFlow: StateFlow<StationInfoScreenState>,
     userStateFlow: StateFlow<UserState?>,
@@ -273,12 +272,12 @@ private fun StationInfoScreen(
             if (LocalUserCredentials.current.isLoggedIn() && LocalUiSettings.current.bottomNavPreference.isHidden()) {
                 if (LocalUiScreenConfig.current.widthSizeClass > WindowWidthSizeClass.Compact) {
                     AppBarActions(
-                        toAppBarAction(navController, listOf(RequestsRoute, LibraryRoute, SearchRoute)),
+                        toAppBarAction(navigator, listOf(Requests, Library, Search)),
                     )
                 } else {
                     AppBarActions(
-                        toAppBarAction(navController, listOf(RequestsRoute)),
-                        toAppBarAction(navController, listOf(LibraryRoute, SearchRoute)),
+                        toAppBarAction(navigator, listOf(Requests)),
+                        toAppBarAction(navigator, listOf(Library, Search)),
                     )
                 }
             }
@@ -323,11 +322,11 @@ private fun StationInfoScreen(
             },
             onAlbumClick = {
                 songActionsState.value = null
-                navController.navigateToDetail(it)
+                navigator.navigate(it)
             },
             onArtistClick = {
                 songActionsState.value = null
-                navController.navigateToDetail(it)
+                navigator.navigate(it)
             },
         )
 
@@ -822,13 +821,11 @@ private class StationInfoScreenStatePreviewProvider : PreviewParameterProvider<S
 private fun StationInfoScreenPreview(
     @PreviewParameter(StationInfoScreenStatePreviewProvider::class) stationInfoScreenState: StationInfoScreenState
 ) {
-    val context = LocalContext.current
-    val navHostController = remember { NavHostController(context) }
     val showPreviouslyPlayed = remember { MutableStateFlow(false) }
 
     PreviewTheme(userCredentials = UserCredentials(2, "")) {
         StationInfoScreen(
-            navController = navHostController,
+            navigator = rememberPreviewNavigator(),
             station = stations[0],
             stationInfoScreenStateFlow = MutableStateFlow(stationInfoScreenState),
             userStateFlow = remember { MutableStateFlow(userStateData[0]) },

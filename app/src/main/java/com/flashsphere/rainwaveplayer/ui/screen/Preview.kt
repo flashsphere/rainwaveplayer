@@ -17,6 +17,10 @@ import com.flashsphere.rainwaveplayer.ui.composition.LocalUserCredentials
 import com.flashsphere.rainwaveplayer.ui.composition.TvUiSettings
 import com.flashsphere.rainwaveplayer.ui.composition.UiScreenConfig
 import com.flashsphere.rainwaveplayer.ui.composition.UiSettings
+import com.flashsphere.rainwaveplayer.ui.navigation.Navigator
+import com.flashsphere.rainwaveplayer.ui.navigation.NowPlaying
+import com.flashsphere.rainwaveplayer.ui.navigation.rememberNavigationState
+import com.flashsphere.rainwaveplayer.ui.navigation.topLevelRoutes
 import com.flashsphere.rainwaveplayer.ui.theme.AppTheme
 import com.flashsphere.rainwaveplayer.ui.theme.tv.TvAppTheme
 import com.flashsphere.rainwaveplayer.util.BottomNavPreference
@@ -65,4 +69,9 @@ fun PreviewTvTheme(
             content()
         }
     }
+}
+
+@Composable
+fun rememberPreviewNavigator(): Navigator {
+    return Navigator(rememberNavigationState(NowPlaying, topLevelRoutes))
 }

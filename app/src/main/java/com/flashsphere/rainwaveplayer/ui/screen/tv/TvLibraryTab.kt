@@ -25,7 +25,6 @@ import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.LifecycleStartEffect
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.navigation.NavHostController
 import androidx.tv.material3.Surface
 import androidx.tv.material3.Text
 import com.flashsphere.rainwaveplayer.R
@@ -39,7 +38,7 @@ import com.flashsphere.rainwaveplayer.ui.item.tv.TvRequestLineListItem
 import com.flashsphere.rainwaveplayer.ui.navigation.AlbumDetail
 import com.flashsphere.rainwaveplayer.ui.navigation.ArtistDetail
 import com.flashsphere.rainwaveplayer.ui.navigation.CategoryDetail
-import com.flashsphere.rainwaveplayer.ui.navigation.navigateToDetail
+import com.flashsphere.rainwaveplayer.ui.navigation.Navigator
 import com.flashsphere.rainwaveplayer.ui.saveLastFocused
 import com.flashsphere.rainwaveplayer.ui.screen.PreviewTv
 import com.flashsphere.rainwaveplayer.ui.screen.PreviewTvTheme
@@ -56,7 +55,7 @@ import kotlinx.coroutines.flow.StateFlow
 
 @Composable
 fun TvAlbumLibraryTab(
-    navController: NavHostController,
+    navigator: Navigator,
     viewModel: LibraryScreenViewModel,
     station: Station,
 ) {
@@ -77,14 +76,14 @@ fun TvAlbumLibraryTab(
             modifier = modifier.saveLastFocused(item.key),
             album = item,
             showGlobalRating = !LocalTvUiSettings.current.hideRatingsUntilRated,
-            onClick = { navController.navigateToDetail(AlbumDetail(item.id, item.name)) },
+            onClick = { navigator.navigate(AlbumDetail(item.id, item.name)) },
         )
     }
 }
 
 @Composable
 fun TvArtistLibraryTab(
-    navController: NavHostController,
+    navigator: Navigator,
     viewModel: LibraryScreenViewModel,
     station: Station,
 ) {
@@ -100,14 +99,14 @@ fun TvArtistLibraryTab(
         TvListItem(
             modifier = modifier.fillMaxWidth().saveLastFocused(item.key),
             text = item.name,
-            onClick = { navController.navigateToDetail(ArtistDetail(item.id, item.name)) },
+            onClick = { navigator.navigate(ArtistDetail(item.id, item.name)) },
         )
     }
 }
 
 @Composable
 fun TvCategoryLibraryTab(
-    navController: NavHostController,
+    navigator: Navigator,
     viewModel: LibraryScreenViewModel,
     station: Station,
 ) {
@@ -123,7 +122,7 @@ fun TvCategoryLibraryTab(
         TvListItem(
             modifier = modifier.fillMaxWidth().saveLastFocused(item.key),
             text = item.name,
-            onClick = { navController.navigateToDetail(CategoryDetail(item.id, item.name)) },
+            onClick = { navigator.navigate(CategoryDetail(item.id, item.name)) },
         )
     }
 }

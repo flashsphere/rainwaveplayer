@@ -14,7 +14,6 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow.Companion.Ellipsis
-import androidx.navigation.NavHostController
 import com.flashsphere.rainwaveplayer.ui.Tooltip
 import com.flashsphere.rainwaveplayer.ui.screen.Preview
 import com.flashsphere.rainwaveplayer.ui.screen.PreviewTablet
@@ -22,13 +21,13 @@ import com.flashsphere.rainwaveplayer.ui.screen.PreviewTheme
 
 @Composable
 fun BottomNavigation(
-    navController: NavHostController,
+    navigator: Navigator,
     alwaysShowLabel: Boolean,
     scrollToTop: MutableState<Boolean>,
 ) {
     NavigationBar {
         Routes(
-            navController = navController,
+            navigator = navigator,
             scrollToTop = scrollToTop,
         ) { route, selected, onClick ->
             BottomNavigationItem(
@@ -43,7 +42,7 @@ fun BottomNavigation(
 
 @Composable
 private fun RowScope.BottomNavigationItem(
-    route: Route,
+    route: TopLevelRoute,
     alwaysShowLabel: Boolean,
     selected: Boolean,
     onClick: () -> Unit,

@@ -38,7 +38,6 @@ import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.LifecycleStartEffect
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.navigation.NavHostController
 import androidx.tv.material3.Button
 import androidx.tv.material3.Icon
 import androidx.tv.material3.MaterialTheme
@@ -53,6 +52,7 @@ import com.flashsphere.rainwaveplayer.ui.animation.fadeOut
 import com.flashsphere.rainwaveplayer.ui.composition.LastFocused
 import com.flashsphere.rainwaveplayer.ui.composition.LocalLastFocused
 import com.flashsphere.rainwaveplayer.ui.item.tv.TvRequestSongCard
+import com.flashsphere.rainwaveplayer.ui.navigation.Navigator
 import com.flashsphere.rainwaveplayer.ui.saveLastFocused
 import com.flashsphere.rainwaveplayer.ui.screen.PreviewTv
 import com.flashsphere.rainwaveplayer.ui.screen.PreviewTvTheme
@@ -68,14 +68,14 @@ import kotlin.math.min
 
 @Composable
 fun TvRequestsScreen(
-    navController: NavHostController,
+    navigator: Navigator,
     viewModel: RequestsScreenViewModel,
     stationFlow: StateFlow<Station?>,
 ) {
     val station = stationFlow.collectAsStateWithLifecycle().value
     LifecycleStartEffect(station) {
         if (station == null) {
-            navController.popBackStack()
+            navigator.goBack()
         } else {
             viewModel.subscribeStationInfo(station, false)
         }

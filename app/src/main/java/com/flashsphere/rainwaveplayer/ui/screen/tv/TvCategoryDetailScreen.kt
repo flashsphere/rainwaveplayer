@@ -19,7 +19,6 @@ import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.LifecycleStartEffect
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.navigation.NavHostController
 import androidx.tv.material3.Surface
 import androidx.tv.material3.Text
 import com.flashsphere.rainwaveplayer.R
@@ -33,7 +32,7 @@ import com.flashsphere.rainwaveplayer.ui.item.tv.TvAlbumHeaderItem
 import com.flashsphere.rainwaveplayer.ui.item.tv.TvSongListItem
 import com.flashsphere.rainwaveplayer.ui.navigation.AlbumDetail
 import com.flashsphere.rainwaveplayer.ui.navigation.CategoryDetail
-import com.flashsphere.rainwaveplayer.ui.navigation.navigateToDetail
+import com.flashsphere.rainwaveplayer.ui.navigation.Navigator
 import com.flashsphere.rainwaveplayer.ui.saveLastFocused
 import com.flashsphere.rainwaveplayer.ui.screen.PreviewTv
 import com.flashsphere.rainwaveplayer.ui.screen.PreviewTvTheme
@@ -48,7 +47,7 @@ import kotlinx.coroutines.flow.StateFlow
 
 @Composable
 fun TvCategoryDetailScreen(
-    navController: NavHostController,
+    navigator: Navigator,
     viewModel: CategoryScreenViewModel,
     stationFlow: StateFlow<Station?>,
     detail: CategoryDetail,
@@ -74,7 +73,7 @@ fun TvCategoryDetailScreen(
         } else if (screenState.loaded && screenState.category != null) {
             TvCategoryDetailScreen(
                 category = screenState.category,
-                onAlbumClick = { navController.navigateToDetail(AlbumDetail(it.id, it.name)) },
+                onAlbumClick = { navigator.navigate(AlbumDetail(it.id, it.name)) },
                 onSongClick = { song -> viewModel.requestSong(song) },
                 onFaveSongClick = { song -> viewModel.faveSong(song) },
             )
