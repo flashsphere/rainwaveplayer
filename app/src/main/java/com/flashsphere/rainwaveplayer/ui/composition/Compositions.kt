@@ -65,7 +65,7 @@ class UiScreenConfig(
     val gridSpan: Int = when {
         (widthSizeClass == WindowWidthSizeClass.Compact ||
             heightSizeClass == WindowHeightSizeClass.Compact ||
-            windowSize.width < 700.dp) -> 1
+            windowSize.width < 825.dp) -> 1
         else -> 2
     }
 
