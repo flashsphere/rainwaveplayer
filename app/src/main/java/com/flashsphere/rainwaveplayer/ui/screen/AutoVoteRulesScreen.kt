@@ -34,7 +34,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.SwipeToDismissBox
-import androidx.compose.material3.SwipeToDismissBoxValue
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -213,24 +212,13 @@ private fun RuleItem(
     val currentIndex by rememberUpdatedState(index)
 
     val dismissState = rememberNoFlingSwipeToDismissBoxState(
-        confirmValueChange = { state ->
-            if (state != SwipeToDismissBoxValue.Settled) {
-                onDelete(currentRule, currentIndex)
-            } else {
-                false
-            }
-        },
         positionalThreshold = { it * .2F }
     )
 
     SwipeToDismissBox(
         state = dismissState,
         backgroundContent = { SwipeToDismissBackground(dismissState) },
-        onDismiss = {
-            if (it != SwipeToDismissBoxValue.Settled) {
-                onDelete(currentRule, currentIndex)
-            }
-        },
+        onDismiss = { onDelete(currentRule, currentIndex) },
     ) {
         Row(modifier = Modifier.background(MaterialTheme.colorScheme.surface)
             .fillMaxWidth()

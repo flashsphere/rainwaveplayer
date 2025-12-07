@@ -37,7 +37,6 @@ import androidx.compose.material3.SmallFloatingActionButton
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Surface
 import androidx.compose.material3.SwipeToDismissBox
-import androidx.compose.material3.SwipeToDismissBoxValue
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteType
@@ -380,13 +379,6 @@ private fun RequestItem(
     val currentIndex by rememberUpdatedState(index)
 
     val dismissState = rememberNoFlingSwipeToDismissBoxState(
-        confirmValueChange = { state ->
-            if (state != SwipeToDismissBoxValue.Settled) {
-                onDelete(currentItem, currentIndex)
-            } else {
-                false
-            }
-        },
         positionalThreshold = { it * .2F }
     )
 
@@ -400,11 +392,7 @@ private fun RequestItem(
     SwipeToDismissBox(
         state = dismissState,
         backgroundContent = { SwipeToDismissBackground(dismissState) },
-        onDismiss = {
-            if (it != SwipeToDismissBoxValue.Settled) {
-                onDelete(currentItem, currentIndex)
-            }
-        },
+        onDismiss = { onDelete(currentItem, currentIndex) },
     ) {
         Row(modifier = Modifier.then(bgColor).fillMaxWidth()
             .combinedClickable(

@@ -29,12 +29,10 @@ import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Surface
 import androidx.compose.material3.SwipeToDismissBox
-import androidx.compose.material3.SwipeToDismissBoxValue
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.TopAppBarScrollBehavior
-import androidx.compose.material3.rememberSwipeToDismissBoxState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
@@ -80,23 +78,17 @@ fun AppScaffold(
             .fillMaxSize()
             .nestedScroll(appBarScrollBehavior.nestedScrollConnection),
         snackbarHost = {
-            val swipeToDismissBoxState = rememberSwipeToDismissBoxState()
-
-            LaunchedEffect(swipeToDismissBoxState.currentValue) {
-                if (swipeToDismissBoxState.currentValue != SwipeToDismissBoxValue.Settled) {
-                    swipeToDismissBoxState.reset()
-                }
-            }
+            val swipeToDismissBoxState = rememberNoFlingSwipeToDismissBoxState(
+                positionalThreshold = { it * .2F }
+            )
 
             SwipeToDismissBox(
                 state = swipeToDismissBoxState,
                 backgroundContent = {},
+                enableDismissFromEndToStart = snackbarHostState.currentSnackbarData != null,
+                enableDismissFromStartToEnd = snackbarHostState.currentSnackbarData != null,
                 content = { SnackbarHost(hostState = snackbarHostState) },
-                onDismiss = {
-                    if (it != SwipeToDismissBoxValue.Settled) {
-                        snackbarHostState.currentSnackbarData?.dismiss()
-                    }
-                },
+                onDismiss = { snackbarHostState.currentSnackbarData?.dismiss() }
             )
         },
         topBar = {
