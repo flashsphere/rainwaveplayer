@@ -145,8 +145,8 @@ class MediaTileService : TileService() {
             .setSmallIcon(R.drawable.ic_rainwave_24dp)
             .setCategory(CATEGORY_TRANSPORT)
             .setForegroundServiceBehavior(NotificationCompat.FOREGROUND_SERVICE_IMMEDIATE)
-            .setContentTitle(getString(R.string.connecting).toString())
-            .setTicker(getString(R.string.connecting).toString())
+            .setContentTitle(getString(R.string.connecting))
+            .setTicker(getString(R.string.connecting))
             .build()
     }
 

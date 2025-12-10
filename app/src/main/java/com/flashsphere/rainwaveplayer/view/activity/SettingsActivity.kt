@@ -42,14 +42,12 @@ import com.flashsphere.rainwaveplayer.util.BottomNavPreference
 import com.flashsphere.rainwaveplayer.util.BufferMinSettingHelper
 import com.flashsphere.rainwaveplayer.util.CoroutineDispatchers
 import com.flashsphere.rainwaveplayer.util.PreferencesKeys.ADD_REQUEST_TO_TOP
-import com.flashsphere.rainwaveplayer.util.PreferencesKeys.ANALYTICS
 import com.flashsphere.rainwaveplayer.util.PreferencesKeys.AUTO_PLAY
 import com.flashsphere.rainwaveplayer.util.PreferencesKeys.AUTO_REQUEST_CLEAR
 import com.flashsphere.rainwaveplayer.util.PreferencesKeys.AUTO_REQUEST_FAVE
 import com.flashsphere.rainwaveplayer.util.PreferencesKeys.AUTO_REQUEST_UNRATED
 import com.flashsphere.rainwaveplayer.util.PreferencesKeys.BTM_NAV
 import com.flashsphere.rainwaveplayer.util.PreferencesKeys.BUFFER_MIN
-import com.flashsphere.rainwaveplayer.util.PreferencesKeys.CRASH_REPORTING
 import com.flashsphere.rainwaveplayer.util.PreferencesKeys.HIDE_RATING_UNTIL_RATED
 import com.flashsphere.rainwaveplayer.util.PreferencesKeys.SSL_RELAY
 import com.flashsphere.rainwaveplayer.util.PreferencesKeys.USE_ANY_NETWORK

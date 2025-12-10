@@ -29,7 +29,7 @@ import androidx.compose.runtime.toMutableStateList
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.graphics.painter.Painter
-import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalResources
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -86,7 +86,7 @@ fun TvRequestsScreen(
     }
 
     val screenState = viewModel.requestsScreenState.collectAsStateWithLifecycle().value
-    val context = LocalContext.current
+    val resources = LocalResources.current
     val selectedRequest = remember { mutableStateOf<SelectedRequest?>(null) }
 
     val lastFocused = LocalLastFocused.current
@@ -104,27 +104,27 @@ fun TvRequestsScreen(
         screenState = screenState,
         onRetry = { viewModel.subscribeStationInfo(true) },
         onResumeClick = {
-            viewModel.showSnackbarMessage(context.getString(R.string.loading_resume_queue))
+            viewModel.showSnackbarMessage(resources.getString(R.string.loading_resume_queue))
             viewModel.resumeQueue()
         },
         onSuspendClick = {
-            viewModel.showSnackbarMessage(context.getString(R.string.loading_suspend_queue))
+            viewModel.showSnackbarMessage(resources.getString(R.string.loading_suspend_queue))
             viewModel.suspendQueue()
         },
         onRequestFavesClick = {
-            viewModel.showSnackbarMessage(context.getString(R.string.loading_request_fave))
+            viewModel.showSnackbarMessage(resources.getString(R.string.loading_request_fave))
             viewModel.requestFavorites()
         },
         onRequestUnratedClick = {
-            viewModel.showSnackbarMessage(context.getString(R.string.loading_request_unrated))
+            viewModel.showSnackbarMessage(resources.getString(R.string.loading_request_unrated))
             viewModel.requestUnrated()
         },
         onClearClick = {
-            viewModel.showSnackbarMessage(context.getString(R.string.loading_clear_request))
+            viewModel.showSnackbarMessage(resources.getString(R.string.loading_clear_request))
             viewModel.clearRequests()
         },
         onRefreshClick = {
-            viewModel.showSnackbarMessage(context.getString(R.string.refreshing))
+            viewModel.showSnackbarMessage(resources.getString(R.string.refreshing))
             viewModel.subscribeStationInfo(true)
         },
         selectedRequest = selectedRequest,

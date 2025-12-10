@@ -11,7 +11,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.key
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalResources
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.tv.material3.Text
@@ -67,13 +67,13 @@ fun TvPreviouslyPlayedItem(
     showToast: (message: String) -> Unit,
 ) {
     val isLoggedIn = LocalUserCredentials.current.isLoggedIn()
-    val context = LocalContext.current
+    val resources = LocalResources.current
 
     val onClick = {
         if (isLoggedIn) {
             onMoreClick(item)
         } else {
-            showToast(context.getString(R.string.error_not_logged_in))
+            showToast(resources.getString(R.string.error_not_logged_in))
         }
     }
 

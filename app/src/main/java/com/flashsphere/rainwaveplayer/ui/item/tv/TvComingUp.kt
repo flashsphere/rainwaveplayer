@@ -12,6 +12,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.key
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalResources
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
 import androidx.tv.material3.Text
@@ -82,7 +83,7 @@ fun TvComingUpItem(
     showToast: (message: String) -> Unit,
 ) {
     val isLoggedIn = LocalUserCredentials.current.isLoggedIn()
-    val context = LocalContext.current
+    val resources = LocalResources.current
 
     TvStationInfoSongCard(
         modifier = modifier,
@@ -94,13 +95,13 @@ fun TvComingUpItem(
                     onVoteClick(item)
                     if (!longPressHintShown) {
                         longPressHintShown = true
-                        showToast(context.getString(R.string.tv_song_long_press_hint))
+                        showToast(resources.getString(R.string.tv_song_long_press_hint))
                     }
                 } else {
                     onMoreClick(item)
                 }
             } else {
-                showToast(context.getString(R.string.error_not_logged_in))
+                showToast(resources.getString(R.string.error_not_logged_in))
             }
         },
         onLongClick = {
@@ -108,7 +109,7 @@ fun TvComingUpItem(
                 longPressHintShown = true
                 onMoreClick(item)
             } else {
-                showToast(context.getString(R.string.error_not_logged_in))
+                showToast(resources.getString(R.string.error_not_logged_in))
             }
         },
     )

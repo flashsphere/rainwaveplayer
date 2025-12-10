@@ -46,8 +46,8 @@ import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalHapticFeedback
+import androidx.compose.ui.platform.LocalResources
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.ParagraphStyle
 import androidx.compose.ui.text.buildAnnotatedString
@@ -251,7 +251,7 @@ private fun RuleItem(
 
 @Composable
 private fun RuleItemText(modifier: Modifier = Modifier, rule: Rule) {
-    val context = LocalContext.current
+    val resources = LocalResources.current
     val text = remember(rule) {
         buildAnnotatedString {
             val iterator = rule.conditions.listIterator()
@@ -262,22 +262,22 @@ private fun RuleItemText(modifier: Modifier = Modifier, rule: Rule) {
                         when (condition) {
                             is RequestCondition -> {
                                 when (condition.requestType) {
-                                    RequestType.User -> append(context.getString(condition.requestType.fullStringResId))
-                                    RequestType.Others -> append(context.getString(condition.requestType.fullStringResId))
+                                    RequestType.User -> append(resources.getString(condition.requestType.fullStringResId))
+                                    RequestType.Others -> append(resources.getString(condition.requestType.fullStringResId))
                                 }
                             }
                             is RatingCondition -> {
-                                append(context.getString(condition.conditionType.stringResId))
+                                append(resources.getString(condition.conditionType.stringResId))
                                 append(" ${condition.operator.value} ${condition.rating}")
                             }
                             is FaveSongCondition, FaveAlbumCondition -> {
-                                append(context.getString(condition.conditionType.stringResId))
+                                append(resources.getString(condition.conditionType.stringResId))
                             }
                         }
                         if (iterator.hasNext()) {
                             withStyle(style = AppTypography.bodySmall.toSpanStyle()) {
                                 append(" ")
-                                append(context.getString(R.string.auto_vote_condition_and))
+                                append(resources.getString(R.string.auto_vote_condition_and))
                             }
                         }
                     }
