@@ -1,4 +1,3 @@
-
 plugins {
     alias(libs.plugins.idea.ext)
     alias(libs.plugins.android.application)
@@ -194,6 +193,7 @@ dependencies {
     ksp(libs.dagger.compiler)
     implementation(libs.dagger.hilt)
     ksp(libs.dagger.hilt.compiler)
+    ksp(libs.kotlin.metadata.jvm)
 
     implementation(libs.google.cast)
     implementation(libs.google.cast.framework)

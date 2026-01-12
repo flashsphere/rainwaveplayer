@@ -11,6 +11,7 @@ import com.flashsphere.rainwaveplayer.util.CoroutineDispatchers
 import com.google.android.gms.cast.MediaInfo
 import com.google.android.gms.cast.MediaLoadRequestData
 import com.google.android.gms.cast.MediaMetadata
+import com.google.android.gms.cast.MediaMetadata.MEDIA_TYPE_MUSIC_TRACK
 import com.google.android.gms.cast.framework.CastSession
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
@@ -64,7 +65,7 @@ class PlaybackManager @Inject constructor(
     }
 
     fun play(castSession: CastSession, station: Station) {
-        val metadata = MediaMetadata()
+        val metadata = MediaMetadata(MEDIA_TYPE_MUSIC_TRACK)
         metadata.putString(MediaMetadata.KEY_TITLE, station.name)
 
         val media = MediaInfo.Builder(station.id.toString())
