@@ -1,10 +1,8 @@
 package com.flashsphere.rainwaveplayer.app
 
 import android.app.Application
-import android.content.Context
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
-import androidx.multidex.MultiDex
 import coil3.ImageLoader
 import coil3.PlatformContext
 import coil3.SingletonImageLoader
@@ -69,11 +67,6 @@ class RainwaveApp : Application(), SingletonImageLoader.Factory {
         Timber.plant(CrashlyticsTree(this, coroutineDispatchers, dataStore))
 
         NotificationChannelHelper(this).setupNotificationChannels()
-    }
-
-    override fun attachBaseContext(base: Context?) {
-        super.attachBaseContext(base)
-        MultiDex.install(this)
     }
 
     override fun onTrimMemory(level: Int) {

@@ -1,7 +1,8 @@
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+
 plugins {
     alias(libs.plugins.idea.ext)
     alias(libs.plugins.android.application)
-    alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.kotlin.parcelize)
     alias(libs.plugins.kotlin.serialization)
@@ -13,6 +14,15 @@ plugins {
 idea {
     module {
         excludeDirs.add(file("src/release/generated/baselineProfiles"))
+    }
+}
+
+kotlin {
+    compilerOptions {
+        jvmTarget = JvmTarget.JVM_21
+        freeCompilerArgs.addAll(listOf(
+            "-Xannotation-default-target=param-property",
+        ))
     }
 }
 
@@ -37,18 +47,12 @@ android {
         compose = true
         viewBinding = true
         buildConfig = true
+        resValues = true
     }
     compileOptions {
         isCoreLibraryDesugaringEnabled = true
         sourceCompatibility = JavaVersion.VERSION_21
         targetCompatibility = JavaVersion.VERSION_21
-    }
-    kotlin {
-        compilerOptions {
-            freeCompilerArgs.addAll(listOf(
-                "-Xannotation-default-target=param-property"
-            ))
-        }
     }
     packaging {
         resources {
@@ -118,12 +122,13 @@ android {
             isIncludeAndroidResources = true
         }
     }
-    baselineProfile {
-        dexLayoutOptimization = true
-    }
     androidResources {
         localeFilters += listOf("en", "fr")
     }
+}
+
+baselineProfile {
+    dexLayoutOptimization = true
 }
 
 composeCompiler {
@@ -149,7 +154,6 @@ dependencies {
     implementation(libs.androidx.media3.okhttp)
     implementation(libs.androidx.media)
     implementation(libs.androidx.mediarouter)
-    implementation(libs.androidx.multidex)
     implementation(libs.androidx.webkit)
     implementation(libs.androidx.collection)
     implementation(libs.androidx.lifecycle.vm)
@@ -224,8 +228,6 @@ dependencies {
 
     coreLibraryDesugaring(libs.desugarJdkLibs)
     androidTestImplementation(libs.androidx.espresso)
-    androidTestImplementation(libs.androidx.multidex)
-    androidTestImplementation(libs.androidx.multidex.instrumentation)
     androidTestImplementation(libs.androidx.test)
     androidTestImplementation(libs.androidx.test.ext.junit)
     androidTestImplementation(libs.androidx.uiautomator)
