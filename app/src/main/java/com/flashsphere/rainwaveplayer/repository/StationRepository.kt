@@ -160,7 +160,10 @@ class StationRepository @Inject constructor(
             coroutineDispatchers.scope.launchWithDefaults("Update stations local cache") {
                 Timber.d("Refreshing local cache with API")
                 suspendRunCatching { fetchStationsFromApi() }
-                    .onSuccess { savedStationsStore.save(it) }
+                    .onSuccess { stations ->
+                        savedStationsStore.save(stations)
+                        stationsCache = stations
+                    }
             }
         }
         return savedStations.stations
