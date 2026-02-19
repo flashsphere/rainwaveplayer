@@ -126,7 +126,7 @@ class MediaSessionHelper(
         val contentText = context.resources.getText(R.string.stopped).toString()
 
         updatePlaybackState(STATE_STOPPED)
-        updateMetadata(null, contentText)
+        updateMetadata(contentText)
 
         mediaPlayerStateObserver.updateState(Stopped)
     }
@@ -178,15 +178,15 @@ class MediaSessionHelper(
         updateCastMediaMetadata(mediaMetadata)
     }
 
-    private fun updateMetadata(station: Station?, state: String) {
+    private fun updateMetadata(station: Station, state: String) {
         Timber.d("update metadata for station")
         val mediaMetadata = mediaMetadataBuilder
-            .putString(MediaMetadataCompat.METADATA_KEY_MEDIA_ID, station?.id?.toString())
+            .putString(MediaMetadataCompat.METADATA_KEY_MEDIA_ID, station.id.toString())
             .putBitmap(MediaMetadataCompat.METADATA_KEY_ALBUM_ART, null)
             .putString(MediaMetadataCompat.METADATA_KEY_ALBUM_ART_URI, null)
             .putString(MediaMetadataCompat.METADATA_KEY_ALBUM, null)
-            .putString(MediaMetadataCompat.METADATA_KEY_ARTIST, station?.name)
-            .putString(MediaMetadataCompat.METADATA_KEY_TITLE, state)
+            .putString(MediaMetadataCompat.METADATA_KEY_ARTIST, state)
+            .putString(MediaMetadataCompat.METADATA_KEY_TITLE, station.name)
             .putLong(MediaMetadataCompat.METADATA_KEY_DURATION, -1)
             .build()
 
