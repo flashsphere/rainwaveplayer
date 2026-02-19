@@ -29,7 +29,6 @@ import com.flashsphere.rainwaveplayer.view.uistate.model.RequestState
 import com.flashsphere.rainwaveplayer.view.uistate.model.UserState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.flowOn
@@ -90,11 +89,6 @@ class RequestsScreenViewModel @Inject constructor(
         cancel(requestsJob)
         requestsJob = stationRepository.getStationInfoFlow(station.id, refresh)
             .map { infoResponse ->
-                if (refresh) {
-                    // workaround Pull To Refresh indicator not disappearing when force refresh
-                    // because the API returns the response too quickly
-                    delay(100)
-                }
                 RequestsScreenState.loaded(infoResponse.requests, infoResponse.user)
             }
             .flowOn(coroutineDispatchers.compute)
