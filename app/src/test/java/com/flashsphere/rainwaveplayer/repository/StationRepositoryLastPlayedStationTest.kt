@@ -114,8 +114,8 @@ class StationRepositoryLastPlayedStationTest : BaseTest() {
         assertThat(runResult.isSuccess).isTrue()
 
         val station = runResult.getOrThrow()
-        assertThat(station.id).isEqualTo(1)
-        assertThat(station.name).isEqualTo("Game")
+        assertThat(station.id).isEqualTo(5)
+        assertThat(station.name).isEqualTo("All")
     }
 
     @Test

@@ -42,6 +42,15 @@ class StationRepositoryStationListTest : BaseTest() {
         assertThat(stations).size().isEqualTo(5)
 
         var station = stations[0]
+        assertThat(station.id).isEqualTo(5)
+        assertThat(station.name).isEqualTo("All")
+        assertThat(station.description).isEqualTo("Video game music online radio, including remixes and original soundtracks!  Vote for the songs you want to hear!")
+        assertThat(station.stream).isEqualTo("http://allrelays.rainwave.cc/all.mp3?12345:abcdef")
+        assertThat(station.relays).isEqualTo(listOf(
+            "http://relay.rainwave.cc/all.mp3?12345:abcdef",
+        ))
+
+        station = stations[1]
         assertThat(station.id).isEqualTo(1)
         assertThat(station.name).isEqualTo("Game")
         assertThat(station.description).isEqualTo("Video game original soundtrack radio.  Vote for the song you want to hear!")
@@ -50,25 +59,7 @@ class StationRepositoryStationListTest : BaseTest() {
             "https://relay.rainwave.cc/game.mp3?12345:abcdef",
         ))
 
-        station = stations[1]
-        assertThat(station.id).isEqualTo(2)
-        assertThat(station.name).isEqualTo("OC ReMix")
-        assertThat(station.description).isEqualTo("OverClocked ReMix Radio, the best in video game remixes.  Vote for your favourite remixes!")
-        assertThat(station.stream).isEqualTo("http://allrelays.rainwave.cc/ocremix.mp3?12345:abcdef")
-        assertThat(station.relays).isEqualTo(listOf(
-            "https://relay.rainwave.cc/ocremix.mp3?12345:abcdef",
-        ))
-
         station = stations[2]
-        assertThat(station.id).isEqualTo(3)
-        assertThat(station.name).isEqualTo("Covers")
-        assertThat(station.description).isEqualTo("Video game official and fan-made remixes, streaming 24/7.  Vote for your favourite artists!")
-        assertThat(station.stream).isEqualTo("http://allrelays.rainwave.cc/covers.mp3?12345:abcdef")
-        assertThat(station.relays).isEqualTo(listOf(
-            "http://allrelays.rainwave.cc/covers.mp3?12345:abcdef",
-        ))
-
-        station = stations[3]
         assertThat(station.id).isEqualTo(4)
         assertThat(station.name).isEqualTo("Chiptune")
         assertThat(station.description).isEqualTo("Video game and original chiptune soudtracks, streaming 24/7.  Vote for the songs you want to hear!")
@@ -77,13 +68,22 @@ class StationRepositoryStationListTest : BaseTest() {
             "http://relay.rainwave.cc:443/chiptune.mp3?12345:abcdef",
         ))
 
-        station = stations[4]
-        assertThat(station.id).isEqualTo(5)
-        assertThat(station.name).isEqualTo("All")
-        assertThat(station.description).isEqualTo("Video game music online radio, including remixes and original soundtracks!  Vote for the songs you want to hear!")
-        assertThat(station.stream).isEqualTo("http://allrelays.rainwave.cc/all.mp3?12345:abcdef")
+        station = stations[3]
+        assertThat(station.id).isEqualTo(2)
+        assertThat(station.name).isEqualTo("OC ReMix")
+        assertThat(station.description).isEqualTo("OverClocked ReMix Radio, the best in video game remixes.  Vote for your favourite remixes!")
+        assertThat(station.stream).isEqualTo("http://allrelays.rainwave.cc/ocremix.mp3?12345:abcdef")
         assertThat(station.relays).isEqualTo(listOf(
-            "http://relay.rainwave.cc/all.mp3?12345:abcdef",
+            "https://relay.rainwave.cc/ocremix.mp3?12345:abcdef",
+        ))
+
+        station = stations[4]
+        assertThat(station.id).isEqualTo(3)
+        assertThat(station.name).isEqualTo("Covers")
+        assertThat(station.description).isEqualTo("Video game official and fan-made remixes, streaming 24/7.  Vote for your favourite artists!")
+        assertThat(station.stream).isEqualTo("http://allrelays.rainwave.cc/covers.mp3?12345:abcdef")
+        assertThat(station.relays).isEqualTo(listOf(
+            "http://allrelays.rainwave.cc/covers.mp3?12345:abcdef",
         ))
     }
 
@@ -177,9 +177,9 @@ class StationRepositoryStationListTest : BaseTest() {
 
         assertThat(stations[0].id).isEqualTo(5)
         assertThat(stations[1].id).isEqualTo(1)
-        assertThat(stations[2].id).isEqualTo(2)
-        assertThat(stations[3].id).isEqualTo(3)
-        assertThat(stations[4].id).isEqualTo(4)
+        assertThat(stations[2].id).isEqualTo(4)
+        assertThat(stations[3].id).isEqualTo(2)
+        assertThat(stations[4].id).isEqualTo(3)
     }
 
     @Test
@@ -206,10 +206,10 @@ class StationRepositoryStationListTest : BaseTest() {
         val stations = runResult.getOrThrow()
         assertThat(stations).size().isEqualTo(5)
 
-        assertThat(stations[0].id).isEqualTo(1)
-        assertThat(stations[1].id).isEqualTo(2)
-        assertThat(stations[2].id).isEqualTo(3)
-        assertThat(stations[3].id).isEqualTo(4)
-        assertThat(stations[4].id).isEqualTo(5)
+        assertThat(stations[0].id).isEqualTo(5)
+        assertThat(stations[1].id).isEqualTo(1)
+        assertThat(stations[2].id).isEqualTo(4)
+        assertThat(stations[3].id).isEqualTo(2)
+        assertThat(stations[4].id).isEqualTo(3)
     }
 }

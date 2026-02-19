@@ -42,8 +42,8 @@ class StationRepositoryPreviousAndNextStationTest : BaseTest() {
         assertThat(runResult.isSuccess).isTrue()
 
         val station = runResult.getOrThrow()
-        assertThat(station.id).isEqualTo(4)
-        assertThat(station.name).isEqualTo("Chiptune")
+        assertThat(station.id).isEqualTo(3)
+        assertThat(station.name).isEqualTo("Covers")
     }
 
     @Test
@@ -68,8 +68,8 @@ class StationRepositoryPreviousAndNextStationTest : BaseTest() {
         assertThat(runResult.isSuccess).isTrue()
 
         val station = runResult.getOrThrow()
-        assertThat(station.id).isEqualTo(3)
-        assertThat(station.name).isEqualTo("Covers")
+        assertThat(station.id).isEqualTo(1)
+        assertThat(station.name).isEqualTo("Game")
     }
 
     @Test
@@ -94,8 +94,8 @@ class StationRepositoryPreviousAndNextStationTest : BaseTest() {
         assertThat(runResult.isSuccess).isTrue()
 
         val station = runResult.getOrThrow()
-        assertThat(station.id).isEqualTo(5)
-        assertThat(station.name).isEqualTo("All")
+        assertThat(station.id).isEqualTo(3)
+        assertThat(station.name).isEqualTo("Covers")
     }
 
     @Test
@@ -124,8 +124,8 @@ class StationRepositoryPreviousAndNextStationTest : BaseTest() {
         assertThat(runResult.isSuccess).isTrue()
 
         val station = runResult.getOrThrow()
-        assertThat(station.id).isEqualTo(4)
-        assertThat(station.name).isEqualTo("Chiptune")
+        assertThat(station.id).isEqualTo(5)
+        assertThat(station.name).isEqualTo("All")
     }
 
     @Test
@@ -176,7 +176,7 @@ class StationRepositoryPreviousAndNextStationTest : BaseTest() {
         assertThat(runResult.isSuccess).isTrue()
 
         val station = runResult.getOrThrow()
-        assertThat(station.id).isEqualTo(2)
-        assertThat(station.name).isEqualTo("OC ReMix")
+        assertThat(station.id).isEqualTo(1)
+        assertThat(station.name).isEqualTo("Game")
     }
 }

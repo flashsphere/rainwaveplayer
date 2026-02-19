@@ -135,20 +135,34 @@ class StationRepository @Inject constructor(
     }
 
     private suspend fun fetchStationsFromApi(): List<Station> = withContext(coroutineDispatchers.io) {
-        val resources = context.resources
-        rainwaveService.fetchStations().stations.map { s ->
-            val name = when (s.id) {
-                // translate station name to respective language
-                1 -> resources.getString(R.string.station_name_1)
-                2 -> resources.getString(R.string.station_name_2)
-                3 -> resources.getString(R.string.station_name_3)
-                4 -> resources.getString(R.string.station_name_4)
-                5 -> resources.getString(R.string.station_name_5)
-                else -> s.name
+        val stationIdOrder = listOf(5, 1, 4, 2, 3, 6)
+        val stationMap = rainwaveService.fetchStations().stations.associateByTo(
+            destination = mutableMapOf(),
+            keySelector = { it.id },
+            valueTransform = { translateStationName(it) }
+        )
+
+        ArrayList<Station>(stationMap.size).also { result ->
+            stationIdOrder.forEach { id ->
+                stationMap.remove(id)?.let(result::add)
             }
-            Timber.d("%s: %s, %s", name, s.stream, s.relays)
-            Station(s.id, name, s.stream, s.description, s.relays)
+            result.addAll(stationMap.values)
         }
+    }
+
+    private fun translateStationName(s: Station): Station {
+        val resources = context.resources
+        val name = when (s.id) {
+            // translate station name to respective language
+            1 -> resources.getString(R.string.station_name_1)
+            2 -> resources.getString(R.string.station_name_2)
+            3 -> resources.getString(R.string.station_name_3)
+            4 -> resources.getString(R.string.station_name_4)
+            5 -> resources.getString(R.string.station_name_5)
+            else -> s.name
+        }
+        Timber.d("%s: %s, %s", name, s.stream, s.relays)
+        return Station(s.id, name, s.stream, s.description, s.relays)
     }
 
     private suspend fun fetchStationsFromLocalCache(): List<Station>? {
