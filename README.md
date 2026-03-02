@@ -20,6 +20,7 @@ Send the following intent:
 <ul>
   <li>Action: <code>android.intent.action.VIEW</code></li>
   <li>Category: <code>DEFAULT</code></li>
+  <li>Target: <code>Activity</code></li>
   <li>Data: <code>rw://rainwave.cc/play/{station_id}?sleep_timer={duration}</code>
 <br/>
 <br/><code>station_id</code>: id of the station (optional)
