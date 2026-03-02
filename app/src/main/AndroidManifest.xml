@@ -139,9 +139,7 @@
             android:exported="true"
             android:theme="@style/AppTheme.NoDisplay">
             <intent-filter>
-                <data android:scheme="rw" />
-                <data android:host="rainwave.cc" />
-                <data android:path="/" />
+                <data android:scheme="rw" android:host="rainwave.cc" android:path="/" />
 
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />
@@ -152,7 +150,20 @@
             android:name=".view.activity.StartPlaybackActivity"
             android:excludeFromRecents="true"
             android:exported="true"
-            android:theme="@style/AppTheme.NoDisplay" />
+            android:theme="@style/AppTheme.NoDisplay">
+            <intent-filter>
+                <data android:scheme="rw" android:host="rainwave.cc" android:path="/play" />
+
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+            <intent-filter>
+                <data android:scheme="rw" android:host="rainwave.cc" android:pathPattern="/play/.*" />
+
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
 
         <activity
             android:name=".view.activity.ShortcutsActivity"

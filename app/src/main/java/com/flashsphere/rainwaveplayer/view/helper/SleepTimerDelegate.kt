@@ -17,6 +17,7 @@ import com.flashsphere.rainwaveplayer.util.getBlocking
 import com.flashsphere.rainwaveplayer.util.removeBlocking
 import com.flashsphere.rainwaveplayer.util.updateBlocking
 import timber.log.Timber
+import java.time.Duration
 import java.time.ZonedDateTime
 import java.time.temporal.ChronoUnit
 import kotlin.time.Duration.Companion.minutes
@@ -39,6 +40,16 @@ class SleepTimerDelegate(
         } else {
             sleepTimerMillis
         }
+    }
+
+    fun createSleepTimer(duration: Duration): Long {
+        val endTime = ZonedDateTime.now()
+            .plus(duration)
+        val endTimeInMillis = endTime.toInstant().toEpochMilli()
+        Timber.d("Creating sleep timer alarm %s", endTime)
+        createSleepTimer(endTimeInMillis)
+        analytics.logEvent(EVENT_SET_SLEEP_TIMER)
+        return endTimeInMillis
     }
 
     fun createSleepTimer(hour: Int, minute: Int): Long {
