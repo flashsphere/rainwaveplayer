@@ -27,7 +27,6 @@ class Album(
     val rating: Float = 0F,
     val ratingUser: Float = 0F,
     val cool: Boolean = false,
-    val ratingCount: Int = 0,
     val songs: List<Song> = emptyList(),
     var favorite: Boolean = false,
     val ratingDistribution: Map<Int, Float> = emptyMap(),
@@ -44,7 +43,6 @@ private class AlbumSurrogate(
     val rating_user: Float = 0F,
     val cool: Boolean = false,
     val rating_histogram: Map<String, Int> = emptyMap(),
-    val rating_count: Int = 0,
     val songs: List<@Serializable(with = SongSerializer::class) Song> = emptyList(),
     val fave: Boolean = false,
 )
@@ -61,7 +59,6 @@ object AlbumSerializer : KSerializer<Album> {
             surrogate.rating,
             surrogate.rating_user,
             surrogate.cool,
-            surrogate.rating_count,
             surrogate.songs.sortedWith(SONG_TITLE_COMPARATOR),
             surrogate.fave,
             getRatingDistribution(surrogate),

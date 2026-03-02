@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -17,9 +16,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Person
-import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.snapshots.SnapshotStateList
@@ -31,11 +27,9 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.lifecycle.compose.LifecycleStartEffect
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.tv.material3.MaterialTheme
 import androidx.tv.material3.Surface
 import androidx.tv.material3.Text
 import com.flashsphere.rainwaveplayer.R
@@ -194,13 +188,11 @@ private fun AlbumInfo(album: AlbumState) {
                 modifier = Modifier.padding(top = 20.dp).fillMaxWidth().height(IntrinsicSize.Min),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Text(text = formatRating(album.rating),
-                    style = TvAppTypography.titleLarge,
-                    modifier = Modifier
-                        .wrapContentSize()
-                        .alignByBaseline()
-                )
-                Column(modifier = Modifier.padding(start = 8.dp).alignByBaseline()) {
+                Column(modifier = Modifier.alignByBaseline()) {
+                    Text(
+                        text = formatRating(album.rating),
+                        style = TvAppTypography.titleLarge,
+                    )
                     AndroidView(
                         factory = { ctx ->
                             RatingBar(ctx, null, AppCompatR.attr.ratingBarStyleSmall,
@@ -215,21 +207,6 @@ private fun AlbumInfo(album: AlbumState) {
                         },
                         modifier = Modifier.wrapContentSize()
                     )
-                    Row(verticalAlignment = Alignment.CenterVertically) {
-                        Text(text = album.ratingCount.toString(),
-                            style = TvAppTypography.bodySmall,
-                            fontSize = 11.sp,
-                            modifier = Modifier.wrapContentSize()
-                        )
-                        Spacer(Modifier.size(2.dp))
-                        Icon(imageVector = Icons.Filled.Person,
-                            contentDescription = null,
-                            tint = MaterialTheme.colorScheme.onSurface,
-                            modifier = Modifier
-                                .size(12.dp)
-                                .padding(0.dp)
-                        )
-                    }
                 }
                 RatingHistogram(
                     modifier = Modifier.padding(start = 8.dp),

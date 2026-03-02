@@ -25,11 +25,7 @@ import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.selection.SelectionContainer
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -305,14 +301,15 @@ private fun AlbumRating(album: AlbumState) {
     }
 
     Row(modifier = modifier.height(IntrinsicSize.Min), verticalAlignment = Alignment.CenterVertically) {
-        Text(text = formattedRating,
-            style = AppTypography.displayMedium,
+        Column(
             modifier = Modifier
-                .wrapContentSize()
-                .alignByBaseline()
-                .padding(itemPaddingDimen, itemPaddingDimen, 0.dp, itemPaddingDimen)
-        )
-        Column(modifier = Modifier.padding(start = 16.dp).alignByBaseline()) {
+                .padding(start = itemPaddingDimen, top = itemPaddingDimen, bottom = itemPaddingDimen)
+                .alignByBaseline(),
+        ) {
+            Text(
+                text = formattedRating,
+                style = AppTypography.displayMedium,
+            )
             AndroidView(
                 factory = { ctx ->
                     RatingBar(ctx, null, AppCompatR.attr.ratingBarStyleSmall,
@@ -327,26 +324,11 @@ private fun AlbumRating(album: AlbumState) {
                 },
                 modifier = Modifier.wrapContentSize()
             )
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                Text(text = album.ratingCount.toString(),
-                    style = AppTypography.bodySmall,
-                    fontSize = 11.sp,
-                    modifier = Modifier.wrapContentSize()
-                )
-                Spacer(Modifier.size(2.dp))
-                Icon(imageVector = Icons.Filled.Person,
-                    contentDescription = null,
-                    tint = MaterialTheme.colorScheme.onSurface,
-                    modifier = Modifier
-                        .size(12.dp)
-                        .padding(0.dp)
-                )
-            }
         }
         RatingHistogram(
             modifier = Modifier
                 .padding(itemPaddingDimen)
-                .padding(vertical = itemPaddingDimen)
+                .padding(top = itemPaddingDimen)
                 .padding(start = 8.dp),
             album = album,
         )

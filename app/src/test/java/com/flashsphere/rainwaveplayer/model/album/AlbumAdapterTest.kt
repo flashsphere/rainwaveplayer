@@ -30,7 +30,6 @@ class AlbumAdapterTest {
         assertThat(album.rating).isEqualTo(3.9F)
         assertThat(album.ratingUser).isEqualTo(1.5F)
         assertThat(album.cool).isEqualTo(true)
-        assertThat(album.ratingCount).isEqualTo(533)
         assertThat(album.favorite).isEqualTo(true)
         assertThat(album.ratingDistribution).isEqualTo(mapOf(
             1 to 0.05F,
