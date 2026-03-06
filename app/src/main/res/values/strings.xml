@@ -237,7 +237,10 @@
     <string name="settings_btm_nav_unlabeled_desc">Labels are not shown in bottom/side navigation bar.</string>
 
     <string name="settings_hide_rating_until_rated">Hide global rating until rated</string>
-    <string name="settings_hide_rating_until_rated_desc">Song and album ratings are hidden until you have rated them.</string>
+    <string name="settings_hide_rating_until_rated_desc">Hide song and album ratings until you have rated them.</string>
+
+    <string name="settings_swap_artist_album_metadata">Swap artist/album metadata</string>
+    <string name="settings_swap_artist_album_metadata_desc">Display artist as album and vice versa in song metadata. This affects the song info displayed in the notification area when playing.</string>
 
     <string name="settings_in_app_playback">In-app playback</string>
     <string name="settings_buffering">Buffer duration</string>

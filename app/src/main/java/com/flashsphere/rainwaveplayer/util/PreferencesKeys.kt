@@ -29,6 +29,7 @@ object PreferencesKeys {
     val AUTO_VOTE_RULES = PreferenceKey(stringPreferencesKey("com.flashsphere.prefs.auto_vote_rules"), "")
     val HIDE_RATING_UNTIL_RATED = PreferenceKey(booleanPreferencesKey("com.flashsphere.prefs.hide_rating_until_rated"), false)
     val USE_ANY_NETWORK = PreferenceKey(booleanPreferencesKey("com.flashsphere.prefs.use_any_network"), false)
+    val SWAP_ARTIST_ALBUM_METADATA = PreferenceKey(booleanPreferencesKey("com.flashsphere.prefs.SWAP_ARTIST_ALBUM_METADATA"), true)
 
     @Deprecated("Not used since pref version 9")
     val CRASH_REPORTING = booleanPreferencesKey("com.flashsphere.prefs.crash_reporting")

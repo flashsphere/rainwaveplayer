@@ -15,6 +15,8 @@ import android.support.v4.media.session.PlaybackStateCompat.STATE_PAUSED
 import android.support.v4.media.session.PlaybackStateCompat.STATE_PLAYING
 import android.support.v4.media.session.PlaybackStateCompat.STATE_STOPPED
 import androidx.core.net.toUri
+import androidx.datastore.core.DataStore
+import androidx.datastore.preferences.core.Preferences
 import com.flashsphere.rainwaveplayer.R
 import com.flashsphere.rainwaveplayer.cast.CastReceiverContextHolder
 import com.flashsphere.rainwaveplayer.flow.MediaPlayerStateObserver
@@ -28,6 +30,8 @@ import com.flashsphere.rainwaveplayer.model.stationInfo.InfoResponse
 import com.flashsphere.rainwaveplayer.receiver.FavoriteSongIntentHandler
 import com.flashsphere.rainwaveplayer.receiver.FavoriteSongIntentHandler.Companion.ACTION_FAVORITE_SONG
 import com.flashsphere.rainwaveplayer.repository.UserRepository
+import com.flashsphere.rainwaveplayer.util.PreferencesKeys
+import com.flashsphere.rainwaveplayer.util.getBlocking
 import com.google.android.gms.cast.MediaMetadata
 import com.google.android.gms.cast.tv.media.MediaManager
 import com.google.android.gms.common.images.WebImage
@@ -38,6 +42,7 @@ class MediaSessionHelper(
     private val context: Context,
     private val userRepository: UserRepository,
     private val mediaPlayerStateObserver: MediaPlayerStateObserver,
+    private val dataStore: DataStore<Preferences>,
     castReceiverContextHolder: CastReceiverContextHolder,
 ) {
     private var mediaMetadataBuilder = MediaMetadataCompat.Builder()
@@ -215,8 +220,15 @@ class MediaSessionHelper(
             .putString(MediaMetadataCompat.METADATA_KEY_MEDIA_ID, station.id.toString())
             .putBitmap(MediaMetadataCompat.METADATA_KEY_ALBUM_ART, albumArt)
             .putString(MediaMetadataCompat.METADATA_KEY_ALBUM_ART_URI, song.getAlbumCoverUrl())
-            .putString(MediaMetadataCompat.METADATA_KEY_ALBUM, song.getArtistName())
-            .putString(MediaMetadataCompat.METADATA_KEY_ARTIST, song.getAlbumName())
+            .also {
+                if (dataStore.getBlocking(PreferencesKeys.SWAP_ARTIST_ALBUM_METADATA)) {
+                    it.putString(MediaMetadataCompat.METADATA_KEY_ALBUM, song.getArtistName())
+                    it.putString(MediaMetadataCompat.METADATA_KEY_ARTIST, song.getAlbumName())
+                } else {
+                    it.putString(MediaMetadataCompat.METADATA_KEY_ALBUM, song.getAlbumName())
+                    it.putString(MediaMetadataCompat.METADATA_KEY_ARTIST, song.getArtistName())
+                }
+            }
             .putString(MediaMetadataCompat.METADATA_KEY_TITLE, song.title)
             .putLong(MediaMetadataCompat.METADATA_KEY_DURATION, song.length.seconds.inWholeMilliseconds)
             .build()

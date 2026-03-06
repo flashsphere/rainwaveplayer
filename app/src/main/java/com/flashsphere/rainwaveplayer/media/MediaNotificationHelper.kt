@@ -25,6 +25,8 @@ import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationCompat.Action
 import androidx.core.app.NotificationCompat.CATEGORY_TRANSPORT
 import androidx.core.graphics.drawable.toBitmap
+import androidx.datastore.core.DataStore
+import androidx.datastore.preferences.core.Preferences
 import androidx.media.app.NotificationCompat.MediaStyle
 import com.flashsphere.rainwaveplayer.R
 import com.flashsphere.rainwaveplayer.model.song.Song
@@ -32,6 +34,8 @@ import com.flashsphere.rainwaveplayer.model.station.Station
 import com.flashsphere.rainwaveplayer.receiver.FavoriteSongIntentHandler
 import com.flashsphere.rainwaveplayer.repository.UserRepository
 import com.flashsphere.rainwaveplayer.util.PendingIntentUtils.getPendingIntentFlags
+import com.flashsphere.rainwaveplayer.util.PreferencesKeys
+import com.flashsphere.rainwaveplayer.util.getBlocking
 import com.flashsphere.rainwaveplayer.view.activity.MainActivity.Companion.getCallingIntent
 import timber.log.Timber
 
@@ -39,6 +43,7 @@ class MediaNotificationHelper(
     private val context: Context,
     private val mediaSessionHelper: MediaSessionHelper,
     private val userRepository: UserRepository,
+    private val dataStore: DataStore<Preferences>,
 ) {
     private val largeIcon by lazy {
         AppCompatResources.getDrawable(context, R.drawable.ic_rainwave_64dp)?.toBitmap()
@@ -65,7 +70,11 @@ class MediaNotificationHelper(
 
                 song?.let {
                     val contentTitle = song.title
-                    val contentText = song.getAlbumName()
+                    val contentText = if (dataStore.getBlocking(PreferencesKeys.SWAP_ARTIST_ALBUM_METADATA)) {
+                        song.getAlbumName()
+                    } else {
+                        song.getArtistName()
+                    }
 
                     setContentIntent(getNotificationIntent(station))
                     setContentTitle(contentTitle)

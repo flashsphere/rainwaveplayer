@@ -26,6 +26,7 @@ import com.flashsphere.rainwaveplayer.receiver.VoteSongIntentHandler
 import com.flashsphere.rainwaveplayer.repository.UserRepository
 import com.flashsphere.rainwaveplayer.util.JobUtils.cancel
 import com.flashsphere.rainwaveplayer.util.PendingIntentUtils
+import com.flashsphere.rainwaveplayer.util.PreferencesKeys
 import com.flashsphere.rainwaveplayer.util.PreferencesKeys.VOTE_SONG_NOTIFICATIONS
 import com.flashsphere.rainwaveplayer.util.getBlocking
 import com.flashsphere.rainwaveplayer.util.isTv
@@ -130,10 +131,15 @@ class VoteSongNotificationHelper(
         val notificationId = song.entryId
         val voteSongIntent = VoteSongIntentHandler.buildPendingIntent(context, notificationId,
             station.id, event.id, song)
+        val contentText = if (dataStore.getBlocking(PreferencesKeys.SWAP_ARTIST_ALBUM_METADATA)) {
+            song.getAlbumName()
+        } else {
+            song.getArtistName()
+        }
 
         val notificationBuilder = createNotificationBuilder(station)
             .setContentTitle(song.title)
-            .setContentText(song.getAlbumName())
+            .setContentText(contentText)
             .setStyle(MediaStyle()
                 .setShowCancelButton(false)
                 .setShowActionsInCompactView(0))

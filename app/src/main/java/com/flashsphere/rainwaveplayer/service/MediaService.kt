@@ -184,8 +184,9 @@ class MediaService : MediaBrowserServiceCompat(), Playback.Callback, LifecycleOw
         notificationManager = NotificationManagerCompat.from(this)
 
         mediaSessionHelper = MediaSessionHelper(this, userRepository, mediaPlayerStateObserver,
-            castReceiverContextHolder)
-        mediaNotificationHelper = MediaNotificationHelper(this, mediaSessionHelper, userRepository)
+            dataStore, castReceiverContextHolder)
+        mediaNotificationHelper = MediaNotificationHelper(this, mediaSessionHelper,
+            userRepository, dataStore)
         voteSongNotificationHelper = VoteSongNotificationHelper(this, lifecycleScope,
             userRepository, dataStore)
         favoriteSongIntentHandler = FavoriteSongIntentHandler(lifecycleScope, faveSongDelegate)

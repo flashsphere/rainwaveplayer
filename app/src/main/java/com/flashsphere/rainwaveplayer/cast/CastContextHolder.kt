@@ -15,6 +15,7 @@ import com.flashsphere.rainwaveplayer.util.PreferencesKeys.AUTO_VOTE_RULES
 import com.flashsphere.rainwaveplayer.util.PreferencesKeys.BUFFER_MIN
 import com.flashsphere.rainwaveplayer.util.PreferencesKeys.HIDE_RATING_UNTIL_RATED
 import com.flashsphere.rainwaveplayer.util.PreferencesKeys.SSL_RELAY
+import com.flashsphere.rainwaveplayer.util.PreferencesKeys.SWAP_ARTIST_ALBUM_METADATA
 import com.flashsphere.rainwaveplayer.util.PreferencesKeys.USER_ID
 import com.flashsphere.rainwaveplayer.util.PreferencesKeys.USE_OGG
 import com.flashsphere.rainwaveplayer.util.isTv
@@ -95,6 +96,7 @@ class CastContextHolder @Inject constructor(
                         exportPreference(prefs, USE_OGG, this) { JsonPrimitive(it) }
                         exportPreference(prefs, AUTO_VOTE_RULES, this) { JsonPrimitive(it) }
                         exportPreference(prefs, HIDE_RATING_UNTIL_RATED, this) { JsonPrimitive(it) }
+                        exportPreference(prefs, SWAP_ARTIST_ALBUM_METADATA, this) { JsonPrimitive(it) }
                     }.let {
                         json.encodeToString(JsonObject(it))
                     }.also {

@@ -50,6 +50,7 @@ import com.flashsphere.rainwaveplayer.util.PreferencesKeys.BTM_NAV
 import com.flashsphere.rainwaveplayer.util.PreferencesKeys.BUFFER_MIN
 import com.flashsphere.rainwaveplayer.util.PreferencesKeys.HIDE_RATING_UNTIL_RATED
 import com.flashsphere.rainwaveplayer.util.PreferencesKeys.SSL_RELAY
+import com.flashsphere.rainwaveplayer.util.PreferencesKeys.SWAP_ARTIST_ALBUM_METADATA
 import com.flashsphere.rainwaveplayer.util.PreferencesKeys.USE_ANY_NETWORK
 import com.flashsphere.rainwaveplayer.util.PreferencesKeys.USE_OGG
 import com.flashsphere.rainwaveplayer.util.PreferencesKeys.VOTE_SONG_NOTIFICATIONS
@@ -181,8 +182,8 @@ class SettingsActivity : BaseActivity() {
                 )
             ))
 
+            add(PreferenceCategoryItem(title = getString(R.string.settings_ui)))
             if (userRepository.isLoggedIn()) {
-                add(PreferenceCategoryItem(title = getString(R.string.settings_ui)))
                 add(ListPreferenceItem(
                     scope = lifecycleScope,
                     dataStore = dataStore,
@@ -230,6 +231,25 @@ class SettingsActivity : BaseActivity() {
                         .onEach { backPressedCallback.isEnabled = true }
                         .launchIn(lifecycleScope)
                 })
+            }
+            add(CheckBoxPreferenceItem(
+                scope = lifecycleScope,
+                dataStore = dataStore,
+                key = SWAP_ARTIST_ALBUM_METADATA,
+                title = getString(R.string.settings_swap_artist_album_metadata),
+                options = listOf(
+                    PreferenceItemValue(
+                        value = true,
+                        label = getString(R.string.settings_swap_artist_album_metadata_desc)
+                    ),
+                    PreferenceItemValue(
+                        value = false,
+                        label = getString(R.string.settings_swap_artist_album_metadata_desc)
+                    )
+                ),
+            ))
+
+            if (userRepository.isLoggedIn()) {
                 add(PreferenceCategoryItem(title = getString(R.string.settings_song_voting)))
                 add(BasicPreferenceItem(
                     title = getString(R.string.settings_auto_song_voting),
@@ -428,8 +448,8 @@ class SettingsActivity : BaseActivity() {
 
     private fun createTvPreferences(): List<Preference> {
         return mutableListOf<Preference>().apply {
+            add(PreferenceCategoryItem(title = getString(R.string.settings_ui)))
             if (userRepository.isLoggedIn()) {
-                add(PreferenceCategoryItem(title = getString(R.string.settings_ui)))
                 add(CheckBoxPreferenceItem(
                     scope = lifecycleScope,
                     dataStore = dataStore,
@@ -450,6 +470,24 @@ class SettingsActivity : BaseActivity() {
                         .onEach { backPressedCallback.isEnabled = true }
                         .launchIn(lifecycleScope)
                 })
+            }
+            add(CheckBoxPreferenceItem(
+                scope = lifecycleScope,
+                dataStore = dataStore,
+                key = SWAP_ARTIST_ALBUM_METADATA,
+                title = getString(R.string.settings_swap_artist_album_metadata),
+                options = listOf(
+                    PreferenceItemValue(
+                        value = true,
+                        label = getString(R.string.settings_swap_artist_album_metadata_desc)
+                    ),
+                    PreferenceItemValue(
+                        value = false,
+                        label = getString(R.string.settings_swap_artist_album_metadata_desc)
+                    )
+                ),
+            ))
+            if (userRepository.isLoggedIn()) {
                 add(PreferenceCategoryItem(title = getString(R.string.settings_song_voting)))
                 add(BasicPreferenceItem(
                     title = getString(R.string.settings_auto_song_voting),
