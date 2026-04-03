@@ -1,9 +1,9 @@
 package com.flashsphere.rainwaveplayer.ui
 
+import android.os.Bundle
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.ui.Modifier
-import androidx.core.os.bundleOf
 import androidx.fragment.compose.AndroidFragment
 import com.flashsphere.rainwaveplayer.view.fragment.WebViewFragment
 import timber.log.Timber
@@ -15,7 +15,7 @@ fun WebView(
     pageTitle: MutableState<String>,
 ) {
     AndroidFragment<WebViewFragment>(
-        arguments = bundleOf(WebViewFragment.ARG_URL to url),
+        arguments = Bundle().also { it.putString(WebViewFragment.ARG_URL, url) },
         modifier = modifier,
         onUpdate = { fragment ->
             Timber.d("onUpdate")
