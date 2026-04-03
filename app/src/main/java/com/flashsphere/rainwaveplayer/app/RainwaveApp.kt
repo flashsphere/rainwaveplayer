@@ -1,6 +1,8 @@
 package com.flashsphere.rainwaveplayer.app
 
 import android.app.Application
+import androidx.compose.runtime.Composer
+import androidx.compose.runtime.tooling.ComposeStackTraceMode
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import coil3.ImageLoader
@@ -63,6 +65,12 @@ class RainwaveApp : Application(), SingletonImageLoader.Factory {
         }
 
         super.onCreate()
+
+        if (BuildConfig.DEBUG) {
+            Composer.setDiagnosticStackTraceMode(ComposeStackTraceMode.SourceInformation)
+        } else {
+            Composer.setDiagnosticStackTraceMode(ComposeStackTraceMode.Auto)
+        }
 
         Timber.plant(CrashlyticsTree(this, coroutineDispatchers, dataStore))
 
