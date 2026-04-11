@@ -51,6 +51,16 @@ class RequestAdapterTest {
         assertThat(result.text).isEqualTo("Invalid argument 'song_id': song_id must be a valid song ID that exists on the requested station ID.")
     }
 
+    @Test
+    fun request_song_new_error_response_works() {
+        val jsonString = readFile(this.javaClass, "/json/request-song-new-error.json")
+        val result = json.decodeFromString<RequestSongResponse>(jsonString).result
+
+        assertThat(result.code).isEqualTo(400)
+        assertThat(result.success).isEqualTo(false)
+        assertThat(result.text).isEqualTo("Invalid argument 'song_id': song_id must be a valid song ID that exists on the requested station ID.")
+    }
+
     // clear requests
     @Test
     fun clear_request_response_works() {
@@ -63,6 +73,16 @@ class RequestAdapterTest {
     @Test
     fun clear_request_error_response_works() {
         val jsonString = readFile(this.javaClass, "/json/clear-requests-error.json")
+        val result = json.decodeFromString<ClearRequestsErrorResponse>(jsonString).result
+
+        assertThat(result.code).isEqualTo(400)
+        assertThat(result.success).isEqualTo(false)
+        assertThat(result.text).isEqualTo("Invalid station ID.")
+    }
+
+    @Test
+    fun clear_request_new_error_response_works() {
+        val jsonString = readFile(this.javaClass, "/json/clear-requests-new-error.json")
         val result = json.decodeFromString<ClearRequestsErrorResponse>(jsonString).result
 
         assertThat(result.code).isEqualTo(400)
@@ -87,6 +107,18 @@ class RequestAdapterTest {
     @Test
     fun delete_request_error_response_works() {
         val jsonString = readFile(this.javaClass, "/json/delete-request-error.json")
+        val response = json.decodeFromString<DeleteRequestResponse>(jsonString)
+
+        val result = response.result
+        assertThat(result.code).isEqualTo(200)
+        assertThat(result.success).isEqualTo(false)
+        assertThat(result.text).isEqualTo("Song not requested.")
+        assertThat(response.requests).isEmpty()
+    }
+
+    @Test
+    fun delete_request_new_error_response_works() {
+        val jsonString = readFile(this.javaClass, "/json/delete-request-new-error.json")
         val response = json.decodeFromString<DeleteRequestResponse>(jsonString)
 
         val result = response.result
@@ -122,6 +154,18 @@ class RequestAdapterTest {
         assertThat(response.requests).isEmpty()
     }
 
+    @Test
+    fun order_requests_new_error_response_works() {
+        val jsonString = readFile(this.javaClass, "/json/order-requests-new-error.json")
+        val response = json.decodeFromString<OrderRequestsResponse>(jsonString)
+
+        val result = response.result
+        assertThat(result.code).isEqualTo(400)
+        assertThat(result.success).isEqualTo(false)
+        assertThat(result.text).isEqualTo("Invalid argument 'order': order must be a comma-separated list of valid song IDs.")
+        assertThat(response.requests).isEmpty()
+    }
+
     // pause requests
     @Test
     fun pause_requests_response_works() {
@@ -147,6 +191,18 @@ class RequestAdapterTest {
         assertThat(response.user).isNull()
     }
 
+    @Test
+    fun pause_requests_new_error_response_works() {
+        val jsonString = readFile(this.javaClass, "/json/pause-requests-new-error.json")
+        val response = json.decodeFromString<PauseRequestResponse>(jsonString)
+
+        val result = response.result
+        assertThat(result.code).isEqualTo(400)
+        assertThat(result.success).isEqualTo(false)
+        assertThat(result.text).isEqualTo("Invalid station ID.")
+        assertThat(response.user).isNull()
+    }
+
     // resume requests
     @Test
     fun resume_requests_response_works() {
@@ -163,6 +219,18 @@ class RequestAdapterTest {
     @Test
     fun resume_requests_error_response_works() {
         val jsonString = readFile(this.javaClass, "/json/resume-requests-error.json")
+        val response = json.decodeFromString<ResumeRequestResponse>(jsonString)
+
+        val result = response.result
+        assertThat(result.code).isEqualTo(400)
+        assertThat(result.success).isEqualTo(false)
+        assertThat(result.text).isEqualTo("Invalid station ID.")
+        assertThat(response.user).isNull()
+    }
+
+    @Test
+    fun resume_requests_new_error_response_works() {
+        val jsonString = readFile(this.javaClass, "/json/resume-requests-new-error.json")
         val response = json.decodeFromString<ResumeRequestResponse>(jsonString)
 
         val result = response.result
@@ -198,6 +266,18 @@ class RequestAdapterTest {
         assertThat(response.requests).isEmpty()
     }
 
+    @Test
+    fun request_fave_new_error_response_works() {
+        val jsonString = readFile(this.javaClass, "/json/request-fave-new-error.json")
+        val response = json.decodeFromString<RequestFaveResponse>(jsonString)
+
+        val result = response.result
+        assertThat(result.code).isEqualTo(200)
+        assertThat(result.success).isEqualTo(false)
+        assertThat(result.text).isEqualTo("Your queue is full.")
+        assertThat(response.requests).isEmpty()
+    }
+
     // request unrated
     @Test
     fun request_unrated_response_works() {
@@ -215,6 +295,18 @@ class RequestAdapterTest {
     @Test
     fun request_unrated_error_response_works() {
         val jsonString = readFile(this.javaClass, "/json/request-unrated-error.json")
+        val response = json.decodeFromString<RequestUnratedResponse>(jsonString)
+
+        val result = response.result
+        assertThat(result.code).isEqualTo(200)
+        assertThat(result.success).isEqualTo(false)
+        assertThat(result.text).isEqualTo("Your queue is full.")
+        assertThat(response.requests).isEmpty()
+    }
+
+    @Test
+    fun request_unrated_new_error_response_works() {
+        val jsonString = readFile(this.javaClass, "/json/request-unrated-new-error.json")
         val response = json.decodeFromString<RequestUnratedResponse>(jsonString)
 
         val result = response.result

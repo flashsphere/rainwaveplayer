@@ -43,6 +43,19 @@ class FavoriteAdapterTest {
     }
 
     @Test
+    fun fave_song_new_error_response_works() {
+        val jsonString = readFile(this.javaClass, "/json/fave-song-new-error.json")
+        val result = json.decodeFromString<FaveSongResponse>(jsonString).result
+
+        assertThat(result.code).isEqualTo(400)
+        assertThat(result.success).isEqualTo(false)
+        assertThat(result.text).isEqualTo("Invalid argument 'song_id': song_id must be a valid song ID.")
+        assertThat(result.favorite).isEqualTo(false)
+        assertThat(result.id).isEqualTo(0)
+        assertThat(result.stationId).isEqualTo(0)
+    }
+
+    @Test
     fun fave_album_response_works() {
         val jsonString = readFile(this.javaClass, "/json/fave-album.json")
         val result = json.decodeFromString<FaveAlbumResponse>(jsonString).result
@@ -58,6 +71,19 @@ class FavoriteAdapterTest {
     @Test
     fun fave_album_error_response_works() {
         val jsonString = readFile(this.javaClass, "/json/fave-album-error.json")
+        val result = json.decodeFromString<FaveAlbumResponse>(jsonString).result
+
+        assertThat(result.code).isEqualTo(400)
+        assertThat(result.success).isEqualTo(false)
+        assertThat(result.text).isEqualTo("Invalid argument 'album_id': album_id must be a valid album ID.")
+        assertThat(result.favorite).isEqualTo(false)
+        assertThat(result.id).isEqualTo(0)
+        assertThat(result.stationId).isEqualTo(0)
+    }
+
+    @Test
+    fun fave_album_new_error_response_works() {
+        val jsonString = readFile(this.javaClass, "/json/fave-album-new-error.json")
         val result = json.decodeFromString<FaveAlbumResponse>(jsonString).result
 
         assertThat(result.code).isEqualTo(400)

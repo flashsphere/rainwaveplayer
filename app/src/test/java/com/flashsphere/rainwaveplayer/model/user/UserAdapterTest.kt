@@ -40,4 +40,15 @@ class UserAdapterTest {
         assertThat(result.success).isEqualTo(false)
         assertThat(result.text).isEqualTo("Authorization failed.")
     }
+
+    @Test
+    fun new_error_response_works() {
+        val jsonString = readFile(this.javaClass, "/json/user-info-new-error.json")
+        val response = json.decodeFromString<UserInfoErrorResponse>(jsonString)
+
+        val result = response.result
+        assertThat(result.code).isEqualTo(403)
+        assertThat(result.success).isEqualTo(false)
+        assertThat(result.text).isEqualTo("Authorization failed.")
+    }
 }

@@ -62,4 +62,14 @@ class StationAdapterTest {
         assertThat(result.success).isEqualTo(false)
         assertThat(result.text).isEqualTo("Authorization failed.")
     }
+
+    @Test
+    fun stations_new_error_response_works() {
+        val jsonString = readFile(this.javaClass, "/json/stations-new-error.json")
+        val result = json.decodeFromString<StationsErrorResponse>(jsonString).result
+
+        assertThat(result.code).isEqualTo(403)
+        assertThat(result.success).isEqualTo(false)
+        assertThat(result.text).isEqualTo("Authorization failed.")
+    }
 }

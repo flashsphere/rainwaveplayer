@@ -36,4 +36,15 @@ class VoteAdapterTest {
         assertThat(result.tlKey).isEqualTo("cannot_vote_for_this_now")
         assertThat(result.text).isEqualTo("Cannot vote for that song right now.")
     }
+
+    @Test
+    fun vote_song_new_error_response_works() {
+        val jsonString = readFile(this.javaClass, "/json/vote-new-error.json")
+        val result = json.decodeFromString<VoteResponse>(jsonString).result
+
+        assertThat(result.code).isEqualTo(0)
+        assertThat(result.success).isEqualTo(false)
+        assertThat(result.tlKey).isEqualTo("cannot_vote_for_this_now")
+        assertThat(result.text).isEqualTo("Cannot vote for that song right now.")
+    }
 }

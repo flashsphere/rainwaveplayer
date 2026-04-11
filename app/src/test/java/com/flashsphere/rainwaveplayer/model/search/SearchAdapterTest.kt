@@ -69,4 +69,17 @@ class SearchAdapterTest {
         assertThat(searchResponse.albums).isEmpty()
         assertThat(searchResponse.songs).isEmpty()
     }
+
+    @Test
+    fun search_new_error_response_work() {
+        val jsonString = readFile(this.javaClass, "/json/search-new-error.json")
+        val searchResponse = json.decodeFromString<SearchResponse>(jsonString)
+
+        assertThat(searchResponse.result?.code).isEqualTo(403)
+        assertThat(searchResponse.result?.success).isEqualTo(false)
+        assertThat(searchResponse.result?.text).isEqualTo("Authorization failed.")
+        assertThat(searchResponse.artists).isEmpty()
+        assertThat(searchResponse.albums).isEmpty()
+        assertThat(searchResponse.songs).isEmpty()
+    }
 }

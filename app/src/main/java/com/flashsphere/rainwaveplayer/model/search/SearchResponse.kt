@@ -8,11 +8,13 @@ import com.flashsphere.rainwaveplayer.model.artist.Artist
 import com.flashsphere.rainwaveplayer.model.artist.ArtistSerializer
 import com.flashsphere.rainwaveplayer.model.song.Song
 import com.flashsphere.rainwaveplayer.model.song.SongSerializer
+import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.descriptors.SerialDescriptor
 import kotlinx.serialization.encoding.Decoder
 import kotlinx.serialization.encoding.Encoder
+import kotlinx.serialization.json.JsonNames
 
 @Serializable(with = SearchResponseSerializer::class)
 class SearchResponse(
@@ -24,6 +26,8 @@ class SearchResponse(
 
 @Serializable
 private class SearchResponseSurrogate(
+    @OptIn(ExperimentalSerializationApi::class)
+    @JsonNames("error")
     val search_results: ResponseResult? = null,
     val artists: List<@Serializable(with = ArtistSerializer::class) Artist> = emptyList(),
     val albums: List<@Serializable(with = AlbumSerializer::class) Album> = emptyList(),

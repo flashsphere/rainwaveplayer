@@ -85,6 +85,19 @@ class SongAdapterTest {
     }
 
     @Test
+    fun rate_song_new_error_response_works() {
+        val jsonString = readFile(this.javaClass, "/json/rate-song-new-error.json")
+        val response = json.decodeFromString<RateSongResponse>(jsonString)
+
+        val result = response.result
+        assertThat(result.code).isEqualTo(200)
+        assertThat(result.success).isEqualTo(false)
+        assertThat(result.text).isEqualTo("Cannot rate that song at this time.")
+        assertThat(result.rating).isEqualTo(0F)
+        assertThat(result.songId).isEqualTo(0)
+    }
+
+    @Test
     fun clear_rating_response_works() {
         val jsonString = readFile(this.javaClass, "/json/clear-rating.json")
         val response = json.decodeFromString<RateSongResponse>(jsonString)
@@ -100,6 +113,19 @@ class SongAdapterTest {
     @Test
     fun clear_rating_error_response_works() {
         val jsonString = readFile(this.javaClass, "/json/clear-rating-error.json")
+        val response = json.decodeFromString<RateSongResponse>(jsonString)
+
+        val result = response.result
+        assertThat(result.code).isEqualTo(400)
+        assertThat(result.success).isEqualTo(false)
+        assertThat(result.text).isEqualTo("Invalid argument 'song_id': song_id must be a valid song ID.")
+        assertThat(result.rating).isEqualTo(0F)
+        assertThat(result.songId).isEqualTo(0)
+    }
+
+    @Test
+    fun clear_rating_new_error_response_works() {
+        val jsonString = readFile(this.javaClass, "/json/clear-rating-new-error.json")
         val response = json.decodeFromString<RateSongResponse>(jsonString)
 
         val result = response.result
