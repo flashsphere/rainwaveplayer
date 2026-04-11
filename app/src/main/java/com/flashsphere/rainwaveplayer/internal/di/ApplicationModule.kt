@@ -29,6 +29,7 @@ import dagger.hilt.components.SingletonComponent
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
+import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.json.Json
 import okhttp3.ConnectionPool
 import okhttp3.MediaType.Companion.toMediaType
@@ -68,6 +69,8 @@ object ApplicationModule {
     fun provideJson() = Json {
         coerceInputValues = true
         ignoreUnknownKeys = true
+        @OptIn(ExperimentalSerializationApi::class)
+        exceptionsWithDebugInfo = true
     }
 
     @Provides
