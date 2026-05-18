@@ -3,6 +3,7 @@ package com.flashsphere.rainwaveplayer.view.activity.delegate
 import android.content.Intent
 import android.os.Bundle
 import android.support.v4.media.session.MediaControllerCompat
+import android.view.WindowManager
 import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
 import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
 import androidx.compose.runtime.CompositionLocalProvider
@@ -15,6 +16,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.tv.material3.Surface
 import com.flashsphere.rainwaveplayer.coroutine.launchWithDefaults
 import com.flashsphere.rainwaveplayer.coroutine.suspendRunCatching
+import com.flashsphere.rainwaveplayer.model.MediaPlayerStatus
 import com.flashsphere.rainwaveplayer.model.station.Station
 import com.flashsphere.rainwaveplayer.service.MediaService.Companion.getPlayFromStationIntent
 import com.flashsphere.rainwaveplayer.ui.TvLoading
@@ -45,6 +47,8 @@ import com.google.android.gms.cast.tv.media.MediaManager
 import com.google.android.gms.tasks.Task
 import com.google.android.gms.tasks.TaskCompletionSource
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
 import timber.log.Timber
 
@@ -102,6 +106,7 @@ class TvMainActivityDelegate(
         }
 
         subscribeToMediaServiceConnection()
+        subscribeToMediaState()
     }
 
     override fun onDestroy() {
@@ -145,13 +150,12 @@ class TvMainActivityDelegate(
 
             private suspend fun onMediaLoad(loadRequestData: MediaLoadRequestData): MediaLoadRequestData {
                 Timber.d("Running cast media load command")
-                val stationId = getStationId(loadRequestData)
-                if (stationId == null) {
-                    throw MediaException(MediaError.Builder()
+                val stationId = getStationId(loadRequestData) ?: throw MediaException(
+                    MediaError.Builder()
                         .setDetailedErrorCode(DetailedErrorCode.LOAD_FAILED)
                         .setReason(MediaError.ERROR_REASON_INVALID_PARAMS)
-                        .build())
-                }
+                        .build()
+                )
                 val station = activity.stationRepository.getStations().find { it.id == stationId }
                 if (station == null) {
                     throw MediaException(MediaError.Builder()
@@ -182,8 +186,7 @@ class TvMainActivityDelegate(
     }
 
     private fun getStationId(loadRequestData: MediaLoadRequestData): Int? {
-        val mediaInfo = loadRequestData.mediaInfo
-        if (mediaInfo == null) return null
+        val mediaInfo = loadRequestData.mediaInfo ?: return null
 
         return runCatching { mediaInfo.contentId.toInt() }
             .recoverCatching { loadRequestData.customData!!.getInt("stationId") }
@@ -227,5 +230,21 @@ class TvMainActivityDelegate(
                 }
             }
             .launchWithDefaults(activity.lifecycleScope, "Media service connection in TV Main activity")
+    }
+
+    private fun subscribeToMediaState() {
+        activity.mediaPlayerStateObserver.flow
+            .map { status -> status.state != MediaPlayerStatus.State.Stopped }
+            .distinctUntilChanged()
+            .onEach { keepScreenOn ->
+                if (keepScreenOn) {
+                    Timber.d("Add 'Keep screen on' flag")
+                    activity.window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
+                } else {
+                    Timber.d("Remove 'Keep screen on' flag")
+                    activity.window.clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
+                }
+            }
+            .launchWithDefaults(activity.lifecycleScope, "Keep screen on when playing")
     }
 }
