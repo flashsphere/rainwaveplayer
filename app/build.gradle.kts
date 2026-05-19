@@ -28,13 +28,13 @@ kotlin {
 
 android {
     namespace = "com.flashsphere.rainwaveplayer"
-    compileSdk = 36
+    compileSdk = 37
 
     defaultConfig {
         applicationId = "com.flashsphere.rainwaveplayer"
         multiDexEnabled = true
         minSdk = 23
-        targetSdk = 36
+        targetSdk = 37
         versionCode = libs.versions.appVersionCode.get().toInt()
         versionName = libs.versions.appVersionName.get()
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
