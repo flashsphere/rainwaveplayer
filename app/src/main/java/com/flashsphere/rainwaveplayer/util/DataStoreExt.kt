@@ -5,6 +5,7 @@ import androidx.datastore.preferences.core.MutablePreferences
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
 import com.flashsphere.rainwaveplayer.model.station.Station
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.firstOrNull
@@ -47,6 +48,10 @@ suspend fun <T> DataStore<Preferences>.get(block: (preferences: Preferences) -> 
     return data.map {
         block(it)
     }.firstOrNull()
+}
+
+fun <T> DataStore<Preferences>.getFlow(key: PreferenceKey<T>): Flow<T> {
+    return data.map { it[key.key] ?: key.defaultValue }
 }
 
 fun <T> DataStore<Preferences>.getBlocking(key: PreferenceKey<T>): T {

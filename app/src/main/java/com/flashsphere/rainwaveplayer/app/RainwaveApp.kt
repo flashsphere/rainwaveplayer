@@ -16,10 +16,12 @@ import coil3.svg.SvgDecoder
 import com.flashsphere.rainwaveplayer.BuildConfig
 import com.flashsphere.rainwaveplayer.flow.MediaPlayerStateObserver
 import com.flashsphere.rainwaveplayer.media.NotificationChannelHelper
+import com.flashsphere.rainwaveplayer.playback.PlaybackManager
 import com.flashsphere.rainwaveplayer.repository.StationRepository
 import com.flashsphere.rainwaveplayer.util.Analytics
 import com.flashsphere.rainwaveplayer.util.CoroutineDispatchers
 import com.flashsphere.rainwaveplayer.util.CrashlyticsTree
+import com.flashsphere.rainwaveplayer.util.TvBackgroundPlay
 import com.jakewharton.processphoenix.ProcessPhoenix
 import dagger.hilt.android.HiltAndroidApp
 import kotlinx.coroutines.DEBUG_PROPERTY_NAME
@@ -52,6 +54,9 @@ class RainwaveApp : Application(), SingletonImageLoader.Factory {
     @Inject
     lateinit var mediaPlayerStateObserver: MediaPlayerStateObserver
 
+    @Inject
+    lateinit var playbackManager: PlaybackManager
+
     init {
         if (BuildConfig.DEBUG) {
             System.setProperty(DEBUG_PROPERTY_NAME, DEBUG_PROPERTY_VALUE_ON)
@@ -75,6 +80,8 @@ class RainwaveApp : Application(), SingletonImageLoader.Factory {
         Timber.plant(CrashlyticsTree(this, coroutineDispatchers, dataStore))
 
         NotificationChannelHelper(this).setupNotificationChannels()
+
+        TvBackgroundPlay(this, coroutineDispatchers, dataStore, playbackManager).configure()
     }
 
     override fun onTrimMemory(level: Int) {

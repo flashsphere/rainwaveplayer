@@ -51,6 +51,7 @@ import com.flashsphere.rainwaveplayer.util.PreferencesKeys.BUFFER_MIN
 import com.flashsphere.rainwaveplayer.util.PreferencesKeys.HIDE_RATING_UNTIL_RATED
 import com.flashsphere.rainwaveplayer.util.PreferencesKeys.SSL_RELAY
 import com.flashsphere.rainwaveplayer.util.PreferencesKeys.SWAP_ARTIST_ALBUM_METADATA
+import com.flashsphere.rainwaveplayer.util.PreferencesKeys.TV_BACKGROUND_PLAY
 import com.flashsphere.rainwaveplayer.util.PreferencesKeys.USE_ANY_NETWORK
 import com.flashsphere.rainwaveplayer.util.PreferencesKeys.USE_OGG
 import com.flashsphere.rainwaveplayer.util.PreferencesKeys.VOTE_SONG_NOTIFICATIONS
@@ -603,6 +604,22 @@ class SettingsActivity : BaseActivity() {
                 validator = { BufferMinSettingHelper.validateBufferSetting(it) },
                 valueToString = { BufferMinSettingHelper.formatToString(it) },
                 stringToValue = { BufferMinSettingHelper.parseToValue(it) },
+            ))
+            add(CheckBoxPreferenceItem(
+                scope = lifecycleScope,
+                dataStore = dataStore,
+                key = TV_BACKGROUND_PLAY,
+                title = getString(R.string.settings_tv_background_play),
+                options = listOf(
+                    PreferenceItemValue(
+                        value = true,
+                        label = getString(R.string.settings_tv_background_play_desc)
+                    ),
+                    PreferenceItemValue(
+                        value = false,
+                        label = getString(R.string.settings_tv_background_play_desc)
+                    )
+                )
             ))
 
             add(PreferenceCategoryItem(title = getString(R.string.settings_other)))

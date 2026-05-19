@@ -248,6 +248,9 @@
 
     <string name="prefs_buffer_min_default" translatable="false">5</string>
 
+    <string name="settings_tv_background_play">Background play</string>
+    <string name="settings_tv_background_play_desc">Allow playback when app is in background. Disabling this will stop playback when app is in background.</string>
+
     <string name="settings_other">Other</string>
 
     <string name="settings_usage_statistics">Usage statistics</string>

@@ -224,6 +224,9 @@
     <string name="settings_buffering">Buffer duration</string>
     <string name="settings_buffering_min_buffer_desc">The duration of media that the player will attempt to ensure is buffered at all times, in seconds. Default is 5 seconds.</string>
 
+    <string name="settings_tv_background_play">Background play</string>
+    <string name="settings_tv_background_play_desc">Allow playback when app is in background. Disabling this will stop playback when app is in background.</string>
+
     <string name="settings_other">Other</string>
 
     <string name="settings_usage_statistics">Usage statistics</string>
