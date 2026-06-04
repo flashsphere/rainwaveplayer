@@ -17,6 +17,7 @@ import androidx.media3.common.MediaItem
 import androidx.media3.common.PlaybackException
 import androidx.media3.common.Player
 import androidx.media3.common.TrackSelectionParameters.AudioOffloadPreferences
+import androidx.media3.common.util.StuckPlayerException
 import androidx.media3.common.util.UnstableApi
 import androidx.media3.common.util.Util
 import androidx.media3.datasource.okhttp.OkHttpDataSource
@@ -170,6 +171,7 @@ import kotlin.math.max
         return ExoPlayer.Builder(context, DefaultMediaSourceFactory(context, mediaExtractorsFactory))
             .setUsePlatformDiagnostics(false)
             .setLoadControl(loadControl)
+            .setStuckBufferingDetectionTimeoutMs(bufferMs * 2)
             .build()
             .apply {
                 val audioOffloadPrefs = AudioOffloadPreferences.Builder()
