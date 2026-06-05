@@ -20,7 +20,7 @@ import androidx.core.content.ContextCompat
 import androidx.lifecycle.LifecycleOwner
 import com.flashsphere.rainwaveplayer.network.NetworkManager.Companion.TAG
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import timber.log.Timber
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.atomic.AtomicInteger
@@ -38,10 +38,10 @@ class Api24AnyNetworkManager(context: Context) : NetworkManager {
     private var currentNetwork: Network? = null
     private var usingDefaultNetwork: Boolean = true
 
-    override fun isConnected(): Boolean = _connectivityFlow.value
+    override fun isConnected(): Boolean = connectivityFlow.value
 
-    private val _connectivityFlow = MutableStateFlow(false)
-    override val connectivityFlow = _connectivityFlow.asStateFlow()
+    override val connectivityFlow: StateFlow<Boolean>
+        field = MutableStateFlow(false)
 
     private var defaultNetworkCallback = object : NetworkCallback() {
         private var previousNetwork = Pair<Network?, Boolean>(null, false)
@@ -120,7 +120,7 @@ class Api24AnyNetworkManager(context: Context) : NetworkManager {
 
         connectivityManager.bindProcessToNetwork(null)
         usingDefaultNetwork = true
-        _connectivityFlow.value = false
+        connectivityFlow.value = false
         currentNetwork = null
 
         availableNetworks.clear()
@@ -142,7 +142,7 @@ class Api24AnyNetworkManager(context: Context) : NetworkManager {
                 connectivityManager.bindProcessToNetwork(null)
             }
             usingDefaultNetwork = true
-            _connectivityFlow.value = true
+            connectivityFlow.value = true
             if (currentNetwork != network) {
                 currentNetwork = network
                 runNetworkChangeCallbacks(network)
@@ -169,7 +169,7 @@ class Api24AnyNetworkManager(context: Context) : NetworkManager {
             connectivityManager.bindProcessToNetwork(selectedNetwork)
             logNetworkCapabilities(selectedNetwork)
         }
-        _connectivityFlow.value = selectedNetwork != null
+        connectivityFlow.value = selectedNetwork != null
         if (currentNetwork != selectedNetwork) {
             currentNetwork = selectedNetwork
             selectedNetwork?.let { runNetworkChangeCallbacks(it) }

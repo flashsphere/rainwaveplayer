@@ -11,7 +11,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.channels.BufferOverflow.SUSPEND
 import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.flow.SharedFlow
 import okhttp3.ResponseBody
 import retrofit2.Converter
 
@@ -19,12 +19,12 @@ class VoteSongDelegate(
     private val stationRepository: StationRepository,
     private val voteResponseConverter: Converter<ResponseBody, VoteResponse>,
 ) {
-    private val _voteSongState = MutableSharedFlow<VoteSongState>(
-        replay = 0,
-        extraBufferCapacity = 1,
-        onBufferOverflow = SUSPEND
-    )
-    val voteSongState = _voteSongState.asSharedFlow()
+    val voteSongState: SharedFlow<VoteSongState>
+        field = MutableSharedFlow(
+            replay = 0,
+            extraBufferCapacity = 1,
+            onBufferOverflow = SUSPEND
+        )
 
     suspend fun voteSong(stationId: Int, eventId: Int, entryId: Int) {
         suspendRunCatching { stationRepository.vote(stationId, entryId) }
@@ -37,7 +37,7 @@ class VoteSongDelegate(
                     }
                 }
 
-                _voteSongState.emit(VoteSongState(
+                voteSongState.emit(VoteSongState(
                     success = false,
                     stationId = stationId,
                     eventId = eventId,
@@ -47,14 +47,14 @@ class VoteSongDelegate(
             }
             .onSuccess {
                 if (it.result.success) {
-                    _voteSongState.emit(VoteSongState(
+                    voteSongState.emit(VoteSongState(
                         success = true,
                         stationId = stationId,
                         eventId = it.result.eventId,
                         entryId = it.result.entryId,
                     ))
                 } else {
-                    _voteSongState.emit(VoteSongState(
+                    voteSongState.emit(VoteSongState(
                         success = false,
                         stationId = stationId,
                         eventId = eventId,

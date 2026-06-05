@@ -11,7 +11,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.channels.BufferOverflow.SUSPEND
 import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.flow.SharedFlow
 import okhttp3.ResponseBody
 import retrofit2.Converter
 
@@ -19,12 +19,12 @@ class RateSongDelegate(
     private val stationRepository: StationRepository,
     private val rateSongResponseConverter: Converter<ResponseBody, RateSongResponse>,
 ) {
-    private val _rateSongState = MutableSharedFlow<RateSongState>(
-        replay = 0,
-        extraBufferCapacity = 1,
-        onBufferOverflow = SUSPEND
-    )
-    val rateSongState = _rateSongState.asSharedFlow()
+    val rateSongState: SharedFlow<RateSongState>
+        field = MutableSharedFlow(
+            replay = 0,
+            extraBufferCapacity = 1,
+            onBufferOverflow = SUSPEND
+        )
 
     fun rateSong(scope: CoroutineScope, stationId: Int, song: SongState, rating: Float): Job {
         return if (rating > 0F) {
@@ -72,7 +72,7 @@ class RateSongDelegate(
     }
 
     private suspend fun emitSuccess(stationId: Int, song: SongState) {
-        _rateSongState.emit(
+        rateSongState.emit(
             RateSongState(
                 success = true,
                 stationId = stationId,
@@ -84,7 +84,7 @@ class RateSongDelegate(
 
     private suspend fun emitError(stationId: Int, song: SongState, rating: Float,
                                   error: OperationError) {
-        _rateSongState.emit(
+        rateSongState.emit(
             RateSongState(
                 success = false,
                 stationId = stationId,

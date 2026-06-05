@@ -1,5 +1,3 @@
-import org.jetbrains.kotlin.gradle.dsl.JvmTarget
-
 plugins {
     alias(libs.plugins.idea.ext)
     alias(libs.plugins.android.application)
@@ -14,15 +12,6 @@ plugins {
 idea {
     module {
         excludeDirs.add(file("src/release/generated/baselineProfiles"))
-    }
-}
-
-kotlin {
-    compilerOptions {
-        jvmTarget = JvmTarget.JVM_21
-        freeCompilerArgs.addAll(listOf(
-            "-Xannotation-default-target=param-property",
-        ))
     }
 }
 

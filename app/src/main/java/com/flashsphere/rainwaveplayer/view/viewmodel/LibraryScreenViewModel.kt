@@ -28,9 +28,8 @@ import com.flashsphere.rainwaveplayer.view.uistate.model.RequestLineState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.debounce
@@ -71,17 +70,17 @@ class LibraryScreenViewModel @Inject constructor(
         .distinctUntilChanged { old, new -> old.queryText == new.queryText }
         .map { it.queryText }
 
-    private val _albumLibraryState = MutableStateFlow(LibraryScreenState<AlbumState>())
-    val albumLibraryState = _albumLibraryState.asStateFlow()
+    val albumLibraryState: StateFlow<LibraryScreenState<AlbumState>>
+        field = MutableStateFlow(LibraryScreenState())
 
-    private val _artistLibraryState = MutableStateFlow(LibraryScreenState<ArtistState>())
-    val artistLibraryState = _artistLibraryState.asStateFlow()
+    val artistLibraryState: StateFlow<LibraryScreenState<ArtistState>>
+        field = MutableStateFlow(LibraryScreenState())
 
-    private val _categoryLibraryState = MutableStateFlow(LibraryScreenState<CategoryState>())
-    val categoryLibraryState = _categoryLibraryState.asStateFlow()
+    val categoryLibraryState: StateFlow<LibraryScreenState<CategoryState>>
+        field = MutableStateFlow(LibraryScreenState())
 
-    private val _requestLineLibraryState = MutableStateFlow(LibraryScreenState<RequestLineState>())
-    val requestLineLibraryState = _requestLineLibraryState.asStateFlow()
+    val requestLineLibraryState: StateFlow<LibraryScreenState<RequestLineState>>
+        field = MutableStateFlow(LibraryScreenState())
 
     private var allAlbumsJob: Job? = null
     private var allArtistsJob: Job? = null
@@ -111,15 +110,15 @@ class LibraryScreenViewModel @Inject constructor(
     }
 
     fun getAllAlbums(station: Station, force: Boolean = false): Job {
-        if (force || _albumLibraryState.value.station != station) {
-            _albumLibraryState.value = LibraryScreenState.loading(_albumLibraryState.value, station)
+        if (force || albumLibraryState.value.station != station) {
+            albumLibraryState.value = LibraryScreenState.loading(albumLibraryState.value, station)
             uiEventDelegate.send(DismissSnackbarEvent)
         }
 
         cancel(allAlbumsJob)
         return flow { emit(stationRepository.getAllAlbums(station.id, force)) }
             .autoRetry(connectivityObserver, coroutineDispatchers) {
-                _albumLibraryState.value = LibraryScreenState.error(_albumLibraryState.value,
+                albumLibraryState.value = LibraryScreenState.error(albumLibraryState.value,
                     OperationError(OperationError.Server))
             }
             .combine(debounceFilterFlow) { response, filterQuery ->
@@ -129,21 +128,21 @@ class LibraryScreenViewModel @Inject constructor(
                 LibraryScreenState.loaded(station, data, filterData(filterQuery, data))
             }
             .flowOn(coroutineDispatchers.compute)
-            .onEach { _albumLibraryState.value = it }
+            .onEach { albumLibraryState.value = it }
             .launchWithDefaults(viewModelScope, "All Albums")
             .also { allAlbumsJob = it }
     }
 
     fun getAllArtists(station: Station, force: Boolean = false): Job {
-        if (force || _artistLibraryState.value.station != station) {
-            _artistLibraryState.value = LibraryScreenState.loading(_artistLibraryState.value, station)
+        if (force || artistLibraryState.value.station != station) {
+            artistLibraryState.value = LibraryScreenState.loading(artistLibraryState.value, station)
             uiEventDelegate.send(DismissSnackbarEvent)
         }
 
         cancel(allArtistsJob)
         return flow { emit(stationRepository.getAllArtists(station.id, force)) }
             .autoRetry(connectivityObserver, coroutineDispatchers) {
-                _artistLibraryState.value = LibraryScreenState.error(_artistLibraryState.value,
+                artistLibraryState.value = LibraryScreenState.error(artistLibraryState.value,
                     OperationError(OperationError.Server))
             }
             .combine(debounceFilterFlow) { response, filterQuery ->
@@ -153,14 +152,14 @@ class LibraryScreenViewModel @Inject constructor(
                 LibraryScreenState.loaded(station, data, filterData(filterQuery, data))
             }
             .flowOn(coroutineDispatchers.compute)
-            .onEach { _artistLibraryState.value = it }
+            .onEach { artistLibraryState.value = it }
             .launchWithDefaults(viewModelScope, "All Artists")
             .also { allArtistsJob = it }
     }
 
     fun getAllCategories(station: Station, force: Boolean = false): Job {
-        if (force || _categoryLibraryState.value.station != station) {
-            _categoryLibraryState.value = LibraryScreenState.loading(_categoryLibraryState.value,
+        if (force || categoryLibraryState.value.station != station) {
+            categoryLibraryState.value = LibraryScreenState.loading(categoryLibraryState.value,
                 station)
             uiEventDelegate.send(DismissSnackbarEvent)
         }
@@ -168,7 +167,7 @@ class LibraryScreenViewModel @Inject constructor(
         cancel(allCategoriesJob)
         return flow { emit(stationRepository.getAllCategories(station.id, force)) }
             .autoRetry(connectivityObserver, coroutineDispatchers) {
-                _categoryLibraryState.value = LibraryScreenState.error(_categoryLibraryState.value,
+                categoryLibraryState.value = LibraryScreenState.error(categoryLibraryState.value,
                     OperationError(OperationError.Server))
             }
             .combine(debounceFilterFlow) { response, filterQuery ->
@@ -178,37 +177,32 @@ class LibraryScreenViewModel @Inject constructor(
                 LibraryScreenState.loaded(station, data, filterData(filterQuery, data))
             }
             .flowOn(coroutineDispatchers.compute)
-            .onEach { _categoryLibraryState.value = it }
+            .onEach { categoryLibraryState.value = it }
             .launchWithDefaults(viewModelScope, "All Categories")
             .also { allCategoriesJob = it }
     }
 
     fun subscribeStationInfo(station: Station, force: Boolean = false): Job {
-        if (force || _requestLineLibraryState.value.station != station) {
-            _requestLineLibraryState.value = LibraryScreenState.loading(
-                _requestLineLibraryState.value, station)
+        if (force || requestLineLibraryState.value.station != station) {
+            requestLineLibraryState.value = LibraryScreenState.loading(
+                requestLineLibraryState.value, station)
             uiEventDelegate.send(DismissSnackbarEvent)
         }
 
         cancel(requestLineJob)
         return stationRepository.getStationInfoFlow(station.id, force)
             .autoRetry(connectivityObserver, coroutineDispatchers) {
-                _requestLineLibraryState.value = LibraryScreenState.error(_requestLineLibraryState.value,
+                requestLineLibraryState.value = LibraryScreenState.error(requestLineLibraryState.value,
                     OperationError(OperationError.Server))
             }
             .combine(debounceFilterFlow) { response, filterQuery ->
-                if (force) {
-                    // workaround Pull To Refresh indicator not disappearing when force refresh
-                    // because the API returns the response too quickly
-                    delay(100)
-                }
                 val data = response.requestLine.asSequence()
                     .map { item -> RequestLineState(item) }
                     .toCollection(mutableStateListOf())
                 LibraryScreenState.loaded(station, data, filterData(filterQuery, data))
             }
             .flowOn(coroutineDispatchers.compute)
-            .onEach { _requestLineLibraryState.value = it }
+            .onEach { requestLineLibraryState.value = it }
             .launchWithDefaults(viewModelScope, "Request Line")
             .also { requestLineJob = it }
     }

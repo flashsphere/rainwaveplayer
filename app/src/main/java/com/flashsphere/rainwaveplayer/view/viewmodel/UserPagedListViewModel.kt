@@ -25,7 +25,7 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.flatMapLatest
@@ -52,11 +52,11 @@ class UserPagedListViewModel @Inject constructor(
 ) : ViewModel() {
     val snackbarEvents = uiEventDelegate.snackbarEvents
 
-    private val _stationsScreenState = MutableStateFlow(StationsScreenState())
-    val stationsScreenState = _stationsScreenState.asStateFlow()
+    val stationsScreenState: StateFlow<StationsScreenState>
+        field = MutableStateFlow(StationsScreenState())
 
-    private val _station = MutableStateFlow<Station?>(savedStateHandle[STATION_KEY])
-    val station = _station.asStateFlow()
+    val station: StateFlow<Station?>
+        field = savedStateHandle.getMutableStateFlow(STATION_KEY, null)
 
     private val updatedItems = MutableStateFlow(mapOf<Int, Boolean>())
 
@@ -65,21 +65,21 @@ class UserPagedListViewModel @Inject constructor(
     private var faveSongStateJob: Job? = null
 
     fun station(station: Station) {
-        _station.value = station
+        this.station.value = station
     }
 
     fun getStations() {
-        _stationsScreenState.value = StationsScreenState.loading()
+        stationsScreenState.value = StationsScreenState.loading()
 
         cancel(stationsJob)
         stationsJob = flow { emit(stationRepository.getStations()) }
             .autoRetry(connectivityObserver, coroutineDispatchers) { e ->
-                _stationsScreenState.value = StationsScreenState.error(
+                stationsScreenState.value = StationsScreenState.error(
                     e.toOperationError(stationsErrorResponseConverter))
             }
             .onEach { stations ->
-                _stationsScreenState.value = StationsScreenState.loaded(stations)
-                if (_station.value == null) {
+                stationsScreenState.value = StationsScreenState.loaded(stations)
+                if (station.value == null) {
                     station(stations[0])
                 }
             }
@@ -87,7 +87,7 @@ class UserPagedListViewModel @Inject constructor(
     }
 
     @OptIn(ExperimentalCoroutinesApi::class)
-    val allFaves: Flow<PagingData<SongState>> = station.filterNotNull()
+    val allFaves: Flow<PagingData<SongState>> = this.station.filterNotNull()
         .flatMapLatest { station ->
             stationRepository.allFaves(station.id, PagingConfig(pageSize = 30, enablePlaceholders = false))
                 .flow
@@ -103,7 +103,7 @@ class UserPagedListViewModel @Inject constructor(
         }
 
     @OptIn(ExperimentalCoroutinesApi::class)
-    val recentVotes: Flow<PagingData<SongState>> = station.filterNotNull()
+    val recentVotes: Flow<PagingData<SongState>> = this.station.filterNotNull()
         .flatMapLatest { station ->
             stationRepository.recentVotes(station.id, PagingConfig(pageSize = 30, enablePlaceholders = false))
                 .flow
@@ -119,7 +119,7 @@ class UserPagedListViewModel @Inject constructor(
         }
 
     @OptIn(ExperimentalCoroutinesApi::class)
-    val requestHistory: Flow<PagingData<SongState>> = station.filterNotNull()
+    val requestHistory: Flow<PagingData<SongState>> = this.station.filterNotNull()
         .flatMapLatest { station ->
             stationRepository.requestHistory(station.id, PagingConfig(pageSize = 30, enablePlaceholders = false))
                 .flow

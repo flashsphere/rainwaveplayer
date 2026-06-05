@@ -24,7 +24,7 @@ import com.flashsphere.rainwaveplayer.view.uistate.model.SongState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
@@ -37,7 +37,7 @@ import javax.inject.Named
 
 @HiltViewModel
 class CategoryScreenViewModel @Inject constructor(
-    private val savedStateHandle: SavedStateHandle,
+    savedStateHandle: SavedStateHandle,
     private val stationRepository: StationRepository,
     private val connectivityObserver: ConnectivityObserver,
     private val coroutineDispatchers: CoroutineDispatchers,
@@ -48,11 +48,11 @@ class CategoryScreenViewModel @Inject constructor(
 ) : ViewModel() {
     val snackbarEvents = uiEventDelegate.snackbarEvents
 
-    private var _station: Station? = savedStateHandle[STATION_KEY]
-    val station get() = _station
+    private val stationFlow: MutableStateFlow<Station?> = savedStateHandle.getMutableStateFlow(
+        STATION_KEY, null)
 
-    private val _categoryScreenState = MutableStateFlow(CategoryScreenState())
-    val categoryScreenState = _categoryScreenState.asStateFlow()
+    val categoryScreenState: StateFlow<CategoryScreenState>
+        field = MutableStateFlow(CategoryScreenState())
 
     private val requestSongDelegate = RequestSongDelegate(viewModelScope, stationRepository,
         requestSongResponseConverter)
@@ -61,35 +61,34 @@ class CategoryScreenViewModel @Inject constructor(
     private var categoryJob: Job? = null
 
     fun getCategory(station: Station, categoryDetail: CategoryDetail) {
-        if (_categoryScreenState.value.loaded &&
-            _categoryScreenState.value.category?.id == categoryDetail.id) return
+        if (categoryScreenState.value.loaded &&
+            categoryScreenState.value.category?.id == categoryDetail.id) return
 
-        savedStateHandle[STATION_KEY] = station
-        _station = station
+        stationFlow.value = station
 
         val category = CategoryState(categoryDetail.id, categoryDetail.name)
-        _categoryScreenState.value = CategoryScreenState.init(category)
+        categoryScreenState.value = CategoryScreenState.init(category)
 
         getCategory()
     }
 
     fun getCategory() {
-        val station = _station ?: return
-        val category = _categoryScreenState.value.category ?: return
+        val station = stationFlow.value ?: return
+        val category = categoryScreenState.value.category ?: return
 
-        _categoryScreenState.value = CategoryScreenState.loading(_categoryScreenState.value)
+        categoryScreenState.value = CategoryScreenState.loading(categoryScreenState.value)
         uiEventDelegate.send(DismissSnackbarEvent)
 
         cancel(categoryJob)
         categoryJob = flow { emit(stationRepository.getCategory(station.id, category.id)) }
             .autoRetry(connectivityObserver, coroutineDispatchers) {
-                _categoryScreenState.value = CategoryScreenState.error(
-                    _categoryScreenState.value, OperationError(OperationError.Server)
+                categoryScreenState.value = CategoryScreenState.error(
+                    categoryScreenState.value, OperationError(OperationError.Server)
                 )
             }
             .map { CategoryState(it.category) }
             .flowOn(coroutineDispatchers.compute)
-            .onEach { _categoryScreenState.value = CategoryScreenState.loaded(it) }
+            .onEach { categoryScreenState.value = CategoryScreenState.loaded(it) }
             .launchWithDefaults(viewModelScope, "Category Detail")
     }
 
@@ -99,7 +98,7 @@ class CategoryScreenViewModel @Inject constructor(
     }
 
     fun requestSong(song: SongState) {
-        val station = _station ?: return
+        val station = stationFlow.value ?: return
         uiEventDelegate.send(DismissSnackbarEvent)
         requestSongDelegate.requestSong(station, song, {
             uiEventDelegate.send(RequestSongSuccessEvent(song = song))
@@ -115,7 +114,7 @@ class CategoryScreenViewModel @Inject constructor(
         faveSongStateJob = faveSongDelegate.faveSongState
             .onEach { state ->
                 if (state.success && state.song == null) {
-                    _categoryScreenState.value.category?.items?.let { items ->
+                    categoryScreenState.value.category?.items?.let { items ->
                         items.asSequence().filterIsInstance<SongState>()
                             .firstOrNull { it.id == state.songId }?.let {
                                 it.favorite.value = state.favorite

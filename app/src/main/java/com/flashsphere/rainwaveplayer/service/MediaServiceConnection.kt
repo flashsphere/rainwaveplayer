@@ -10,7 +10,7 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ProcessLifecycleOwner
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import timber.log.Timber
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -21,8 +21,8 @@ class MediaServiceConnection @Inject constructor(
 ) : ServiceConnection, DefaultLifecycleObserver {
     private val serviceComponent = ComponentName(context, MediaService::class.java)
 
-    private val _boundService = MutableStateFlow<MediaService?>(null)
-    val boundService = _boundService.asStateFlow()
+    val boundService: StateFlow<MediaService?>
+        field = MutableStateFlow(null)
 
     init {
         ProcessLifecycleOwner.get().lifecycle.addObserver(this)
@@ -38,7 +38,7 @@ class MediaServiceConnection @Inject constructor(
     }
 
     override fun onStop(owner: LifecycleOwner) {
-        if (_boundService.value == null) return
+        if (boundService.value == null) return
         runCatching {
             Timber.i("Unbind service")
             context.unbindService(this)
@@ -52,11 +52,11 @@ class MediaServiceConnection @Inject constructor(
         if (serviceComponent != name) return
         if (binder !is MediaService.LocalBinder) return
         Timber.i("MediaService connected")
-        _boundService.value = binder.service.get()
+        boundService.value = binder.service.get()
     }
 
     override fun onServiceDisconnected(name: ComponentName) {
         if (serviceComponent != name) return
-        _boundService.value = null
+        boundService.value = null
     }
 }

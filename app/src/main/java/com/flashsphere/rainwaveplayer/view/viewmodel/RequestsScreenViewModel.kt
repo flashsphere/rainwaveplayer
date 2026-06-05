@@ -1,6 +1,5 @@
 package com.flashsphere.rainwaveplayer.view.viewmodel
 
-import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.flashsphere.rainwaveplayer.R
@@ -30,7 +29,7 @@ import com.flashsphere.rainwaveplayer.view.uistate.model.UserState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
@@ -42,7 +41,6 @@ import javax.inject.Named
 
 @HiltViewModel
 class RequestsScreenViewModel @Inject constructor(
-    private val savedStateHandle: SavedStateHandle,
     private val stationRepository: StationRepository,
     private val connectivityObserver: ConnectivityObserver,
     private val coroutineDispatchers: CoroutineDispatchers,
@@ -66,8 +64,8 @@ class RequestsScreenViewModel @Inject constructor(
 
     private var station: Station? = null
 
-    private val _requestsScreenState = MutableStateFlow(RequestsScreenState())
-    val requestsScreenState = _requestsScreenState.asStateFlow()
+    val requestsScreenState: StateFlow<RequestsScreenState>
+        field = MutableStateFlow(RequestsScreenState())
 
     private var requestsJob: Job? = null
     private var suspendResumeJob: Job? = null
@@ -84,7 +82,7 @@ class RequestsScreenViewModel @Inject constructor(
         val station = this.station ?: return
 
         uiEventDelegate.send(DismissSnackbarEvent)
-        _requestsScreenState.value = RequestsScreenState.loading(_requestsScreenState.value)
+        requestsScreenState.value = RequestsScreenState.loading(requestsScreenState.value)
 
         cancel(requestsJob)
         requestsJob = stationRepository.getStationInfoFlow(station.id, refresh)
@@ -93,10 +91,10 @@ class RequestsScreenViewModel @Inject constructor(
             }
             .flowOn(coroutineDispatchers.compute)
             .autoRetry(connectivityObserver, coroutineDispatchers) {
-                _requestsScreenState.value = RequestsScreenState.error(_requestsScreenState.value,
+                requestsScreenState.value = RequestsScreenState.error(requestsScreenState.value,
                     OperationError(OperationError.Server))
             }
-            .onEach { _requestsScreenState.value = it }
+            .onEach { requestsScreenState.value = it }
             .launchWithDefaults(viewModelScope, "Requests List")
     }
 
@@ -105,14 +103,14 @@ class RequestsScreenViewModel @Inject constructor(
     }
 
     fun reorderRequestItem(fromIndex: Int, toIndex: Int) {
-        val requests = _requestsScreenState.value.requests ?: return
+        val requests = requestsScreenState.value.requests ?: return
         val fromItem = requests[fromIndex]
         requests[fromIndex] = requests[toIndex]
         requests[toIndex] = fromItem
     }
 
     fun reorderItemToTop(request: RequestState, index: Int) {
-        val requests = _requestsScreenState.value.requests ?: return
+        val requests = requestsScreenState.value.requests ?: return
         val item = requests.getOrNull(index) ?: return
         if (item.songId != request.songId) return
 
@@ -121,7 +119,7 @@ class RequestsScreenViewModel @Inject constructor(
     }
 
     fun reorderRequests() {
-        val requestsScreenState = _requestsScreenState.value
+        val requestsScreenState = requestsScreenState.value
         val originalRequests = requestsScreenState.originalRequests?.joinToString(",") { it.songId.toString() } ?: return
         val requests = requestsScreenState.requests?.joinToString(",") { it.songId.toString() } ?: return
         if (requests == originalRequests) return
@@ -134,12 +132,12 @@ class RequestsScreenViewModel @Inject constructor(
         val songIds = requests.joinToString(",") { it.songId.toString() }
 
         uiEventDelegate.send(DismissSnackbarEvent)
-        _requestsScreenState.value = RequestsScreenState.loading(_requestsScreenState.value)
+        requestsScreenState.value = RequestsScreenState.loading(requestsScreenState.value)
 
         viewModelScope.launchWithDefaults("Reorder Requests") {
             suspendRunCatching { stationRepository.orderRequests(station.id, songIds) }
                 .onFailure { e ->
-                    _requestsScreenState.value = RequestsScreenState.loaded(_requestsScreenState.value)
+                    requestsScreenState.value = RequestsScreenState.loaded(requestsScreenState.value)
                     uiEventDelegate.send(RequestErrorEvent(
                         error = e.toOperationError(orderRequestsResponseConverter),
                         retry = { reorderRequests() },
@@ -147,10 +145,10 @@ class RequestsScreenViewModel @Inject constructor(
                 }
                 .onSuccess { response ->
                     if (response.result.success) {
-                        _requestsScreenState.value = RequestsScreenState.requestsUpdated(
-                            _requestsScreenState.value, response.requests)
+                        requestsScreenState.value = RequestsScreenState.requestsUpdated(
+                            requestsScreenState.value, response.requests)
                     } else {
-                        _requestsScreenState.value = RequestsScreenState.loaded(_requestsScreenState.value)
+                        requestsScreenState.value = RequestsScreenState.loaded(requestsScreenState.value)
                         uiEventDelegate.send(RequestErrorEvent(
                             error = OperationError(OperationError.Server, response.result.text),
                             retry = { reorderRequests() },
@@ -161,7 +159,7 @@ class RequestsScreenViewModel @Inject constructor(
     }
 
     fun deleteRequest(request: RequestState, index: Int): Boolean {
-        _requestsScreenState.value.requests?.let { requests ->
+        requestsScreenState.value.requests?.let { requests ->
             val item = requests.getOrNull(index) ?: return false
             if (item.songId != request.songId) return false
 
@@ -176,12 +174,12 @@ class RequestsScreenViewModel @Inject constructor(
         val station = this.station ?: return
 
         uiEventDelegate.send(DismissSnackbarEvent)
-        _requestsScreenState.value = RequestsScreenState.loading(_requestsScreenState.value)
+        requestsScreenState.value = RequestsScreenState.loading(requestsScreenState.value)
 
         viewModelScope.launchWithDefaults("Delete Request") {
             suspendRunCatching { stationRepository.deleteRequest(station.id, request.songId) }
                 .onFailure { e ->
-                    _requestsScreenState.value = RequestsScreenState.loaded(_requestsScreenState.value)
+                    requestsScreenState.value = RequestsScreenState.loaded(requestsScreenState.value)
                     uiEventDelegate.send(RequestErrorEvent(
                         error = e.toOperationError(deleteRequestConverter),
                         retry = { deleteRequest(request) },
@@ -189,10 +187,10 @@ class RequestsScreenViewModel @Inject constructor(
                 }
                 .onSuccess {
                     if (it.result.success) {
-                        _requestsScreenState.value = RequestsScreenState.requestsUpdated(
-                            _requestsScreenState.value, it.requests)
+                        requestsScreenState.value = RequestsScreenState.requestsUpdated(
+                            requestsScreenState.value, it.requests)
                     } else {
-                        _requestsScreenState.value = RequestsScreenState.loaded(_requestsScreenState.value)
+                        requestsScreenState.value = RequestsScreenState.loaded(requestsScreenState.value)
                         uiEventDelegate.send(RequestErrorEvent(
                             error = OperationError(OperationError.Server, it.result.text),
                             retry = { deleteRequest(request) },
@@ -207,13 +205,13 @@ class RequestsScreenViewModel @Inject constructor(
         val station = this.station ?: return
 
         uiEventDelegate.send(DismissSnackbarEvent)
-        _requestsScreenState.value = RequestsScreenState.loading(_requestsScreenState.value)
+        requestsScreenState.value = RequestsScreenState.loading(requestsScreenState.value)
 
         cancel(suspendResumeJob)
         suspendResumeJob = viewModelScope.launchWithDefaults("Suspend Queue") {
             suspendRunCatching { stationRepository.pauseRequestResponse(station.id) }
                 .onFailure { e ->
-                    _requestsScreenState.value = RequestsScreenState.loaded(_requestsScreenState.value)
+                    requestsScreenState.value = RequestsScreenState.loaded(requestsScreenState.value)
                     uiEventDelegate.send(RequestErrorEvent(
                         error = e.toOperationError(pauseRequestConverter),
                         retry = { suspendQueue() },
@@ -222,11 +220,11 @@ class RequestsScreenViewModel @Inject constructor(
                 .onSuccess {
                     if (it.result.success) {
                         it.user?.let { user ->
-                            _requestsScreenState.value = RequestsScreenState.userUpdated(
-                                _requestsScreenState.value, UserState(user))
+                            requestsScreenState.value = RequestsScreenState.userUpdated(
+                                requestsScreenState.value, UserState(user))
                         }
                     } else {
-                        _requestsScreenState.value = RequestsScreenState.loaded(_requestsScreenState.value)
+                        requestsScreenState.value = RequestsScreenState.loaded(requestsScreenState.value)
                         uiEventDelegate.send(RequestErrorEvent(
                             error = OperationError(OperationError.Server, it.result.text),
                             retry = { suspendQueue() },
@@ -240,13 +238,13 @@ class RequestsScreenViewModel @Inject constructor(
         val station = this.station ?: return
 
         uiEventDelegate.send(DismissSnackbarEvent)
-        _requestsScreenState.value = RequestsScreenState.loading(_requestsScreenState.value)
+        requestsScreenState.value = RequestsScreenState.loading(requestsScreenState.value)
 
         cancel(suspendResumeJob)
         suspendResumeJob = viewModelScope.launchWithDefaults("Resume Queue") {
             suspendRunCatching { stationRepository.resumeRequestResponse(station.id) }
                 .onFailure { e ->
-                    _requestsScreenState.value = RequestsScreenState.loaded(_requestsScreenState.value)
+                    requestsScreenState.value = RequestsScreenState.loaded(requestsScreenState.value)
                     uiEventDelegate.send(RequestErrorEvent(
                         error = e.toOperationError(resumeRequestConverter),
                         retry = { resumeQueue() },
@@ -255,11 +253,11 @@ class RequestsScreenViewModel @Inject constructor(
                 .onSuccess {
                     if (it.result.success) {
                         it.user?.let { user ->
-                            _requestsScreenState.value = RequestsScreenState.userUpdated(
-                                _requestsScreenState.value, UserState(user))
+                            requestsScreenState.value = RequestsScreenState.userUpdated(
+                                requestsScreenState.value, UserState(user))
                         }
                     } else {
-                        _requestsScreenState.value = RequestsScreenState.loaded(_requestsScreenState.value)
+                        requestsScreenState.value = RequestsScreenState.loaded(requestsScreenState.value)
                         uiEventDelegate.send(RequestErrorEvent(
                             error = OperationError(OperationError.Server, it.result.text),
                             retry = { resumeQueue() },
@@ -273,21 +271,21 @@ class RequestsScreenViewModel @Inject constructor(
         val station = this.station ?: return
 
         uiEventDelegate.send(DismissSnackbarEvent)
-        _requestsScreenState.value = RequestsScreenState.loading(_requestsScreenState.value)
+        requestsScreenState.value = RequestsScreenState.loading(requestsScreenState.value)
 
         cancel(clearRequestsJob)
         clearRequestsJob = viewModelScope.launchWithDefaults("Clear Requests") {
             suspendRunCatching { stationRepository.clearRequests(station.id) }
                 .onFailure { e ->
-                    _requestsScreenState.value = RequestsScreenState.loaded(_requestsScreenState.value)
+                    requestsScreenState.value = RequestsScreenState.loaded(requestsScreenState.value)
                     uiEventDelegate.send(RequestErrorEvent(
                         error = e.toOperationError(clearRequestsErrorResponseConverter),
                         retry = { clearRequests() },
                         message = R.string.error_clear_failed))
                 }
                 .onSuccess {
-                    _requestsScreenState.value = RequestsScreenState.requestsUpdated(
-                        _requestsScreenState.value, it.requests)
+                    requestsScreenState.value = RequestsScreenState.requestsUpdated(
+                        requestsScreenState.value, it.requests)
                 }
         }
     }
@@ -296,13 +294,13 @@ class RequestsScreenViewModel @Inject constructor(
         val station = this.station ?: return
 
         uiEventDelegate.send(DismissSnackbarEvent)
-        _requestsScreenState.value = RequestsScreenState.loading(_requestsScreenState.value)
+        requestsScreenState.value = RequestsScreenState.loading(requestsScreenState.value)
 
         cancel(requestFaveJob)
         requestFaveJob = viewModelScope.launchWithDefaults("Request Faves") {
             suspendRunCatching { stationRepository.requestFave(station.id) }
                 .onFailure { e ->
-                    _requestsScreenState.value = RequestsScreenState.loaded(_requestsScreenState.value)
+                    requestsScreenState.value = RequestsScreenState.loaded(requestsScreenState.value)
                     uiEventDelegate.send(RequestErrorEvent(
                         error = e.toOperationError(requestFaveResponseConverter),
                         retry = { requestFavorites() },
@@ -310,10 +308,10 @@ class RequestsScreenViewModel @Inject constructor(
                 }
                 .onSuccess {
                     if (it.result.success) {
-                        _requestsScreenState.value = RequestsScreenState.requestsUpdated(
-                            _requestsScreenState.value, it.requests)
+                        requestsScreenState.value = RequestsScreenState.requestsUpdated(
+                            requestsScreenState.value, it.requests)
                     } else {
-                        _requestsScreenState.value = RequestsScreenState.loaded(_requestsScreenState.value)
+                        requestsScreenState.value = RequestsScreenState.loaded(requestsScreenState.value)
                         uiEventDelegate.send(RequestErrorEvent(
                             error = OperationError(OperationError.Server, it.result.text),
                             retry = { requestFavorites() },
@@ -327,13 +325,13 @@ class RequestsScreenViewModel @Inject constructor(
         val station = this.station ?: return
 
         uiEventDelegate.send(DismissSnackbarEvent)
-        _requestsScreenState.value = RequestsScreenState.loading(_requestsScreenState.value)
+        requestsScreenState.value = RequestsScreenState.loading(requestsScreenState.value)
 
         cancel(requestUnratedJob)
         requestUnratedJob = viewModelScope.launchWithDefaults("Request Unrated") {
             suspendRunCatching { stationRepository.requestUnrated(station.id) }
                 .onFailure { e ->
-                    _requestsScreenState.value = RequestsScreenState.loaded(_requestsScreenState.value)
+                    requestsScreenState.value = RequestsScreenState.loaded(requestsScreenState.value)
                     uiEventDelegate.send(RequestErrorEvent(
                         error = e.toOperationError(requestUnratedResponseConverter),
                         retry = { requestUnrated() },
@@ -341,10 +339,10 @@ class RequestsScreenViewModel @Inject constructor(
                 }
                 .onSuccess {
                     if (it.result.success) {
-                        _requestsScreenState.value = RequestsScreenState.requestsUpdated(
-                            _requestsScreenState.value, it.requests)
+                        requestsScreenState.value = RequestsScreenState.requestsUpdated(
+                            requestsScreenState.value, it.requests)
                     } else {
-                        _requestsScreenState.value = RequestsScreenState.loaded(_requestsScreenState.value)
+                        requestsScreenState.value = RequestsScreenState.loaded(requestsScreenState.value)
                         uiEventDelegate.send(RequestErrorEvent(
                             error = OperationError(OperationError.Server, it.result.text),
                             retry = { requestFavorites() },

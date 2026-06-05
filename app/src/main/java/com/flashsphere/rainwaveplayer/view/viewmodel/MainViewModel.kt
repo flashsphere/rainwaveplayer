@@ -10,6 +10,7 @@ import com.flashsphere.rainwaveplayer.coroutine.launchWithDefaults
 import com.flashsphere.rainwaveplayer.flow.ConnectivityObserver
 import com.flashsphere.rainwaveplayer.flow.MediaPlayerStateObserver
 import com.flashsphere.rainwaveplayer.flow.autoRetry
+import com.flashsphere.rainwaveplayer.model.MediaPlayerStatus
 import com.flashsphere.rainwaveplayer.model.station.Station
 import com.flashsphere.rainwaveplayer.model.station.StationsErrorResponse
 import com.flashsphere.rainwaveplayer.model.stationInfo.InfoErrorResponse
@@ -44,7 +45,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.filterIsInstance
@@ -60,7 +61,7 @@ import javax.inject.Named
 @HiltViewModel
 class MainViewModel @Inject constructor(
     @ApplicationContext context: Context,
-    private val savedStateHandle: SavedStateHandle,
+    savedStateHandle: SavedStateHandle,
     private val dataStore: DataStore<Preferences>,
     private val stationRepository: StationRepository,
     private val userRepository: UserRepository,
@@ -85,23 +86,23 @@ class MainViewModel @Inject constructor(
     val snackbarEvents = uiEventDelegate.snackbarEvents
     val castState = MutableStateFlow("")
 
-    private val _station = MutableStateFlow<Station?>(savedStateHandle[STATION_KEY])
-    val station = _station.asStateFlow()
+    val station: StateFlow<Station?>
+        field = savedStateHandle.getMutableStateFlow(STATION_KEY, null)
 
-    private val _user = MutableStateFlow<UserState?>(savedStateHandle[USER_KEY])
-    val user = _user.asStateFlow()
+    val user: StateFlow<UserState?>
+        field = savedStateHandle.getMutableStateFlow(USER_KEY, null)
 
-    private val _showPreviouslyPlayed = MutableStateFlow(false)
-    val showPreviouslyPlayed = _showPreviouslyPlayed.asStateFlow()
+    val showPreviouslyPlayed: StateFlow<Boolean>
+        field = MutableStateFlow(false)
 
-    private val _stationsScreenState = MutableStateFlow(StationsScreenState())
-    val stationsScreenState = _stationsScreenState.asStateFlow()
+    val stationsScreenState: StateFlow<StationsScreenState>
+        field = MutableStateFlow(StationsScreenState())
 
-    private val _stationInfoScreenState = MutableStateFlow(StationInfoScreenState())
-    val stationInfoScreenState = _stationInfoScreenState.asStateFlow()
+    val stationInfoScreenState: StateFlow<StationInfoScreenState>
+        field = MutableStateFlow(StationInfoScreenState())
 
-    private val _playbackState = MutableStateFlow(mediaPlayerStateObserver.currentState)
-    val playbackState = _playbackState.asStateFlow()
+    val playbackState: StateFlow<MediaPlayerStatus>
+        field = MutableStateFlow(mediaPlayerStateObserver.currentState)
 
     val showSleepTimer = sleepTimerDelegate.showState
 
@@ -121,51 +122,45 @@ class MainViewModel @Inject constructor(
     }
 
     fun getStations() {
-        _stationsScreenState.value = StationsScreenState.loading()
+        stationsScreenState.value = StationsScreenState.loading()
 
         cancel(stationsJob)
         stationsJob = flow { emit(stationRepository.getStations()) }
             .autoRetry(connectivityObserver, coroutineDispatchers) { e ->
-                _stationsScreenState.value = StationsScreenState.error(e.toOperationError(stationsErrorResponseConverter))
+                stationsScreenState.value = StationsScreenState.error(e.toOperationError(stationsErrorResponseConverter))
             }
             .onEach { data ->
-                _stationsScreenState.value = StationsScreenState.loaded(data)
+                stationsScreenState.value = StationsScreenState.loaded(data)
             }
             .launchWithDefaults(viewModelScope, "Stations in Main VM")
     }
 
     fun station(station: Station) {
-        if (station.id == _station.value?.id) return
-        savedStateHandle[STATION_KEY] = station
-        _station.value = station
-        _stationInfoScreenState.value = StationInfoScreenState.clear()
+        if (station.id == this.station.value?.id) return
+        this.station.value = station
+        stationInfoScreenState.value = StationInfoScreenState.clear()
     }
 
     fun showPreviouslyPlayed(showPreviouslyPlayed: Boolean) {
-        _showPreviouslyPlayed.value = showPreviouslyPlayed
-    }
-
-    private fun user(user: UserState) {
-        savedStateHandle[USER_KEY] = user
-        _user.value = user
+        this.showPreviouslyPlayed.value = showPreviouslyPlayed
     }
 
     fun subscribeStationInfo(refresh: Boolean = false) {
-        val station = _station.value ?: return
+        val station = this.station.value ?: return
 
-        _stationInfoScreenState.value = StationInfoScreenState.loading(
-            _stationInfoScreenState.value)
+        stationInfoScreenState.value = StationInfoScreenState.loading(
+            stationInfoScreenState.value)
 
         cancel(stationInfoJob)
         stationInfoJob = stationRepository.getStationInfoFlow(station.id, refresh)
             .autoRetry(connectivityObserver, coroutineDispatchers) { e ->
-                _stationInfoScreenState.value =
+                stationInfoScreenState.value =
                     StationInfoScreenState.error(e.toOperationError(infoErrorResponseConverter))
             }
             .combine(showPreviouslyPlayed) { infoResponse, showPreviouslyPlayed ->
-                _stationInfoScreenState.value = StationInfoScreenState.loaded(
+                stationInfoScreenState.value = StationInfoScreenState.loaded(
                     StationInfo(infoResponse, showPreviouslyPlayed, isTv))
-                user(UserState(infoResponse.user))
+                user.value = UserState(infoResponse.user)
             }
             .flowOn(coroutineDispatchers.compute)
             .launchWithDefaults(viewModelScope, "Station Info in Main VM")
@@ -176,7 +171,7 @@ class MainViewModel @Inject constructor(
     }
 
     fun clearStationInfo() {
-        _stationInfoScreenState.value = StationInfoScreenState.clear()
+        stationInfoScreenState.value = StationInfoScreenState.clear()
     }
 
     fun faveSong(song: SongState) {
@@ -185,13 +180,13 @@ class MainViewModel @Inject constructor(
     }
 
     fun faveAlbum(album: AlbumState) {
-        val station = _station.value ?: return
+        val station = this.station.value ?: return
         uiEventDelegate.send(DismissSnackbarEvent)
         faveAlbumDelegate.faveAlbum(viewModelScope, station, album)
     }
 
     fun voteSong(eventId: Int, entryId: Int) {
-        val station = _station.value ?: return
+        val station = this.station.value ?: return
         uiEventDelegate.send(DismissSnackbarEvent)
         if (userRepository.isLoggedIn()) {
             voteSongDelegate.voteSong(viewModelScope, station.id, eventId, entryId)
@@ -201,8 +196,8 @@ class MainViewModel @Inject constructor(
     }
 
     fun rateSong(ratingState: RatingState) {
-        val station = _station.value ?: return
-        val items = _stationInfoScreenState.value.stationInfo?.items ?: return
+        val station = this.station.value ?: return
+        val items = stationInfoScreenState.value.stationInfo?.items ?: return
 
         uiEventDelegate.send(DismissSnackbarEvent)
         val found = items.asSequence().filterIsInstance<StationInfoSongItem>()
@@ -231,7 +226,7 @@ class MainViewModel @Inject constructor(
         faveSongStateJob = faveSongDelegate.faveSongState
             .onEach { state ->
                 if (state.success && state.song == null) {
-                    _stationInfoScreenState.value.stationInfo?.items?.let { items ->
+                    stationInfoScreenState.value.stationInfo?.items?.let { items ->
                         items.asSequence()
                             .filterIsInstance<StationInfoSongItem>()
                             .firstOrNull { it.data.songId == state.songId }?.let {
@@ -254,7 +249,7 @@ class MainViewModel @Inject constructor(
         voteSongStateJob = voteSongDelegate.voteSongState
             .onEach { state ->
                 if (state.success) {
-                    _stationInfoScreenState.value.stationInfo?.items?.let { items ->
+                    stationInfoScreenState.value.stationInfo?.items?.let { items ->
                         items.asSequence()
                             .filterIsInstance<ComingUpSongItem>()
                             .filter { it.eventId == state.eventId }
@@ -316,13 +311,13 @@ class MainViewModel @Inject constructor(
                     "media player state changed, station = %s, state = %s",
                     it.station.name, it.state
                 )
-                _playbackState.value = it
+                playbackState.value = it
             }
             .launchWithDefaults(viewModelScope, "Media Player State for in Station Info")
 
         cancel(refreshStationInfoJob)
         refreshStationInfoJob = uiEventDelegate.events.filterIsInstance<RefreshStationInfo>()
-            .filter { it.stationId == station.value?.id }
+            .filter { it.stationId == this.station.value?.id }
             .onEach { subscribeStationInfo(refresh = true) }
             .launchWithDefaults(viewModelScope, "Refresh Station Info event in Station Info")
     }
@@ -339,7 +334,7 @@ class MainViewModel @Inject constructor(
     }
 
     fun togglePlayback() {
-        val station = _station.value ?: return
+        val station = this.station.value ?: return
         playbackManager.togglePlayback(station)
     }
 

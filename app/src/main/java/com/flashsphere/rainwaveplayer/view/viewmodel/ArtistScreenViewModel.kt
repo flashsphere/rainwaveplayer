@@ -24,7 +24,7 @@ import com.flashsphere.rainwaveplayer.view.uistate.model.SongState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
@@ -37,7 +37,7 @@ import javax.inject.Named
 
 @HiltViewModel
 class ArtistScreenViewModel @Inject constructor(
-    private val savedStateHandle: SavedStateHandle,
+    savedStateHandle: SavedStateHandle,
     private val stationRepository: StationRepository,
     private val connectivityObserver: ConnectivityObserver,
     private val coroutineDispatchers: CoroutineDispatchers,
@@ -48,11 +48,11 @@ class ArtistScreenViewModel @Inject constructor(
 ) : ViewModel() {
     val snackbarEvents = uiEventDelegate.snackbarEvents
 
-    private var _station: Station? = savedStateHandle[STATION_KEY]
-    val station get() = _station
+    private val stationFlow: MutableStateFlow<Station?> = savedStateHandle.getMutableStateFlow(
+        STATION_KEY, null)
 
-    private val _artistScreenState = MutableStateFlow(ArtistScreenState())
-    val artistScreenState = _artistScreenState.asStateFlow()
+    val artistScreenState: StateFlow<ArtistScreenState>
+        field = MutableStateFlow(ArtistScreenState())
 
     private val requestSongDelegate = RequestSongDelegate(viewModelScope, stationRepository,
         requestSongResponseConverter)
@@ -61,34 +61,33 @@ class ArtistScreenViewModel @Inject constructor(
     private var artistDetailJob: Job? = null
 
     fun getArtist(station: Station, artistDetail: ArtistDetail) {
-        if (_artistScreenState.value.loaded &&
-            _artistScreenState.value.artist?.id == artistDetail.id) return
+        if (artistScreenState.value.loaded &&
+            artistScreenState.value.artist?.id == artistDetail.id) return
 
-        savedStateHandle[STATION_KEY] = station
-        _station = station
+        stationFlow.value = station
 
         val artist = ArtistState(artistDetail.id, artistDetail.name)
-        _artistScreenState.value = ArtistScreenState.init(artist)
+        artistScreenState.value = ArtistScreenState.init(artist)
 
         getArtist()
     }
 
     fun getArtist() {
-        val station = _station ?: return
-        val artist = _artistScreenState.value.artist ?: return
+        val station = stationFlow.value ?: return
+        val artist = artistScreenState.value.artist ?: return
 
-        _artistScreenState.value = ArtistScreenState.loading(_artistScreenState.value)
+        artistScreenState.value = ArtistScreenState.loading(artistScreenState.value)
         uiEventDelegate.send(DismissSnackbarEvent)
 
         cancel(artistDetailJob)
         artistDetailJob = flow { emit(stationRepository.getArtist(station.id, artist.id)) }
             .autoRetry(connectivityObserver, coroutineDispatchers) {
-                _artistScreenState.value = ArtistScreenState.error(_artistScreenState.value,
+                artistScreenState.value = ArtistScreenState.error(artistScreenState.value,
                     OperationError(OperationError.Server))
             }
             .map { ArtistState(it.second, station, it.first) }
             .flowOn(coroutineDispatchers.compute)
-            .onEach { _artistScreenState.value = ArtistScreenState.loaded(it) }
+            .onEach { artistScreenState.value = ArtistScreenState.loaded(it) }
             .launchWithDefaults(viewModelScope, "Artist Detail")
     }
 
@@ -98,7 +97,7 @@ class ArtistScreenViewModel @Inject constructor(
     }
 
     fun requestSong(song: SongState) {
-        val station = _station ?: return
+        val station = stationFlow.value ?: return
         uiEventDelegate.send(DismissSnackbarEvent)
         requestSongDelegate.requestSong(station, song, {
             uiEventDelegate.send(RequestSongSuccessEvent(song = song))
@@ -114,7 +113,7 @@ class ArtistScreenViewModel @Inject constructor(
         faveSongStateJob = faveSongDelegate.faveSongState
             .onEach { state ->
                 if (state.success && state.song != null) {
-                    _artistScreenState.value.artist?.items?.let { items ->
+                    artistScreenState.value.artist?.items?.let { items ->
                         items.asSequence().filterIsInstance<SongState>()
                             .firstOrNull { it.id == state.songId }?.let {
                                 it.favorite.value = state.favorite

@@ -11,7 +11,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.channels.BufferOverflow.SUSPEND
 import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.flow.SharedFlow
 import okhttp3.ResponseBody
 import retrofit2.Converter
 
@@ -19,18 +19,18 @@ class FaveSongDelegate(
     private val stationRepository: StationRepository,
     private val faveSongResponseConverter: Converter<ResponseBody, FaveSongResponse>,
 ) {
-    private val _faveSongState = MutableSharedFlow<FaveSongState>(
-        replay = 0,
-        extraBufferCapacity = 1,
-        onBufferOverflow = SUSPEND
-    )
-    val faveSongState = _faveSongState.asSharedFlow()
+    val faveSongState: SharedFlow<FaveSongState>
+        field = MutableSharedFlow(
+            replay = 0,
+            extraBufferCapacity = 1,
+            onBufferOverflow = SUSPEND
+        )
 
     fun faveSong(scope: CoroutineScope, songId: Int, favorite: Boolean): Job {
         return scope.launchWithDefaults("Fave Song") {
             suspendRunCatching { stationRepository.favoriteSong(songId, favorite) }
                 .onFailure { e ->
-                    _faveSongState.emit(FaveSongState(
+                    faveSongState.emit(FaveSongState(
                         success = false,
                         songId = songId,
                         favorite = !favorite,
@@ -39,13 +39,13 @@ class FaveSongDelegate(
                 }
                 .onSuccess {
                     if (it.result.success) {
-                        _faveSongState.emit(FaveSongState(
+                        faveSongState.emit(FaveSongState(
                             success = true,
                             songId = songId,
                             favorite = it.result.favorite,
                             song = null))
                     } else {
-                        _faveSongState.emit(FaveSongState(
+                        faveSongState.emit(FaveSongState(
                             success = false,
                             songId = songId,
                             favorite = !favorite,
@@ -61,7 +61,7 @@ class FaveSongDelegate(
         return scope.launchWithDefaults("Fave Song") {
             suspendRunCatching { stationRepository.favoriteSong(song.id, !song.favorite.value) }
                 .onFailure { e ->
-                    _faveSongState.emit(FaveSongState(
+                    faveSongState.emit(FaveSongState(
                         success = false,
                         songId = song.id,
                         favorite = song.favorite.value,
@@ -71,13 +71,13 @@ class FaveSongDelegate(
                 .onSuccess {
                     if (it.result.success) {
                         song.favorite.value = it.result.favorite
-                        _faveSongState.emit(FaveSongState(
+                        faveSongState.emit(FaveSongState(
                             success = true,
                             songId = song.id,
                             favorite = it.result.favorite,
                             song = song))
                     } else {
-                        _faveSongState.emit(FaveSongState(
+                        faveSongState.emit(FaveSongState(
                             success = false,
                             songId = song.id,
                             favorite = song.favorite.value,

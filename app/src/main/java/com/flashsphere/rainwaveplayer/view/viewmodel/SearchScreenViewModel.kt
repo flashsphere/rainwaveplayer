@@ -35,7 +35,7 @@ import com.flashsphere.rainwaveplayer.view.uistate.model.SongState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
@@ -70,8 +70,8 @@ class SearchScreenViewModel @Inject constructor(
     private var station: Station? = null
     val searchTextFieldState = TextFieldState(savedStateHandle[SEARCH_QUERY_KEY] ?: "")
 
-    private val _searchState = MutableStateFlow(SearchScreenState())
-    val searchState = _searchState.asStateFlow()
+    val searchState: StateFlow<SearchScreenState>
+        field = MutableStateFlow(SearchScreenState())
 
     private var faveSongStateJob: Job? = null
     private var faveAlbumStateJob: Job? = null
@@ -102,7 +102,7 @@ class SearchScreenViewModel @Inject constructor(
             return
         }
 
-        _searchState.value = SearchScreenState.loading()
+        searchState.value = SearchScreenState.loading()
 
         cancel(searchJob)
         searchJob = flow { emit(stationRepository.search(station.id, query)) }
@@ -129,10 +129,10 @@ class SearchScreenViewModel @Inject constructor(
             }
             .flowOn(coroutineDispatchers.compute)
             .autoRetry(connectivityObserver, coroutineDispatchers) { e ->
-                _searchState.value = SearchScreenState.error(
+                searchState.value = SearchScreenState.error(
                     e.toOperationError(searchResponseConverter))
             }
-            .onEach { _searchState.value = SearchScreenState.loaded(it) }
+            .onEach { searchState.value = SearchScreenState.loaded(it) }
             .launchWithDefaults(viewModelScope, "Search Results")
     }
 
@@ -164,7 +164,7 @@ class SearchScreenViewModel @Inject constructor(
         faveSongStateJob = faveSongDelegate.faveSongState
             .onEach { state ->
                 if (state.success && state.song == null) {
-                    _searchState.value.result?.items?.let { items ->
+                    searchState.value.result?.items?.let { items ->
                         items.asSequence()
                             .filterIsInstance<SearchSongItem>()
                             .firstOrNull { it.song.id == state.songId }?.let {

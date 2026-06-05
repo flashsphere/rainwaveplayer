@@ -11,7 +11,7 @@ import com.flashsphere.rainwaveplayer.view.uistate.model.AlbumState
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.channels.BufferOverflow.SUSPEND
 import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.flow.SharedFlow
 import okhttp3.ResponseBody
 import retrofit2.Converter
 
@@ -19,18 +19,18 @@ class FaveAlbumDelegate(
     private val stationRepository: StationRepository,
     private val faveAlbumResponseConverter: Converter<ResponseBody, FaveAlbumResponse>
 ) {
-    private val _faveAlbumState = MutableSharedFlow<FaveAlbumState>(
-        replay = 0,
-        extraBufferCapacity = 1,
-        onBufferOverflow = SUSPEND
-    )
-    val faveAlbumState = _faveAlbumState.asSharedFlow()
+    val faveAlbumState: SharedFlow<FaveAlbumState>
+        field = MutableSharedFlow(
+            replay = 0,
+            extraBufferCapacity = 1,
+            onBufferOverflow = SUSPEND
+        )
 
     fun faveAlbum(scope: CoroutineScope, station: Station, album: AlbumState) {
         scope.launchWithDefaults("Fave Album") {
             suspendRunCatching { stationRepository.favoriteAlbum(station.id, album.id, !album.favorite.value) }
                 .onFailure { e ->
-                    _faveAlbumState.emit(
+                    faveAlbumState.emit(
                         FaveAlbumState(
                             success = false,
                             station = station,
@@ -42,7 +42,7 @@ class FaveAlbumDelegate(
                 .onSuccess {
                     if (it.result.success) {
                         album.favorite.value = it.result.favorite
-                        _faveAlbumState.emit(
+                        faveAlbumState.emit(
                             FaveAlbumState(
                                 success = true,
                                 station = station,
@@ -50,7 +50,7 @@ class FaveAlbumDelegate(
                             )
                         )
                     } else {
-                        _faveAlbumState.emit(
+                        faveAlbumState.emit(
                             FaveAlbumState(
                                 success = false,
                                 station = station,
