@@ -12,17 +12,17 @@ import kotlinx.coroutines.plus
 import timber.log.Timber
 import kotlin.coroutines.cancellation.CancellationException
 
-val coroutineExceptionHandler = CoroutineExceptionHandler { coroutineContext, exception ->
-    Timber.e(exception, "Exception in '${coroutineContext[CoroutineName]?.name ?: "unknown"}' coroutine")
+val coroutineExceptionHandler = CoroutineExceptionHandler { coroutineContext, t ->
+    Timber.e(t, "Exception in '${coroutineContext[CoroutineName]?.name ?: "unknown"}' coroutine")
 }
 
 suspend inline fun <reified T> suspendRunCatching(crossinline block: suspend () -> T): Result<T> = try {
     Result.success(block())
 } catch (c: CancellationException) {
     throw c
-} catch (e: Exception) {
-    Timber.e(e, "Exception in '${currentCoroutineContext()[CoroutineName]?.name ?: "unknown"}' coroutine'")
-    Result.failure(e)
+} catch (t: Throwable) {
+    Timber.e(t, "Exception in '${currentCoroutineContext()[CoroutineName]?.name ?: "unknown"}' coroutine'")
+    Result.failure(t)
 }
 
 fun CoroutineScope.launchWithDefaults(name: String, block: suspend CoroutineScope.() -> Unit) =
