@@ -1,6 +1,7 @@
 package com.flashsphere.rainwaveplayer.cast
 
 import android.content.Context
+import com.flashsphere.rainwaveplayer.BuildConfig
 import com.flashsphere.rainwaveplayer.R
 import com.flashsphere.rainwaveplayer.util.ClassUtils.getClassName
 import com.flashsphere.rainwaveplayer.view.activity.MainActivity
@@ -35,7 +36,7 @@ class CastOptionsProvider : OptionsProvider, ReceiverOptionsProvider {
             .setAndroidReceiverCompatible(true)
             .build()
         return CastOptions.Builder()
-            .setReceiverApplicationId(context.getString(R.string.cast_app_id))
+            .setReceiverApplicationId(BuildConfig.CAST_APP_ID)
             .setCastMediaOptions(mediaOptions)
             .setLaunchOptions(launchOptions)
             .build()

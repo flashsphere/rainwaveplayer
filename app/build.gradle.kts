@@ -15,6 +15,12 @@ idea {
     }
 }
 
+kotlin {
+    compilerOptions {
+        allWarningsAsErrors.set(true)
+    }
+}
+
 android {
     namespace = "com.flashsphere.rainwaveplayer"
     compileSdk = 37
@@ -28,6 +34,7 @@ android {
         versionName = libs.versions.appVersionName.get()
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
+        buildConfigField("String", "CAST_APP_ID", "\"4AD422FD\"")
         buildConfigField("String", "TEST_CREDENTIALS", "\"\"")
         buildConfigField("String", "OKHTTP_VERSION", "\"${libs.versions.okhttp3.get()}\"")
         buildConfigField("boolean", "PIXELIZE_IMAGE", "false")
@@ -36,7 +43,6 @@ android {
         compose = true
         viewBinding = true
         buildConfig = true
-        resValues = true
     }
     compileOptions {
         isCoreLibraryDesugaringEnabled = true
@@ -59,10 +65,10 @@ android {
     }
     signingConfigs {
         create("release") {
-            storeFile = file(project.properties["RELEASE_STORE_FILE"] as String)
-            storePassword = project.properties["RELEASE_STORE_PASSWORD"] as String
-            keyAlias = project.properties["RELEASE_KEY_ALIAS"] as String
-            keyPassword = project.properties["RELEASE_KEY_PASSWORD"] as String
+            storeFile = file(project.property("RELEASE_STORE_FILE") as String)
+            storePassword = project.property("RELEASE_STORE_PASSWORD") as String
+            keyAlias = project.property("RELEASE_KEY_ALIAS") as String
+            keyPassword = project.property("RELEASE_KEY_PASSWORD") as String
 
             enableV1Signing = true
             enableV2Signing = true
@@ -77,16 +83,14 @@ android {
             isDebuggable = true
             isPseudoLocalesEnabled = true
 
-            resValue("string", "cast_app_id", "4AD422FD")
-
-            buildConfigField("String", "TEST_CREDENTIALS", "\"${project.properties["RAINWAVE_TEST_CREDENTIALS"]}\"")
+            buildConfigField("String", "TEST_CREDENTIALS", "\"${project.property("RAINWAVE_TEST_CREDENTIALS")}\"")
         }
         release {
             isDebuggable = false
             isMinifyEnabled = true
             isShrinkResources = true
 
-            resValue("string", "cast_app_id", "2E4E683E")
+            buildConfigField("String", "CAST_APP_ID", "\"2E4E683E\"")
 
             signingConfig = signingConfigs["release"]
 
