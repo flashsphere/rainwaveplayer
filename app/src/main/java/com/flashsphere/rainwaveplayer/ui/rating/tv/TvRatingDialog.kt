@@ -1,5 +1,7 @@
 package com.flashsphere.rainwaveplayer.ui.rating.tv
 
+import androidx.compose.foundation.layout.IntrinsicSize
+import androidx.compose.foundation.layout.width
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
@@ -35,6 +37,7 @@ fun TvRatingDialog(
     }
 
     TvCustomAlertDialog(
+        modifier = Modifier.width(IntrinsicSize.Max),
         onDismissRequest = dismissDialog,
         title = {
             Text(text = stringResource(id = R.string.rate_song, ratingStateValue.songTitle))

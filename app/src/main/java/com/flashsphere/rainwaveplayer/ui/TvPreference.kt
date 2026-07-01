@@ -244,7 +244,10 @@ private fun TvPreferenceAlertDialog(
     buttons: @Composable () -> Unit,
     content: @Composable () -> Unit,
 ) {
-    TvCustomAlertDialog(onDismissRequest = onDismissRequest) {
+    TvCustomAlertDialog(
+        modifier = Modifier.width(IntrinsicSize.Max),
+        onDismissRequest = onDismissRequest,
+    ) {
         Column {
             Box(modifier = Modifier
                 .padding(horizontal = 20.dp)

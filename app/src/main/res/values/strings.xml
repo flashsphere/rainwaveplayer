@@ -5,16 +5,6 @@
     <string name="channel_name_playback">Playback</string>
     <string name="channel_name_vote_song">Vote Song</string>
 
-    <string name="media_route_menu_title">Play on&#8230;</string>
-
-    <string name="allowed_caller_log" translatable="false">
-        Caller has a valid certificate, but its package doesn\'t match any expected package for the
-        given certificate. To allow this caller, add the following to the allowed callers list:\n
-        <![CDATA[
-        <signature name=\"%1$s\" package=\"%2$s\">\n\t<key>%3$s</key>\n</signature>\n
-        ]]>
-    </string>
-
     <string name="feedback_instructions">Please select an email app to send your feedback.</string>
     <string name="feedback_email" translatable="false">Send email using</string>
     <string name="feedback_email_address" translatable="false">player.for.rainwave@gmail.com</string>
@@ -59,19 +49,14 @@
     <string name="action_move_down">Move down</string>
     <string name="action_delete">Delete</string>
 
-    <string name="drawer_open">Open</string>
-    <string name="drawer_close">Close</string>
-
     <string name="nav_back">Back</string>
     <string name="nav_close">Close</string>
     <string name="nav_menu">Menu</string>
 
-    <string name="loading_order_request">Reordering request…</string>
     <string name="loading_suspend_queue">Suspending queue…</string>
     <string name="loading_resume_queue">Resuming queue…</string>
     <string name="loading_request_fave">Requesting faves…</string>
     <string name="loading_request_unrated">Requesting unrated…</string>
-    <string name="loading_delete_request">Deleting request…</string>
     <string name="loading_clear_request">Clearing requests…</string>
 
     <string name="error_connection">Connection error.</string>
@@ -79,7 +64,6 @@
     <string name="error_voting">Voting failed.</string>
     <string name="error_not_logged_in">You are not logged in.</string>
     <string name="error_save_credentials_failed">Login failed. Unable to save your API key.</string>
-    <string name="error_login_failed_retry">Login failed. Tap to retry.</string>
     <string name="error_request_song_failed">Request song failed.</string>
     <string name="error_order_requests_failed">Order requests failed.</string>
     <string name="error_delete_request_failed">Delete request failed.</string>
@@ -106,7 +90,6 @@
     <string name="waiting_for_network">Waiting for network…</string>
     <string name="stopped">Stopped</string>
 
-    <string name="cast">Cast</string>
     <string name="cast_buffering">%1$s — Buffering…</string>
     <string name="cast_playing">%1$s — Playing…</string>
 
@@ -128,7 +111,6 @@
     <string name="categories">Categories</string>
     <string name="request_line">Request Line</string>
     <string name="no_song_selected">(no song selected)</string>
-    <string name="nobody_in_line">Nobody in line.</string>
     <string name="request_success">Request successful.</string>
     <string name="rating_success">Rating successful.</string>
     <string name="favorite_album">Favorite album</string>
@@ -152,7 +134,6 @@
     <string name="time_day">d</string>
     <string name="time_hour">h</string>
     <string name="time_minute">m</string>
-    <string name="countdown_zero">0:00</string>
     <string name="request_position">%1$s in line</string>
     <string name="position_ordinal">
         {position, selectordinal,
@@ -176,10 +157,8 @@
     <string name="version">Version</string>
     <string name="about">About</string>
     <string name="logout">Logout</string>
-    <string name="forums">Forums</string>
     <string name="settings">Settings</string>
     <string name="discord">Discord</string>
-    <string name="others">Others</string>
     <string name="recent_votes">Recent Votes</string>
     <string name="all_faves">All Faves</string>
     <string name="request_history">Request History</string>
@@ -246,18 +225,10 @@
     <string name="settings_buffering">Buffer duration</string>
     <string name="settings_buffering_min_buffer_desc">The duration of media that the player will attempt to ensure is buffered at all times, in seconds. Default is 5 seconds.</string>
 
-    <string name="prefs_buffer_min_default" translatable="false">5</string>
-
     <string name="settings_tv_background_play">Background play</string>
     <string name="settings_tv_background_play_desc">Allow playback when app is in background. Disabling this will stop playback when app is in background.</string>
 
     <string name="settings_other">Other</string>
-
-    <string name="settings_usage_statistics">Usage statistics</string>
-    <string name="settings_usage_statistics_desc">Enable to help make the app better by sending anonymous usage data.</string>
-
-    <string name="settings_crash_reporting">Crash reporting</string>
-    <string name="settings_crash_reporting_desc">Enable to help diagnose issues within the app.</string>
 
     <string name="settings_stream">Listen with Ogg</string>
     <string name="settings_stream_desc">Enable to listen with Ogg. Otherwise, MP3 is used.</string>
@@ -283,7 +254,6 @@
     <string name="sleep_timer_stop">Playback will stop at %1$s %2$s.</string>
 
     <string name="permission_notification_not_granted">No permission to post notifications.</string>
-    <string name="permission_grant">Grant</string>
 
     <string name="auto_vote_condition_add">Add condition</string>
     <string name="auto_vote_condition_remove">Remove condition</string>

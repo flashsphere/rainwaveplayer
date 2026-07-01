@@ -15,6 +15,7 @@ import android.view.KeyEvent.KEYCODE_MEDIA_PREVIOUS
 import android.view.KeyEvent.KEYCODE_MEDIA_STOP
 import androidx.core.content.ContextCompat
 import androidx.core.content.IntentCompat
+import androidx.core.content.IntentSanitizer
 import com.flashsphere.rainwaveplayer.R
 import com.flashsphere.rainwaveplayer.flow.MediaPlayerStateObserver
 import com.flashsphere.rainwaveplayer.service.MediaService
@@ -28,22 +29,30 @@ class MediaButtonReceiver : BroadcastReceiver() {
     @Inject
     lateinit var mediaPlayerStateObserver: MediaPlayerStateObserver
 
+    private val sanitizer = IntentSanitizer.Builder()
+        .allowAction(Intent.ACTION_MEDIA_BUTTON)
+        .allowExtra(Intent.EXTRA_KEY_EVENT, KeyEvent::class.java)
+        .allowExtra("source", String::class.java)
+        .build()
+
     override fun onReceive(context: Context, intent: Intent) {
-        if (Intent.ACTION_MEDIA_BUTTON != intent.action ||
-            !intent.hasExtra(Intent.EXTRA_KEY_EVENT)) {
-            Timber.d("Ignore unsupported intent: %s", intent)
+        val safeIntent = sanitizer.sanitizeByFiltering(intent)
+
+        if (Intent.ACTION_MEDIA_BUTTON != safeIntent.action ||
+            !safeIntent.hasExtra(Intent.EXTRA_KEY_EVENT)) {
+            Timber.d("Ignore unsupported intent: %s", safeIntent)
             return
         }
 
-        val ke = IntentCompat.getParcelableExtra(intent, Intent.EXTRA_KEY_EVENT, KeyEvent::class.java) ?: return
+        val ke = IntentCompat.getParcelableExtra(safeIntent, Intent.EXTRA_KEY_EVENT, KeyEvent::class.java) ?: return
         if (ke.action != ACTION_DOWN) {
             return
         }
 
-        val source = intent.getStringExtra("source") ?: "system"
+        val source = safeIntent.getStringExtra("source") ?: "system"
         Timber.i("Media button: %d, action: %d, source: %s", ke.keyCode, ke.action, source)
 
-        intent.component = ComponentName(context, MediaService::class.java)
+        safeIntent.component = ComponentName(context, MediaService::class.java)
 
         when (ke.keyCode) {
             KEYCODE_MEDIA_PAUSE -> {
@@ -51,13 +60,13 @@ class MediaButtonReceiver : BroadcastReceiver() {
                     Timber.i("Not pausing as media is not playing")
                     return
                 }
-                startService(context, intent)
+                startService(context, safeIntent)
             }
             KEYCODE_MEDIA_PLAY,
             KEYCODE_MEDIA_NEXT,
             KEYCODE_MEDIA_PREVIOUS,
             KEYCODE_MEDIA_PLAY_PAUSE -> {
-                startForegroundService(context, intent)
+                startForegroundService(context, safeIntent)
             }
             KEYCODE_MEDIA_STOP -> {
                 MediaService.stop(context)

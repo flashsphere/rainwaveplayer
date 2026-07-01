@@ -2,7 +2,6 @@ package com.flashsphere.rainwaveplayer.view.helper
 
 import android.app.AlarmManager
 import android.content.Context
-import android.os.Build
 import android.os.SystemClock
 import androidx.compose.runtime.mutableStateOf
 import androidx.datastore.core.DataStore
@@ -20,7 +19,6 @@ import timber.log.Timber
 import java.time.Duration
 import java.time.ZonedDateTime
 import java.time.temporal.ChronoUnit
-import kotlin.time.Duration.Companion.minutes
 
 class SleepTimerDelegate(
     private val context: Context,
@@ -76,16 +74,9 @@ class SleepTimerDelegate(
         dataStore.updateBlocking(SLEEP_TIMER_MILLIS, timeInMillis)
 
         val triggerTime = SystemClock.elapsedRealtime() + difference
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            alarmManager.setAndAllowWhileIdle(AlarmManager.ELAPSED_REALTIME_WAKEUP,
-                triggerTime,
-                createBroadcastIntent(context))
-        } else {
-            alarmManager.setWindow(AlarmManager.ELAPSED_REALTIME_WAKEUP,
-                triggerTime,
-                10.minutes.inWholeMilliseconds,
-                createBroadcastIntent(context))
-        }
+        alarmManager.setAndAllowWhileIdle(AlarmManager.ELAPSED_REALTIME_WAKEUP,
+            triggerTime,
+            createBroadcastIntent(context))
     }
 
     fun removeSleepTimer() {

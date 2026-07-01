@@ -1,5 +1,6 @@
 package com.flashsphere.rainwaveplayer.playback
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.IntentFilter
 import android.media.AudioManager
@@ -108,6 +109,7 @@ import kotlin.math.max
         }
         if (!wakeLock.isHeld) {
             Timber.d("acquire wake lock")
+            @SuppressLint("WakelockTimeout")
             wakeLock.acquire()
         }
         observeHeadsets()

@@ -17,7 +17,7 @@ android {
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
-        buildConfigField("String", "TEST_CREDENTIALS", "\"${project.properties["RAINWAVE_TEST_CREDENTIALS"]}\"")
+        buildConfigField("String", "TEST_CREDENTIALS", "\"${project.property("RAINWAVE_TEST_CREDENTIALS")}\"")
     }
     buildFeatures {
         buildConfig = true

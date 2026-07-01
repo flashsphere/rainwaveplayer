@@ -106,9 +106,9 @@ android {
         }
     }
     lint {
-        abortOnError = false
-        ignoreWarnings = false
-        quiet = false
+        informational.addAll(setOf("GradleDependency", "NewerVersionAvailable", "IconDuplicates"))
+        warningsAsErrors = true
+        abortOnError = true
     }
     testOptions {
         unitTests {
@@ -235,4 +235,11 @@ dependencies {
     testImplementation(libs.kotlinx.coroutines.test)
     testImplementation(libs.assertk)
     testImplementation(libs.jsonassert)
+}
+
+tasks.named("lint") {
+    dependsOn(
+        "lintDebug",
+        "lintRelease",
+    )
 }

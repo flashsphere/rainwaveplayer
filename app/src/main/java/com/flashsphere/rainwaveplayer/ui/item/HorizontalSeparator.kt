@@ -12,10 +12,9 @@ import androidx.compose.ui.unit.Dp
 
 @Composable
 fun HorizontalSeparator(
-    modifier: Modifier = Modifier.fillMaxWidth(),
     thickness: Dp = DividerDefaults.Thickness,
     color: Color = DividerDefaults.color,
-) = Canvas(modifier.height(thickness)) {
+) = Canvas(Modifier.fillMaxWidth().height(thickness)) {
     drawLine(
         color = color,
         strokeWidth = thickness.toPx(),

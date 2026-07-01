@@ -26,7 +26,7 @@ import com.flashsphere.rainwaveplayer.ui.theme.tv.TvAppTypography
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TvCustomAlertDialog(
-    modifier: Modifier = Modifier.width(IntrinsicSize.Max),
+    modifier: Modifier,
     properties: DialogProperties = DialogProperties(),
     onDismissRequest: () -> Unit,
     content: @Composable BoxScope.() -> Unit,
@@ -44,7 +44,7 @@ fun TvCustomAlertDialog(
 
 @Composable
 fun TvCustomAlertDialog(
-    modifier: Modifier = Modifier.width(IntrinsicSize.Max),
+    modifier: Modifier,
     properties: DialogProperties = DialogProperties(),
     onDismissRequest: () -> Unit,
     title: @Composable (BoxScope.() -> Unit)?,

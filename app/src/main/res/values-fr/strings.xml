@@ -5,7 +5,6 @@
     <string name="channel_name_playback">Playback</string>
     <string name="channel_name_vote_song">Vote Song</string>
 
-    <string name="media_route_menu_title">Play on&#8230;</string>
     <string name="feedback_instructions">Please select an email app to send your feedback.</string>
 
     <string name="actions">Actions</string>
@@ -39,19 +38,14 @@
     <string name="action_move_down">Move down</string>
     <string name="action_delete">Delete</string>
 
-    <string name="drawer_open">Ouvrir</string>
-    <string name="drawer_close">Fermer</string>
-
     <string name="nav_back">Back</string>
     <string name="nav_close">Close</string>
     <string name="nav_menu">Menu</string>
 
-    <string name="loading_order_request">Reordering request…</string>
     <string name="loading_suspend_queue">Suspending queue…</string>
     <string name="loading_resume_queue">Resuming queue…</string>
     <string name="loading_request_fave">Requesting faves…</string>
     <string name="loading_request_unrated">Requesting unrated…</string>
-    <string name="loading_delete_request">Deleting request…</string>
     <string name="loading_clear_request">Clearing requests…</string>
 
     <string name="error_connection">Erreur de connection.</string>
@@ -59,7 +53,6 @@
     <string name="error_voting">Le vote a échoué.</string>
     <string name="error_not_logged_in">Vous n\'êtes pas connecté.</string>
     <string name="error_save_credentials_failed">Erreur d\'authentification. Impossible de sauvegarder votre clé API.</string>
-    <string name="error_login_failed_retry">Erreur d\'authentification. Appuyez pour réessayer.</string>
     <string name="error_request_song_failed">Échec d\'ajout de votre requête à la file d\'attente.</string>
     <string name="error_order_requests_failed">Échec de la demande de requête.</string>
     <string name="error_delete_request_failed">Échec de suppression de votre requête de la file d\'attente.</string>
@@ -86,7 +79,6 @@
     <string name="waiting_for_network">En attente du réseau…</string>
     <string name="stopped">Arrêt</string>
 
-    <string name="cast">Cast</string>
     <string name="cast_buffering">%1$s — Mise en mémoire…</string>
     <string name="cast_playing">%1$s — Le morceau se joue…</string>
 
@@ -108,7 +100,6 @@
     <string name="categories">Catégories</string>
     <string name="request_line">File d\'attente</string>
     <string name="no_song_selected">(Aucune chanson sélectionnée)</string>
-    <string name="nobody_in_line">Personne en file.</string>
     <string name="request_success">Requête effectuée.</string>
     <string name="rating_success">Rating successful.</string>
     <string name="favorite_album">Favorite album</string>
@@ -132,7 +123,6 @@
     <string name="time_day">j</string>
     <string name="time_hour">h</string>
     <string name="time_minute">m</string>
-    <string name="countdown_zero">0:00</string>
     <string name="request_position">%1$s in line</string>
     <string name="position_ordinal">
         {position, selectordinal,
@@ -150,14 +140,12 @@
     <string name="stations">Stations</string>
     <string name="patreon">Patreon</string>
     <string name="feedback">Retour d\'infos</string>
-    <string name="forums">Forums</string>
     <string name="privacy_policy">Privacy Policy</string>
     <string name="version">Version</string>
     <string name="about">About</string>
     <string name="logout">Logout</string>
     <string name="settings">Options</string>
     <string name="discord">Discord</string>
-    <string name="others">Others</string>
     <string name="recent_votes">Recent Votes</string>
     <string name="all_faves">All Faves</string>
     <string name="request_history">Request History</string>
@@ -229,12 +217,6 @@
 
     <string name="settings_other">Other</string>
 
-    <string name="settings_usage_statistics">Usage statistics</string>
-    <string name="settings_usage_statistics_desc">Enable to help make the app better by sending anonymous usage data.</string>
-
-    <string name="settings_crash_reporting">Crash reporting</string>
-    <string name="settings_crash_reporting_desc">Enable to help diagnose issues within the app.</string>
-
     <string name="settings_stream">Listen with Ogg</string>
     <string name="settings_stream_desc">Enable to listen with Ogg. Otherwise, MP3 is used.</string>
 
@@ -259,7 +241,6 @@
     <string name="sleep_timer_stop">Playback will stop at %1$s %2$s.</string>
 
     <string name="permission_notification_not_granted">No permission to post notifications.</string>
-    <string name="permission_grant">Grant</string>
 
     <string name="auto_vote_condition_add">Add condition</string>
     <string name="auto_vote_condition_remove">Remove condition</string>

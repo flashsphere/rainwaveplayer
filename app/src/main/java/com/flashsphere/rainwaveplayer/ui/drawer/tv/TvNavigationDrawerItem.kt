@@ -43,10 +43,10 @@ import androidx.tv.material3.SurfaceDefaults
 
 @Composable
 fun NavigationDrawerScope.TvNavigationDrawerItem(
+    modifier: Modifier = Modifier,
     selected: Boolean = false,
     onClick: () -> Unit,
     leadingContent: (@Composable () -> Unit)? = null,
-    modifier: Modifier = Modifier,
     enabled: Boolean = true,
     onLongClick: (() -> Unit)? = null,
     supportingContent: (@Composable () -> Unit)? = null,
