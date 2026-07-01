@@ -1,0 +1,50 @@
+name: Setup build
+description: Configure build and project secrets
+
+inputs:
+  keystore:
+    required: true
+    description: Keystore
+  keystore-passphrase:
+    required: true
+    description: Keystore passphrase
+  keystore-password:
+    required: true
+    description: Keystore password
+  key-alias:
+    required: true
+    description: Key alias
+  key-password:
+    required: true
+    description: Key password
+  rainwave-test-creds:
+    required: true
+    description: Rainwave test credentials
+
+runs:
+  using: composite
+  steps:
+    - uses: actions/setup-java@v5
+      with:
+        java-version: 21
+        distribution: 'zulu'
+    - uses: gradle/actions/setup-gradle@v6
+      with:
+        cache-overwrite-existing: true
+        cache-provider: basic
+    - uses: android-actions/setup-android@v4
+      with:
+        log-accepted-android-sdk-licenses: false
+    - name: Prepare release keystore
+      shell: bash
+      run: |
+        echo "${{ inputs.keystore }}" > keystore.jks.asc
+        gpg -d --passphrase "${{ inputs.keystore-passphrase }}" --batch keystore.jks.asc > app/keystore.jks
+    - name: Write secrets to environment
+      shell: bash
+      run: |
+        echo "ORG_GRADLE_PROJECT_RAINWAVE_TEST_CREDENTIALS=${{ inputs.rainwave-test-creds }}" >> "$GITHUB_ENV"
+        echo "ORG_GRADLE_PROJECT_RELEASE_STORE_FILE=keystore.jks" >> "$GITHUB_ENV"
+        echo "ORG_GRADLE_PROJECT_RELEASE_STORE_PASSWORD=${{ inputs.keystore-password }}" >> "$GITHUB_ENV"
+        echo "ORG_GRADLE_PROJECT_RELEASE_KEY_ALIAS=${{ inputs.key-alias }}" >> "$GITHUB_ENV"
+        echo "ORG_GRADLE_PROJECT_RELEASE_KEY_PASSWORD=${{ inputs.key-password }}" >> "$GITHUB_ENV"

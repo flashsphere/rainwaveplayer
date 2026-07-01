@@ -2,41 +2,64 @@ name: build
 
 on:
   push:
+    branches:
+      - main
     tags:
       - '*'
+  pull_request:
   workflow_dispatch:
 
+concurrency:
+  # Limit concurrency to 1 for PRs. 'main' concurrency isn't limited.
+  group: ${{ github.head_ref || github.run_id }}
+  cancel-in-progress: true
+
 jobs:
-  build:
-    name: Build
+  lint:
+    name: Lint
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
-      - uses: actions/setup-java@v5
-        with:
-          java-version: '21'
-          distribution: 'zulu'
-          cache: gradle
+      - uses: ./.github/actions/setup-build
+        with: &setup-build-inputs
+          keystore: ${{ secrets.KEYSTORE_FILE_BASE64 }}
+          keystore-passphrase: ${{ secrets.KEYSTORE_FILE_PASSPHRASE }}
+          keystore-password: ${{ secrets.KEYSTORE_PASSWORD }}
+          key-alias: ${{ secrets.UPLOAD_KEY_ALIAS }}
+          key-password: ${{ secrets.UPLOAD_KEY_PASSWORD }}
+          rainwave-test-creds: ${{ secrets.RAINWAVE_TEST_CREDENTIALS }}
       - uses: android-actions/setup-android@v4
         with:
           log-accepted-android-sdk-licenses: false
-      - name: Prepare keystore
-        run: |
-          echo "${{ secrets.KEYSTORE_FILE_BASE64 }}" > keystore.jks.asc
-          gpg -d --passphrase "${{ secrets.KEYSTORE_FILE_PASSPHRASE }}" --batch keystore.jks.asc > app/keystore.jks
-      - name: Write keystore secrets to environment
-        run: |
-          echo "ORG_GRADLE_PROJECT_RAINWAVE_TEST_CREDENTIALS=${{ secrets.RAINWAVE_TEST_CREDENTIALS }}" >> "$GITHUB_ENV"
-          echo "ORG_GRADLE_PROJECT_RELEASE_STORE_FILE=keystore.jks" >> "$GITHUB_ENV"
-          echo "ORG_GRADLE_PROJECT_RELEASE_STORE_PASSWORD=${{ secrets.KEYSTORE_PASSWORD }}" >> "$GITHUB_ENV"
-          echo "ORG_GRADLE_PROJECT_RELEASE_KEY_ALIAS=${{ secrets.UPLOAD_KEY_ALIAS }}" >> "$GITHUB_ENV"
-          echo "ORG_GRADLE_PROJECT_RELEASE_KEY_PASSWORD=${{ secrets.UPLOAD_KEY_PASSWORD }}" >> "$GITHUB_ENV"
-      - name: Grant execute permission for gradlew
-        run: chmod +x gradlew
-      - name: Clean
-        run: ./gradlew clean
-      - name: Run tests
-        run: ./gradlew app:test
+      - run: ./gradlew lint
+      - name: Lint Summary
+        uses: hidakatsuya/action-report-android-lint@v1.3.0
+        if: always()
+        with:
+          result-path: 'app/build/reports/**/lint-results-*.xml'
+
+  unit-tests:
+    name: Unit tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: ./.github/actions/setup-build
+        with: *setup-build-inputs
+      - run: ./gradlew test
+      - name: Unit tests summary
+        uses: test-summary/action@v2
+        if: always()
+        with:
+          paths: |
+            app/build/test-results/**/TEST-*.xml
+
+  assemble:
+    name: Assemble apk/aab
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: ./.github/actions/setup-build
+        with: *setup-build-inputs
       - name: Build AAB with Gradle
         run: ./gradlew bundleRelease
       - name: Build universal APK from AAB
@@ -61,8 +84,9 @@ jobs:
             app/build/outputs/apk/release/app-release.apk
             app/build/outputs/bundle/release/app-release.aab
           if-no-files-found: error
+
   release:
-    needs: build
+    needs: [lint, unit-tests, assemble]
     runs-on: ubuntu-latest
     if: github.ref_type == 'tag'
     permissions:
