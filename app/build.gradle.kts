@@ -120,6 +120,10 @@ android {
     }
 }
 
+hilt {
+    enableAggregatingTask = true
+}
+
 baselineProfile {
     dexLayoutOptimization = true
 }
@@ -186,8 +190,6 @@ dependencies {
 
     implementation(libs.androidx.tv.material)
 
-    implementation(libs.dagger)
-    ksp(libs.dagger.compiler)
     implementation(libs.dagger.hilt)
     ksp(libs.dagger.hilt.compiler)
     ksp(libs.kotlin.metadata.jvm)
@@ -227,6 +229,8 @@ dependencies {
     androidTestImplementation(platform(libs.androidx.compose.bom))
     androidTestImplementation(libs.androidx.compose.ui.test.junit4)
     androidTestImplementation(libs.assertk)
+    androidTestImplementation(libs.dagger.hilt.testing)
+    kspAndroidTest(libs.dagger.hilt.compiler)
 
     testImplementation(libs.junit)
     testImplementation(libs.mockk)
@@ -235,6 +239,8 @@ dependencies {
     testImplementation(libs.kotlinx.coroutines.test)
     testImplementation(libs.assertk)
     testImplementation(libs.jsonassert)
+    testImplementation(libs.dagger.hilt.testing)
+    kspTest(libs.dagger.hilt.compiler)
 }
 
 tasks.named("lint") {
