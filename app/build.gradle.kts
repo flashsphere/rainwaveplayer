@@ -65,10 +65,10 @@ android {
     }
     signingConfigs {
         create("release") {
-            storeFile = file(project.property("RELEASE_STORE_FILE") as String)
-            storePassword = project.property("RELEASE_STORE_PASSWORD") as String
-            keyAlias = project.property("RELEASE_KEY_ALIAS") as String
-            keyPassword = project.property("RELEASE_KEY_PASSWORD") as String
+            storeFile = findProperty("RELEASE_STORE_FILE")?.let { file(it as String) }
+            storePassword = findProperty("RELEASE_STORE_PASSWORD") as String?
+            keyAlias = findProperty("RELEASE_KEY_ALIAS") as String?
+            keyPassword = findProperty("RELEASE_KEY_PASSWORD") as String?
 
             enableV1Signing = true
             enableV2Signing = true
@@ -83,7 +83,7 @@ android {
             isDebuggable = true
             isPseudoLocalesEnabled = true
 
-            buildConfigField("String", "TEST_CREDENTIALS", "\"${project.property("RAINWAVE_TEST_CREDENTIALS")}\"")
+            buildConfigField("String", "TEST_CREDENTIALS", "\"${project.findProperty("RAINWAVE_TEST_CREDENTIALS") ?: ""}\"")
         }
         release {
             isDebuggable = false
