@@ -106,7 +106,12 @@ android {
         }
     }
     lint {
-        informational.addAll(setOf("GradleDependency", "NewerVersionAvailable", "IconDuplicates"))
+        informational.addAll(setOf(
+            "GradleDependency",
+            "NewerVersionAvailable",
+            "IconDuplicates",
+            "AndroidGradlePluginVersion",
+        ))
         warningsAsErrors = true
         abortOnError = true
     }
