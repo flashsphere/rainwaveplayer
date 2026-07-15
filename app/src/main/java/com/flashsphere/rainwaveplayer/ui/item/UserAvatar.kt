@@ -20,15 +20,15 @@ import com.flashsphere.rainwaveplayer.view.uistate.model.UserState
 fun UserAvatar(modifier: Modifier = Modifier, size: Dp = 50.dp, user: UserState?) {
     if (user != null && !user.isAnon()) {
         if (user.avatar.isNullOrBlank()) {
-            Image(painter = painterResource(id = R.drawable.ic_account_circle_white_50dp),
+            Image(painter = painterResource(id = R.drawable.ic_account_circle),
                 contentDescription = null, modifier = modifier.size(size))
         } else {
             CoilImage(
                 image = user.avatar,
                 contentScale = ContentScale.Fit,
-                fallback = painterResource(id = R.drawable.ic_account_circle_white_50dp),
-                error = painterResource(id = R.drawable.ic_account_circle_white_50dp),
-                placeholder = if (LocalInspectionMode.current) painterResource(R.drawable.ic_account_circle_white_50dp) else null,
+                fallback = painterResource(id = R.drawable.ic_account_circle),
+                error = painterResource(id = R.drawable.ic_account_circle),
+                placeholder = if (LocalInspectionMode.current) painterResource(R.drawable.ic_account_circle) else null,
                 modifier = modifier.size(size).clip(CircleShape),
             )
         }

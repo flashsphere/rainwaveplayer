@@ -269,10 +269,10 @@ class MediaSessionHelper(
         val actionName: String
 
         if (song.favorite) {
-            favoriteIcon = R.drawable.ic_favorite_white_20dp
+            favoriteIcon = R.drawable.ic_favorite_filled
             actionName = context.resources.getString(R.string.unfavorite_song)
         } else {
-            favoriteIcon = R.drawable.ic_favorite_border_white_20dp
+            favoriteIcon = R.drawable.ic_favorite
             actionName = context.resources.getString(R.string.favorite_song)
         }
 
@@ -283,7 +283,7 @@ class MediaSessionHelper(
     }
 
     private fun createCloseCustomAction(): PlaybackStateCompat.CustomAction {
-        val icon = R.drawable.ic_close_white_24dp
+        val icon = R.drawable.ic_close
         val actionName = context.resources.getString(R.string.action_close)
 
         return PlaybackStateCompat.CustomAction.Builder(

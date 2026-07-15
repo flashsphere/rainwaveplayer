@@ -27,7 +27,6 @@ import androidx.compose.foundation.lazy.grid.itemsIndexed
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.DragHandle
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
@@ -48,6 +47,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.platform.LocalResources
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.ParagraphStyle
 import androidx.compose.ui.text.buildAnnotatedString
@@ -238,7 +238,7 @@ private fun RuleItem(
                         onReorder()
                     })
             }, contentAlignment = Alignment.Center) {
-                Icon(imageVector = Icons.Filled.DragHandle, contentDescription = null)
+                Icon(painter = painterResource(R.drawable.ic_drag_handle), contentDescription = null)
             }
             Row(modifier = Modifier.weight(1F).padding(LocalUiScreenConfig.current.itemPadding)) {
                 Text(text = "${currentIndex+1}. ", style = AppTypography.bodyMedium,

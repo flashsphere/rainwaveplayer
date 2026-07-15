@@ -487,19 +487,19 @@ private fun ActionsMenu(
                     .padding(end = 16.dp, bottom = 80.dp)) {
                 Action(
                     action = stringResource(id = R.string.action_clear_requests),
-                    actionIcon = R.drawable.ic_request_clear_24dp) {
+                    actionIcon = R.drawable.ic_request_clear) {
                     onHide()
                     onClearClick()
                 }
                 Action(
                     action = stringResource(id = R.string.action_request_unrated),
-                    actionIcon = R.drawable.ic_request_unrated_24dp) {
+                    actionIcon = R.drawable.ic_request_unrated) {
                     onHide()
                     onRequestUnratedClick()
                 }
                 Action(
                     action = stringResource(id = R.string.action_request_faves),
-                    actionIcon = R.drawable.ic_request_faves_24dp) {
+                    actionIcon = R.drawable.ic_request_faves) {
                     onHide()
                     onRequestFavesClick()
                 }
@@ -507,14 +507,14 @@ private fun ActionsMenu(
                     if (userState.requestsPaused) {
                         Action(
                             action = stringResource(id = R.string.action_resume),
-                            actionIcon = R.drawable.ic_request_resume_24dp) {
+                            actionIcon = R.drawable.ic_request_resume) {
                             onHide()
                             onResumeClick()
                         }
                     } else {
                         Action(
                             action = stringResource(id = R.string.action_suspend),
-                            actionIcon = R.drawable.ic_request_suspend_24dp) {
+                            actionIcon = R.drawable.ic_request_suspend) {
                             onHide()
                             onPauseClick()
                         }

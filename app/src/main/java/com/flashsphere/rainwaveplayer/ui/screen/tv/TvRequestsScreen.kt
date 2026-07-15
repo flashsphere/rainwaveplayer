@@ -267,7 +267,7 @@ private fun ActionsRow(
             RequestActionButton(
                 modifier = Modifier.saveLastFocused("request_faves_btn"),
                 onClick = onRequestFavesClick,
-                painter = painterResource(R.drawable.ic_request_faves_24dp),
+                painter = painterResource(R.drawable.ic_request_faves),
                 text = stringResource(R.string.action_request_faves),
             )
         }
@@ -275,7 +275,7 @@ private fun ActionsRow(
             RequestActionButton(
                 modifier = Modifier.saveLastFocused("request_unrated_btn"),
                 onClick = onRequestUnratedClick,
-                painter = painterResource(R.drawable.ic_request_unrated_24dp),
+                painter = painterResource(R.drawable.ic_request_unrated),
                 text = stringResource(R.string.action_request_unrated),
             )
         }
@@ -283,7 +283,7 @@ private fun ActionsRow(
             RequestActionButton(
                 modifier = Modifier.saveLastFocused("clear_btn"),
                 onClick = onClearClick,
-                painter = painterResource(R.drawable.ic_request_clear_24dp),
+                painter = painterResource(R.drawable.ic_request_clear),
                 text = stringResource(R.string.action_clear_requests),
             )
         }
@@ -291,7 +291,7 @@ private fun ActionsRow(
             RequestActionButton(
                 modifier = Modifier.saveLastFocused("refresh_btn"),
                 onClick = onRefreshClick,
-                painter = painterResource(R.drawable.ic_refresh_white_24dp),
+                painter = painterResource(R.drawable.ic_refresh),
                 text = stringResource(R.string.action_refresh),
             )
         }
@@ -311,9 +311,9 @@ private fun SuspendResumeButton(
         onSuspendClick
     }
     val painter = if (user.requestsPaused) {
-        painterResource(R.drawable.ic_request_resume_24dp)
+        painterResource(R.drawable.ic_request_resume)
     } else {
-        painterResource(R.drawable.ic_request_suspend_24dp)
+        painterResource(R.drawable.ic_request_suspend)
     }
     val text = if (user.requestsPaused) {
         stringResource(R.string.action_resume)

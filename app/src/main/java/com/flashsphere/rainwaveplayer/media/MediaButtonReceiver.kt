@@ -30,6 +30,7 @@ class MediaButtonReceiver : BroadcastReceiver() {
     lateinit var mediaPlayerStateObserver: MediaPlayerStateObserver
 
     private val sanitizer = IntentSanitizer.Builder()
+        .allowAnyComponent()
         .allowAction(Intent.ACTION_MEDIA_BUTTON)
         .allowExtra(Intent.EXTRA_KEY_EVENT, KeyEvent::class.java)
         .allowExtra("source", String::class.java)

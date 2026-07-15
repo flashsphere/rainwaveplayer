@@ -25,7 +25,6 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ArrowDropDown
-import androidx.compose.material.icons.filled.Remove
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuAnchorType
@@ -43,6 +42,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.focusRestorer
 import androidx.compose.ui.graphics.SolidColor
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
@@ -202,7 +202,7 @@ private fun RuleDialogItem(
                     onClick = onRemove,
                     colors = OutlinedIconButtonDefaults.colors(contentColor = MaterialTheme.colorScheme.error,),
                 ) {
-                    Icon(imageVector = Icons.Filled.Remove, contentDescription = stringResource(R.string.auto_vote_condition_remove))
+                    Icon(painter = painterResource(R.drawable.ic_remove), contentDescription = stringResource(R.string.auto_vote_condition_remove))
                 }
             }
         }

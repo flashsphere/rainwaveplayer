@@ -12,8 +12,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowRight
+import androidx.compose.foundation.layout.size
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -161,7 +160,7 @@ fun TvAlbumHeaderItem(
                 },
                 trailingContent = {
                     Icon(
-                        imageVector = Icons.AutoMirrored.Filled.ArrowRight,
+                        painter = painterResource(R.drawable.ic_arrow_right),
                         contentDescription = null
                     )
                 },
@@ -278,6 +277,7 @@ fun TvFaveListItem(
             contentAlignment = Alignment.Center,
         ) {
             Icon(
+                modifier = Modifier.size(20.dp),
                 painter = painterResource(fave.drawable),
                 contentDescription = stringResource(fave.contentDescription)
             )

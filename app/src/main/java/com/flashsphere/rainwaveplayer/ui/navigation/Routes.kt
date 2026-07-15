@@ -28,19 +28,19 @@ interface DetailRoute : Route {
 @Serializable
 object NowPlaying : TopLevelRoute {
     override val title: Int = R.string.now_playing
-    override val icon: Int = R.drawable.ic_now_playing_white_24dp
+    override val icon: Int = R.drawable.ic_music
 }
 @Serializable object Requests : TopLevelRoute {
     override val title: Int = R.string.action_requests
-    override val icon: Int = R.drawable.ic_requests_white_24dp
+    override val icon: Int = R.drawable.ic_requests
 }
 @Serializable object Library : TopLevelRoute {
     override val title: Int = R.string.action_library
-    override val icon: Int = R.drawable.ic_library_music_white_24dp
+    override val icon: Int = R.drawable.ic_library_music
 }
 @Serializable object Search : TopLevelRoute {
     override val title: Int = R.string.action_search
-    override val icon: Int = R.drawable.ic_search_white_24dp
+    override val icon: Int = R.drawable.ic_search
 }
 
 @Serializable data class AlbumDetail(override val id: Int, override val name: String): DetailRoute

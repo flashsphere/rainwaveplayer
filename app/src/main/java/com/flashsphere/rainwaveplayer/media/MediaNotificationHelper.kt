@@ -86,23 +86,23 @@ class MediaNotificationHelper(
                         val favIntent = generateFavoriteSongIntent(context, station!!, it)
 
                         if (it.favorite) {
-                            addAction(R.drawable.ic_favorite_white_20dp, context.getString(R.string.unfavorite_song), favIntent)
+                            addAction(R.drawable.ic_favorite_filled, context.getString(R.string.unfavorite_song), favIntent)
                         } else {
-                            addAction(R.drawable.ic_favorite_border_white_20dp, context.getString(R.string.favorite_song), favIntent)
+                            addAction(R.drawable.ic_favorite, context.getString(R.string.favorite_song), favIntent)
                         }
                     }
                 }
 
-                addAction(R.drawable.ic_skip_previous_24dp,
+                addAction(R.drawable.ic_skip_previous,
                     context.getString(R.string.action_prev),
                     generateMediaPlayerIntent(context, ACTION_SKIP_TO_PREVIOUS))
 
                 addAction(action)
 
-                addAction(R.drawable.ic_skip_next_24dp, context.getString(R.string.action_next),
+                addAction(R.drawable.ic_skip_next, context.getString(R.string.action_next),
                     generateMediaPlayerIntent(context, ACTION_SKIP_TO_NEXT))
 
-                addAction(R.drawable.ic_close_white_24dp, context.getString(R.string.action_close),
+                addAction(R.drawable.ic_close, context.getString(R.string.action_close),
                     generateMediaPlayerIntent(context, ACTION_STOP))
 
                 setStyle(MediaStyle()
@@ -113,14 +113,14 @@ class MediaNotificationHelper(
 
     private fun createPlayingNotificationBuilder(station: Station? = null,
                                                  song: Song? = null): NotificationCompat.Builder {
-        val action = Action(R.drawable.ic_pause_24dp,
+        val action = Action(R.drawable.ic_pause,
             context.getString(R.string.action_pause),
             generateMediaPlayerIntent(context, ACTION_PAUSE))
         return createNotificationBuilder(station, song, action)
     }
 
     private fun createStoppedNotificationBuilder(station: Station? = null): NotificationCompat.Builder {
-        val action = Action(R.drawable.ic_play_arrow_24dp,
+        val action = Action(R.drawable.ic_play_arrow,
             context.getString(R.string.action_play),
             generateMediaPlayerIntent(context, ACTION_PLAY))
         return createNotificationBuilder(station, null, action)

@@ -52,7 +52,7 @@ class VoteSongNotificationHelper(
     private fun createNotificationBuilder(station: Station): NotificationCompat.Builder {
         return NotificationCompat.Builder(context, context.getString(R.string.channel_name_vote_song))
             .setShowWhen(false)
-            .setSmallIcon(R.drawable.ic_vote_24dp)
+            .setSmallIcon(R.drawable.ic_vote)
             .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
             .setCategory(NotificationCompat.CATEGORY_REMINDER)
             .setContentIntent(createNotificationContentIntent(station))
@@ -143,7 +143,7 @@ class VoteSongNotificationHelper(
             .setStyle(MediaStyle()
                 .setShowCancelButton(false)
                 .setShowActionsInCompactView(0))
-            .addAction(R.drawable.ic_vote_24dp, context.getString(R.string.action_vote), voteSongIntent)
+            .addAction(R.drawable.ic_vote, context.getString(R.string.action_vote), voteSongIntent)
 
         val notification = if (bitmap != null) {
             notificationBuilder.setLargeIcon(bitmap).build()

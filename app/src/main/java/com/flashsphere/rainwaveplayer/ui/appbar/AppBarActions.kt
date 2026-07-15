@@ -2,11 +2,7 @@ package com.flashsphere.rainwaveplayer.ui.appbar
 
 import androidx.compose.foundation.layout.Row
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowDropDown
-import androidx.compose.material.icons.filled.FilterList
-import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.MoreVert
-import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
@@ -18,7 +14,6 @@ import androidx.compose.runtime.key
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.graphics.painter.Painter
-import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import com.flashsphere.rainwaveplayer.R
@@ -97,24 +92,24 @@ private fun AppBarActionsPreview() {
             Row {
                 AppBarActions(listOf(
                     AppBarAction(
-                        icon = rememberVectorPainter(Icons.Filled.FilterList),
+                        icon = painterResource(R.drawable.ic_filter_list),
                         text = "Filter",
                         onClick = {},
                     ),
                     AppBarAction(
-                        icon = rememberVectorPainter(Icons.Filled.Search),
-                        text = "Filter",
+                        icon = painterResource(R.drawable.ic_search),
+                        text = "Search",
                         onClick = {},
                     ),
                 ), listOf(
                     AppBarAction(
-                        icon = rememberVectorPainter(Icons.Filled.Menu),
-                        text = "Filter",
+                        icon = painterResource(R.drawable.ic_menu),
+                        text = "Menu",
                         onClick = {},
                     ),
                     AppBarAction(
-                        icon = rememberVectorPainter(Icons.Filled.ArrowDropDown),
-                        text = "Filter",
+                        icon = painterResource(R.drawable.ic_arrow_drop_down),
+                        text = "Dropdown",
                         onClick = {},
                     ),
                 ))

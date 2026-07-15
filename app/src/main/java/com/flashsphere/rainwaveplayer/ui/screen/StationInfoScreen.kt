@@ -27,10 +27,6 @@ import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.itemsIndexed
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowRight
-import androidx.compose.material.icons.filled.ArrowDropDown
-import androidx.compose.material.icons.filled.ArrowDropUp
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.HorizontalDivider
@@ -523,10 +519,10 @@ private fun StationInfoList(
 private fun PreviouslyPlayedHeader(showPreviouslyPlayed: StateFlow<Boolean>,
                            onClick: (expand: Boolean) -> Unit) {
     val expand = showPreviouslyPlayed.collectAsStateWithLifecycle().value
-    val imageVector = if (expand) {
-        Icons.Filled.ArrowDropUp
+    val icon = if (expand) {
+        painterResource(R.drawable.ic_arrow_drop_up)
     } else {
-        Icons.Filled.ArrowDropDown
+        painterResource(R.drawable.ic_arrow_drop_down)
     }
     Row(modifier = Modifier
         .fillMaxWidth()
@@ -540,7 +536,7 @@ private fun PreviouslyPlayedHeader(showPreviouslyPlayed: StateFlow<Boolean>,
             fontSize = 13.sp,
             lineHeight = 13.sp,
             modifier = Modifier.padding(end = 4.dp))
-        Icon(imageVector = imageVector, contentDescription = null,
+        Icon(painter = icon, contentDescription = null,
             modifier = Modifier.size(14.dp))
     }
 }
@@ -687,10 +683,10 @@ private fun StationInfoSong(
                             indication = ripple(bounded = false),
                             onClick = onMoreClick)
                         ) {
-                            Icon(painter = painterResource(id = R.drawable.ic_more_vert_20dp),
+                            Icon(painter = painterResource(id = R.drawable.ic_more_vert),
                                 tint = colorResource(id = R.color.unfavorite),
                                 contentDescription = stringResource(id = R.string.action_more),
-                                modifier = Modifier.padding(start = 4.dp, end = 4.dp))
+                                modifier = Modifier.padding(start = 4.dp, end = 4.dp).size(20.dp))
                         }
                     }
                 }
@@ -772,7 +768,7 @@ private fun FaveIcon(modifier: Modifier = Modifier, fave: Fave, onFaveClick: () 
                 Icon(painter = painterResource(id = faveDrawable),
                     tint = colorResource(id = faveColor),
                     contentDescription = stringResource(id = faveDesc),
-                    modifier = Modifier.padding(start = 4.dp, end = 4.dp))
+                    modifier = Modifier.padding(start = 4.dp, end = 4.dp).size(20.dp))
             }
         }
     }
@@ -795,9 +791,9 @@ private fun PlaybackFab(
     ) {
         Icon(
             painter = if (isPlaying) {
-                painterResource(R.drawable.ic_stop_24dp)
+                painterResource(R.drawable.ic_stop)
             } else {
-                painterResource(R.drawable.ic_play_arrow_24dp)
+                painterResource(R.drawable.ic_play_arrow)
             },
             contentDescription = if (isPlaying) {
                 stringResource(id = R.string.action_stop)
@@ -897,7 +893,7 @@ private fun SongActions(
             SongActionItem({ onRateClick(song) }) {
                 Text(stringResource(R.string.action_rate), modifier = Modifier.weight(1F),
                     style = AppTypography.bodyLarge)
-                Icon(imageVector = Icons.AutoMirrored.Filled.ArrowRight,
+                Icon(painter = painterResource(R.drawable.ic_arrow_right),
                     contentDescription = null)
             }
         }
@@ -907,7 +903,7 @@ private fun SongActions(
                 SongActionItem({ onAlbumClick(AlbumDetail(it.id, it.name)) }) {
                     Text(it.name, modifier = Modifier.weight(1F),
                         style = AppTypography.bodyLarge)
-                    Icon(imageVector = Icons.AutoMirrored.Filled.ArrowRight,
+                    Icon(painter = painterResource(R.drawable.ic_arrow_right),
                         contentDescription = null)
                 }
             }
@@ -918,7 +914,7 @@ private fun SongActions(
                 SongActionItem({ onArtistClick(ArtistDetail(it.id, it.name)) }) {
                     Text(it.name, modifier = Modifier.weight(1F),
                         style = AppTypography.bodyLarge)
-                    Icon(imageVector = Icons.AutoMirrored.Filled.ArrowRight,
+                    Icon(painter = painterResource(R.drawable.ic_arrow_right),
                         contentDescription = null)
                 }
             }

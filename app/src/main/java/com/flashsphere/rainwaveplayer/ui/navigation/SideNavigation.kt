@@ -4,7 +4,6 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Settings
-import androidx.compose.material.icons.filled.Snooze
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -61,7 +60,7 @@ fun SideNavigation(
         NavigationRailItem(
             icon = {
                 Tooltip(stringResource(R.string.sleep_timer)) {
-                    Icon(imageVector = Icons.Filled.Snooze, contentDescription = stringResource(R.string.sleep_timer))
+                    Icon(painter = painterResource(R.drawable.ic_snooze), contentDescription = stringResource(R.string.sleep_timer))
                 }
             },
             label = { Text(stringResource(R.string.sleep_timer), textAlign = TextAlign.Center) },

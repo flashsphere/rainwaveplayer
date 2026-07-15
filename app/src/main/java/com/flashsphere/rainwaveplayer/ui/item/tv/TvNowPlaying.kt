@@ -9,9 +9,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentHeight
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.MoreHoriz
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
@@ -193,7 +192,7 @@ private fun NowPlayingControls(
                         onClick = { onMoreClick(item) }
                     ) {
                         Icon(
-                            imageVector = Icons.Filled.MoreHoriz,
+                            painter = painterResource(R.drawable.ic_more_horiz),
                             contentDescription = stringResource(R.string.action_more),
                         )
                     }
@@ -263,9 +262,9 @@ private fun PlaybackButton(
     ) {
         Icon(
             painter = if (isPlaying) {
-                painterResource(R.drawable.ic_stop_24dp)
+                painterResource(R.drawable.ic_stop)
             } else {
-                painterResource(R.drawable.ic_play_arrow_24dp)
+                painterResource(R.drawable.ic_play_arrow)
             },
             contentDescription = if (isPlaying) {
                 stringResource(id = R.string.action_stop)
@@ -290,6 +289,7 @@ private fun FaveButton(modifier: Modifier = Modifier, fave: Fave, onClick: () ->
     }
     IconButton(modifier = modifier, onClick = onClick, colors = colors) {
         Icon(
+            modifier = Modifier.size(20.dp),
             painter = painterResource(id = faveDrawable),
             contentDescription = stringResource(id = faveDesc),
         )
@@ -323,7 +323,8 @@ private fun RatingButton(
     ) {
         Text(text = Formatter.formatRating(rating))
         Icon(
-            painter = painterResource(R.drawable.ic_star_rate_white_18dp),
+            modifier = Modifier.size(14.dp),
+            painter = painterResource(R.drawable.ic_star_rate),
             contentDescription = null,
         )
     }

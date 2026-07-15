@@ -6,9 +6,6 @@ import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Keyboard
-import androidx.compose.material.icons.filled.Schedule
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
@@ -26,6 +23,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.DialogProperties
@@ -118,12 +116,12 @@ private fun TimePickerDialog(
             TextButton(onClick = { clockLayout.value = !clockLayout.value }) {
                 if (clockLayout.value) {
                     Icon(
-                        imageVector = Icons.Filled.Keyboard,
+                        painter = painterResource(R.drawable.ic_keyboard),
                         contentDescription = null,
                     )
                 } else {
                     Icon(
-                        imageVector = Icons.Filled.Schedule,
+                        painter = painterResource(R.drawable.ic_schedule),
                         contentDescription = null,
                     )
                 }

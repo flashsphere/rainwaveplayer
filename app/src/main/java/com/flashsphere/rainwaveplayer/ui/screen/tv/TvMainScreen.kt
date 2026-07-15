@@ -161,9 +161,9 @@ private fun NavigationDrawerScope.NavigationDrawerContent(
                         CoilImage(
                             image = user.avatar,
                             contentScale = ContentScale.Fit,
-                            fallback = painterResource(id = R.drawable.ic_account_circle_white_50dp),
-                            error = painterResource(id = R.drawable.ic_account_circle_white_50dp),
-                            placeholder = if (LocalInspectionMode.current) painterResource(R.drawable.ic_account_circle_white_50dp) else null,
+                            fallback = painterResource(id = R.drawable.ic_account_circle),
+                            error = painterResource(id = R.drawable.ic_account_circle),
+                            placeholder = if (LocalInspectionMode.current) painterResource(R.drawable.ic_account_circle) else null,
                             modifier = Modifier.size(NavigationDrawerItemDefaults.IconSize).clip(CircleShape)
                         )
                     }

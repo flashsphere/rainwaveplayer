@@ -8,8 +8,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.FilterList
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
@@ -27,7 +25,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.vector.rememberVectorPainter
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -103,7 +101,7 @@ fun LibraryScreen(
                     onSubmit = { viewModel.submitFilter() },
                     label = {
                         SearchTextFieldLabel(
-                            painter = rememberVectorPainter(Icons.Filled.FilterList),
+                            painter = painterResource(R.drawable.ic_filter_list),
                             text = stringResource(id = R.string.action_filter)
                         )
                     },
@@ -145,8 +143,8 @@ fun LibraryScreen(
                     onClick = { filterActivated.value = true },
                     containerColor = MaterialTheme.colorScheme.secondaryContainer,
                     contentColor = MaterialTheme.colorScheme.onSecondaryContainer,) {
-                    Icon(imageVector = Icons.Filled.FilterList,
-                        stringResource(id = R.string.action_filter))
+                    Icon(painter = painterResource(R.drawable.ic_filter_list),
+                        contentDescription = stringResource(id = R.string.action_filter))
                 }
             }
         },
