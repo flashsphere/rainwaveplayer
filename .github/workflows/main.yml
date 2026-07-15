@@ -1,4 +1,4 @@
-name: build
+name: CI
 
 on:
   push:
@@ -8,11 +8,19 @@ on:
       - '*'
   pull_request:
   workflow_dispatch:
+    inputs:
+      pr:
+        description: "PR # (optional)"
+        required: false
+        type: number
 
 concurrency:
   # Limit concurrency to 1 for PRs. 'main' concurrency isn't limited.
   group: ${{ github.head_ref || github.run_id }}
   cancel-in-progress: true
+
+permissions:
+  contents: write
 
 jobs:
   lint:
@@ -20,6 +28,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
+        with: &setup-checkout
+          ref: ${{ inputs.pr && format('refs/pull/{0}/head', inputs.pr) || github.sha }}
       - uses: ./.github/actions/setup-build
         with: &setup-build-inputs
           keystore: ${{ secrets.KEYSTORE_FILE_BASE64 }}
@@ -43,6 +53,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
+        with: *setup-checkout
       - uses: ./.github/actions/setup-build
         with: *setup-build-inputs
       - run: ./gradlew test
@@ -58,6 +69,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
+        with: *setup-checkout
       - uses: ./.github/actions/setup-build
         with: *setup-build-inputs
       - name: Build AAB with Gradle
