@@ -20,7 +20,7 @@ concurrency:
   cancel-in-progress: true
 
 permissions:
-  contents: write
+  contents: read
 
 jobs:
   lint:
@@ -111,6 +111,7 @@ jobs:
       - name: Release
         uses: softprops/action-gh-release@v3
         with:
+          prerelease: true
           files: |
             dist/**/*.apk
             dist/**/*.aab
