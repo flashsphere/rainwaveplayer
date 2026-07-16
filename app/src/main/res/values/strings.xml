@@ -7,7 +7,7 @@
 
     <string name="feedback_instructions">Please select an email app to send your feedback.</string>
     <string name="feedback_email" translatable="false">Send email using</string>
-    <string name="feedback_email_address" translatable="false">player.for.rainwave@gmail.com</string>
+    <string name="feedback_email_address" translatable="false">naixnes.apps@gmail.com</string>
     <string name="feedback_email_subject" translatable="false">Player for Rainwave feedback</string>
     <string name="feedback_email_body" translatable="false">
         \n
