@@ -683,10 +683,10 @@ private fun StationInfoSong(
                             indication = ripple(bounded = false),
                             onClick = onMoreClick)
                         ) {
-                            Icon(painter = painterResource(id = R.drawable.ic_more_vert),
+                            Icon(painter = painterResource(id = R.drawable.ic_more_vert_20dp),
                                 tint = colorResource(id = R.color.unfavorite),
                                 contentDescription = stringResource(id = R.string.action_more),
-                                modifier = Modifier.padding(start = 4.dp, end = 4.dp).size(20.dp))
+                                modifier = Modifier.padding(start = 4.dp, end = 4.dp))
                         }
                     }
                 }
@@ -768,7 +768,7 @@ private fun FaveIcon(modifier: Modifier = Modifier, fave: Fave, onFaveClick: () 
                 Icon(painter = painterResource(id = faveDrawable),
                     tint = colorResource(id = faveColor),
                     contentDescription = stringResource(id = faveDesc),
-                    modifier = Modifier.padding(start = 4.dp, end = 4.dp).size(20.dp))
+                    modifier = Modifier.padding(start = 4.dp, end = 4.dp))
             }
         }
     }

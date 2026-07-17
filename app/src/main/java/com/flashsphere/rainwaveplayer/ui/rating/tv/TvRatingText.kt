@@ -1,13 +1,11 @@
 package com.flashsphere.rainwaveplayer.ui.rating.tv
 
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.unit.dp
 import androidx.tv.material3.Icon
 import androidx.tv.material3.Surface
 import androidx.tv.material3.Text
@@ -60,8 +58,7 @@ private fun TvRatingText(modifier: Modifier = Modifier, rated: Boolean, rating: 
             color = color,
         )
         Icon(
-            modifier = Modifier.size(14.dp),
-            painter = painterResource(R.drawable.ic_star_rate),
+            painter = painterResource(R.drawable.ic_star_rate_14dp),
             contentDescription = null,
             tint = color,
         )

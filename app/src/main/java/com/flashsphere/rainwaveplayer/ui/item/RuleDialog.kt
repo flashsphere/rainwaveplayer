@@ -20,9 +20,6 @@ import androidx.compose.foundation.text.input.TextFieldLineLimits
 import androidx.compose.foundation.text.input.rememberTextFieldState
 import androidx.compose.foundation.text.input.selectAll
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuAnchorType
@@ -143,7 +140,7 @@ fun RuleDialog(
                         },
                         colors = IconButtonDefaults.iconButtonColors(contentColor = MaterialTheme.colorScheme.secondary),
                     ) {
-                        Icon(imageVector = Icons.Filled.Add, contentDescription = stringResource(R.string.auto_vote_condition_add))
+                        Icon(painter = painterResource(id = R.drawable.ic_add), contentDescription = stringResource(R.string.auto_vote_condition_add))
                     }
                 }
             }
@@ -254,7 +251,7 @@ private fun <T> DropDownSelect(
                 }
                 Spacer(Modifier.width(4.dp))
                 Icon(
-                    imageVector = Icons.Filled.ArrowDropDown,
+                    painter = painterResource(id = R.drawable.ic_arrow_drop_down),
                     contentDescription = null
                 )
             }

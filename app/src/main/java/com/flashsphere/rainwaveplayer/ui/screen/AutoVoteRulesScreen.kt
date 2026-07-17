@@ -25,8 +25,6 @@ import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.itemsIndexed
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
@@ -191,7 +189,7 @@ private fun AddFab(
         contentColor = MaterialTheme.colorScheme.onSecondaryContainer,
     ) {
         Icon(
-            imageVector = Icons.Filled.Add,
+            painter = painterResource(id = R.drawable.ic_add),
             contentDescription = stringResource(id = R.string.action_add),
         )
     }

@@ -2,7 +2,6 @@ package com.flashsphere.rainwaveplayer.ui.rating
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -11,7 +10,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.flashsphere.rainwaveplayer.R
 import com.flashsphere.rainwaveplayer.ui.screen.Preview
@@ -62,8 +60,7 @@ private fun RatingText(modifier: Modifier = Modifier, rated: Boolean, rating: Fl
             lineHeight = 14.sp,
             color = color)
         Icon(
-            modifier = Modifier.size(14.dp),
-            painter = painterResource(id = R.drawable.ic_star_rate),
+            painter = painterResource(id = R.drawable.ic_star_rate_14dp),
             contentDescription = null,
             tint = color)
     }

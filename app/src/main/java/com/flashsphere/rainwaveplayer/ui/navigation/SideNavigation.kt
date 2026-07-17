@@ -2,8 +2,6 @@ package com.flashsphere.rainwaveplayer.ui.navigation
 
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -71,7 +69,7 @@ fun SideNavigation(
         NavigationRailItem(
             icon = {
                 Tooltip(stringResource(R.string.settings)) {
-                    Icon(imageVector = Icons.Filled.Settings, contentDescription = stringResource(R.string.settings))
+                    Icon(painter = painterResource(id = R.drawable.ic_settings), contentDescription = stringResource(R.string.settings))
                 }
             },
             label = { Text(stringResource(R.string.settings), textAlign = TextAlign.Center) },

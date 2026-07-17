@@ -13,11 +13,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.systemBars
 import androidx.compose.foundation.layout.union
 import androidx.compose.foundation.text.input.rememberTextFieldState
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.filled.Close
-import androidx.compose.material.icons.filled.Menu
-import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FabPosition
 import androidx.compose.material3.Icon
@@ -41,7 +36,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -180,7 +174,7 @@ fun MenuIcon(onMenuClick: () -> Unit) {
     Tooltip(stringResource(id = R.string.nav_menu)) {
         IconButton(onClick = onMenuClick) {
             Icon(
-                imageVector = Icons.Filled.Menu,
+                painter = painterResource(id = R.drawable.ic_menu),
                 contentDescription = stringResource(id = R.string.nav_menu)
             )
         }
@@ -192,7 +186,7 @@ fun BackIcon(onBackClick: () -> Unit) {
     Tooltip(stringResource(id = R.string.nav_back)) {
         IconButton(onClick = onBackClick) {
             Icon(
-                imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                painter = painterResource(id = R.drawable.ic_arrow_back),
                 contentDescription = stringResource(id = R.string.nav_back)
             )
         }
@@ -204,7 +198,7 @@ fun CloseIcon(onCloseClick: () -> Unit) {
     Tooltip(stringResource(id = R.string.nav_close)) {
         IconButton(onClick = onCloseClick) {
             Icon(
-                imageVector = Icons.Filled.Close,
+                painter = painterResource(id = R.drawable.ic_close),
                 contentDescription = stringResource(id = R.string.nav_close)
             )
         }
@@ -222,7 +216,7 @@ private fun ScaffoldWithAppBarPreview() {
             navigationIcon = {
                 IconButton(onClick = {}) {
                     Icon(
-                        imageVector = Icons.Filled.Menu,
+                        painter = painterResource(R.drawable.ic_menu),
                         contentDescription = stringResource(id = R.string.nav_menu)
                     )
                 }
@@ -234,7 +228,7 @@ private fun ScaffoldWithAppBarPreview() {
                         onSubmit = {},
                         label = {
                             SearchTextFieldLabel(
-                                painter = rememberVectorPainter(Icons.Filled.Search),
+                                painter = painterResource(id = R.drawable.ic_search),
                                 text = "Search"
                             )
                         }

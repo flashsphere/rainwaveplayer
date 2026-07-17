@@ -86,9 +86,9 @@ class MediaNotificationHelper(
                         val favIntent = generateFavoriteSongIntent(context, station!!, it)
 
                         if (it.favorite) {
-                            addAction(R.drawable.ic_favorite_filled, context.getString(R.string.unfavorite_song), favIntent)
+                            addAction(R.drawable.ic_favorite_filled_20dp, context.getString(R.string.unfavorite_song), favIntent)
                         } else {
-                            addAction(R.drawable.ic_favorite, context.getString(R.string.favorite_song), favIntent)
+                            addAction(R.drawable.ic_favorite_20dp, context.getString(R.string.favorite_song), favIntent)
                         }
                     }
                 }

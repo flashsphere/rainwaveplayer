@@ -18,9 +18,6 @@ import androidx.compose.foundation.text.input.TextFieldLineLimits
 import androidx.compose.foundation.text.input.TextFieldState
 import androidx.compose.foundation.text.input.clearText
 import androidx.compose.foundation.text.input.rememberTextFieldState
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Clear
-import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -35,13 +32,14 @@ import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.graphics.painter.Painter
-import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
+import com.flashsphere.rainwaveplayer.R
 import com.flashsphere.rainwaveplayer.ui.item.HorizontalSeparator
 import com.flashsphere.rainwaveplayer.ui.screen.Preview
 import com.flashsphere.rainwaveplayer.ui.screen.PreviewTheme
@@ -55,7 +53,7 @@ fun SearchTextField(
     onSubmit: () -> Unit,
     clearIcon: @Composable (() -> Unit)? = {
         Icon(
-            imageVector = Icons.Filled.Clear,
+            painter = painterResource(id = R.drawable.ic_close),
             contentDescription = null
         )
     },
@@ -159,7 +157,7 @@ private fun SearchTextFieldPreview(
         Surface(color = MaterialTheme.colorScheme.primaryContainer) {
             SearchTextField(state = state, onSubmit = {}) {
                 SearchTextFieldLabel(
-                    painter = rememberVectorPainter(Icons.Filled.Search),
+                    painter = painterResource(id = R.drawable.ic_search),
                     text = "Search"
                 )
             }

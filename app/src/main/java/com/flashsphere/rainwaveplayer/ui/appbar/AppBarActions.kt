@@ -1,8 +1,6 @@
 package com.flashsphere.rainwaveplayer.ui.appbar
 
 import androidx.compose.foundation.layout.Row
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
@@ -42,7 +40,7 @@ fun AppBarActions(
 
     Tooltip(stringResource(id = R.string.action_more)) {
         IconButton(onClick = { showDropDownMenu.value = true }) {
-            Icon(Icons.Filled.MoreVert, stringResource(id = R.string.action_more))
+            Icon(painterResource(id = R.drawable.ic_more_vert), stringResource(id = R.string.action_more))
         }
     }
 

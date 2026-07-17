@@ -18,8 +18,6 @@ import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.itemsIndexed
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
@@ -31,6 +29,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalResources
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.ParagraphStyle
 import androidx.compose.ui.text.buildAnnotatedString
@@ -132,7 +131,7 @@ private fun TvAutoVoteRulesScreen(
                         modifier = Modifier.padding(vertical = 8.dp).saveLastFocused("add_btn"),
                         onClick = { addRuleDialog.value = true }
                     ) {
-                        Icon(imageVector = Icons.Filled.Add, contentDescription = stringResource(R.string.action_add))
+                        Icon(painter = painterResource(id = R.drawable.ic_add), contentDescription = stringResource(R.string.action_add))
                         Spacer(Modifier.size(4.dp))
                         Text(text = stringResource(R.string.action_add))
                     }

@@ -269,10 +269,10 @@ class MediaSessionHelper(
         val actionName: String
 
         if (song.favorite) {
-            favoriteIcon = R.drawable.ic_favorite_filled
+            favoriteIcon = R.drawable.ic_favorite_filled_20dp
             actionName = context.resources.getString(R.string.unfavorite_song)
         } else {
-            favoriteIcon = R.drawable.ic_favorite
+            favoriteIcon = R.drawable.ic_favorite_20dp
             actionName = context.resources.getString(R.string.favorite_song)
         }
 

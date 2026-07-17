@@ -26,9 +26,9 @@ class FaveSong(
     override val favorite: Boolean
 ) : Fave {
     override val drawable: Int = if (favorite) {
-        R.drawable.ic_favorite_filled
+        R.drawable.ic_favorite_filled_20dp
     } else {
-        R.drawable.ic_favorite
+        R.drawable.ic_favorite_20dp
     }
     override val color: Int = if (favorite) {
         R.color.favorite
@@ -47,9 +47,9 @@ class FaveAlbum(
     override val favorite: Boolean
 ) : Fave {
     override val drawable: Int = if (favorite) {
-        R.drawable.ic_favorite_filled
+        R.drawable.ic_favorite_filled_20dp
     } else {
-        R.drawable.ic_favorite
+        R.drawable.ic_favorite_20dp
     }
     override val color: Int = if (favorite) {
         R.color.favorite

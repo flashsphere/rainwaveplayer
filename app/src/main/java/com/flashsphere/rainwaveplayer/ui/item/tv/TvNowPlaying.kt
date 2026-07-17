@@ -9,7 +9,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.runtime.Composable
@@ -289,7 +288,6 @@ private fun FaveButton(modifier: Modifier = Modifier, fave: Fave, onClick: () ->
     }
     IconButton(modifier = modifier, onClick = onClick, colors = colors) {
         Icon(
-            modifier = Modifier.size(20.dp),
             painter = painterResource(id = faveDrawable),
             contentDescription = stringResource(id = faveDesc),
         )
@@ -323,8 +321,7 @@ private fun RatingButton(
     ) {
         Text(text = Formatter.formatRating(rating))
         Icon(
-            modifier = Modifier.size(14.dp),
-            painter = painterResource(R.drawable.ic_star_rate),
+            painter = painterResource(R.drawable.ic_star_rate_14dp),
             contentDescription = null,
         )
     }
