@@ -255,6 +255,7 @@
 
     <string name="permission_notification_not_granted">No permission to post notifications.</string>
 
+    <string name="auto_vote_no_rules">No rules configured.</string>
     <string name="auto_vote_condition_add">Add condition</string>
     <string name="auto_vote_condition_remove">Remove condition</string>
     <string name="auto_vote_condition_and">and</string>

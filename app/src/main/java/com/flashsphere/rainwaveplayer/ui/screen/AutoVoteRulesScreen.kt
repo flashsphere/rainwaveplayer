@@ -49,6 +49,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.ParagraphStyle
 import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import com.flashsphere.rainwaveplayer.R
@@ -127,6 +128,13 @@ private fun AutoVoteRulesScreen(
                 haptics.performHapticFeedback(HapticFeedbackType.SegmentTick)
                 onReorderItem(from.index, to.index)
             }
+            if (rules.isEmpty()) {
+                val listItemPadding = LocalUiScreenConfig.current.listItemPadding
+                Text(text = stringResource(id = R.string.auto_vote_no_rules),
+                    style = AppTypography.bodyMedium,
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier.padding(top = 20.dp, start = listItemPadding, end = listItemPadding))
+            }
             LazyVerticalGrid(
                 modifier = Modifier.fillMaxSize(),
                 state = gridState,
@@ -141,7 +149,7 @@ private fun AutoVoteRulesScreen(
                         state = reorderableLazyListState,
                         key = item.id,
                     ) { isDragging ->
-                        val elevation by animateDpAsState(if (isDragging) 4.dp else 0.dp, label = "ReorderRequests")
+                        val elevation by animateDpAsState(if (isDragging) 4.dp else 0.dp, label = "ReorderRules")
                         Surface(shadowElevation = elevation) {
                             RuleItem(
                                 scope = this,
@@ -312,6 +320,23 @@ private fun AutoVoteScreenPreview() {
             )
         ),
     ) }
+    PreviewTheme {
+        AutoVoteRulesScreen(
+            rules = rules,
+            onBackClick = {},
+            onAdd = {},
+            onEdit = { _, _ -> },
+            onDelete = { _, _ -> true },
+            onReorderItem = { _, _ -> },
+            onReorder = {},
+        )
+    }
+}
+
+@Preview
+@Composable
+private fun AutoVoteScreenNoRulesPreview() {
+    val rules = remember { mutableStateListOf<Rule>() }
     PreviewTheme {
         AutoVoteRulesScreen(
             rules = rules,

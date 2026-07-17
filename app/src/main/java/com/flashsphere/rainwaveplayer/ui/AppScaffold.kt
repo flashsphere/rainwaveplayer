@@ -35,6 +35,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.snapshotFlow
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
@@ -104,7 +105,10 @@ fun AppScaffold(
         floatingActionButtonPosition = FabPosition.End
     ) { padding ->
         Box(
-            modifier = Modifier.padding(padding).consumeWindowInsets(padding).fillMaxSize()
+            modifier = Modifier.padding(padding)
+                .consumeWindowInsets(padding)
+                .fillMaxSize(),
+            contentAlignment = Alignment.TopCenter,
         ) {
             val scope = remember(snackbarHostState) { AppScaffoldScopeImpl(snackbarHostState) }
             scope.content()
