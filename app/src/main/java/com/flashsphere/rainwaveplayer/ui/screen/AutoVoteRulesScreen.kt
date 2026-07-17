@@ -226,7 +226,7 @@ private fun RuleItem(
         backgroundContent = { SwipeToDismissBackground(dismissState) },
         onDismiss = { onDelete(currentRule, currentIndex) },
     ) {
-        Row(modifier = Modifier.background(MaterialTheme.colorScheme.surface)
+        Row(modifier = Modifier.background(MaterialTheme.colorScheme.background)
             .fillMaxWidth()
             .heightIn(min = LocalUiScreenConfig.current.listItemLineHeight)
             .height(IntrinsicSize.Min)

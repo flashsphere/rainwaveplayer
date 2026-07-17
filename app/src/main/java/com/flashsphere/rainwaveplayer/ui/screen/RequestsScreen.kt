@@ -386,7 +386,7 @@ private fun RequestItem(
     val bgColor = if (cooldownText != null) {
         Modifier.background(colorResource(id = R.color.cooldown_background))
     } else {
-        Modifier.background(MaterialTheme.colorScheme.surface)
+        Modifier.background(MaterialTheme.colorScheme.background)
     }
 
     SwipeToDismissBox(
