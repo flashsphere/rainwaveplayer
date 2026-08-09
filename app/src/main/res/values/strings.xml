@@ -92,6 +92,7 @@
 
     <string name="cast_buffering">%1$s — Buffering…</string>
     <string name="cast_playing">%1$s — Playing…</string>
+    <string name="cast_permission_message">“Nearby devices” permission is required to find Cast devices.</string>
 
     <string name="login">Login</string>
     <string name="loading">Loading…</string>
