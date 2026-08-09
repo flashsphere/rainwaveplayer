@@ -1,13 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Player for Rainwave</string>
-    <string name="app_label">Rainwave</string>
-    <string name="channel_name_playback">Playback</string>
-    <string name="channel_name_vote_song">Vote Song</string>
-
-    <string name="feedback_instructions">Please select an email app to send your feedback.</string>
-
-    <string name="actions">Actions</string>
     <string name="action_library">Bibliothèque</string>
     <string name="action_search">Recherche</string>
     <string name="action_filter">Filtre</string>
@@ -26,27 +18,6 @@
     <string name="action_clear_requests">Effacer tout</string>
     <string name="action_cancel">Annuler</string>
     <string name="action_rate">Évaluer</string>
-    <string name="action_remove">Remove</string>
-    <string name="action_vote">Vote</string>
-    <string name="action_refresh">Refresh</string>
-    <string name="action_more">More</string>
-    <string name="action_cast">Cast</string>
-    <string name="action_add">Add</string>
-
-    <string name="action_move_to_top">Move to top</string>
-    <string name="action_move_up">Move up</string>
-    <string name="action_move_down">Move down</string>
-    <string name="action_delete">Delete</string>
-
-    <string name="nav_back">Back</string>
-    <string name="nav_close">Close</string>
-    <string name="nav_menu">Menu</string>
-
-    <string name="loading_suspend_queue">Suspending queue…</string>
-    <string name="loading_resume_queue">Resuming queue…</string>
-    <string name="loading_request_fave">Requesting faves…</string>
-    <string name="loading_request_unrated">Requesting unrated…</string>
-    <string name="loading_clear_request">Clearing requests…</string>
 
     <string name="error_connection">Erreur de connection.</string>
     <string name="error_connection_with_message">Erreur de connection: %1$s</string>
@@ -101,11 +72,6 @@
     <string name="request_line">File d\'attente</string>
     <string name="no_song_selected">(Aucune chanson sélectionnée)</string>
     <string name="request_success">Requête effectuée.</string>
-    <string name="rating_success">Rating successful.</string>
-    <string name="favorite_album">Favorite album</string>
-    <string name="unfavorite_album">Un-favorite album</string>
-    <string name="favorite_song">Favorite song</string>
-    <string name="unfavorite_song">Un-favorite song</string>
     <string name="rating_user">Votre évaluation de cet album: %1$s</string>
     <string name="album_on_cooldown">Cet album est en cooldown.</string>
     <string name="some_songs_on_cooldown">Certaines chansons sont en cooldown.</string>
@@ -119,11 +85,9 @@
     <string name="coming_off_cooldown">Le cooldown se termine bientôt.</string>
     <string name="no_requests">Ouvrez la bibliothèque et touchez le titre d\'une chanson pour l\'ajouter à la file d\'attente.</string>
     <string name="requests_suspended">En suspens</string>
-    <string name="requests_long_press_hint">Long press the request to move it to top of queue.</string>
     <string name="time_day">j</string>
     <string name="time_hour">h</string>
     <string name="time_minute">m</string>
-    <string name="request_position">%1$s in line</string>
     <string name="position_ordinal">
         {position, selectordinal,
             one {#er}
@@ -131,27 +95,10 @@
         }
     </string>
 
-    <string name="tv_song_long_press_hint">Long press for more options.</string>
-    <string name="tv_change_station">Change station</string>
-
     <string name="no_results">Aucun résultat.</string>
     <string name="songs">Chansons</string>
 
-    <string name="stations">Stations</string>
-    <string name="patreon">Patreon</string>
     <string name="feedback">Retour d\'infos</string>
-    <string name="privacy_policy">Privacy Policy</string>
-    <string name="version">Version</string>
-    <string name="about">About</string>
-    <string name="logout">Logout</string>
-    <string name="settings">Options</string>
-    <string name="discord">Discord</string>
-    <string name="recent_votes">Recent Votes</string>
-    <string name="all_faves">All Faves</string>
-    <string name="request_history">Request History</string>
-    <string name="sleep_timer">Sleep Timer</string>
-
-    <string name="refreshing">Refreshing…</string>
 
     <string name="faq_cooldown_what_is">Qu\'est–ce qu\'un cooldown?</string>
     <string name="faq_cooldown_blue_bg_is">Lorsqu\'une chanson ou un album a un arrière–plan bleu, cela signifie qu\'il est en cooldown et ne peux être joué pour l\'instant.</string>
@@ -164,7 +111,6 @@
     <string name="faq_cooldown_album">Album</string>
     <string name="faq_cooldown_album_length">6–48 heures</string>
     <string name="faq_cooldown_category">Catégorie</string>
-    <string name="faq_cooldown_category_length">15 minutes</string>
     <string name="faq_cooldown_cooldowns_depend_on">Les cooldowns peuvent dépendre de:</string>
     <string name="faq_cooldown_album_size">Taille de l\'album</string>
     <string name="faq_cooldown_larger_album">Grand Album = cooldown court</string>
@@ -172,86 +118,4 @@
     <string name="faq_cooldown_higher_rating">Bonne évaluation = cooldown court</string>
     <string name="faq_cooldown_recently_added">Ajout récent</string>
     <string name="faq_cooldown_newer">Récent = cooldown court</string>
-
-    <string name="settings_song_requests">Song requests</string>
-    <string name="settings_add_request_to_top">Add song request to top of queue</string>
-    <string name="settings_add_request_to_top_desc">Always add song request to top of queue.</string>
-    <string name="settings_auto_request_faves">Request favorites</string>
-    <string name="settings_auto_request_faves_desc">Automatically request favorite songs when tuned-in and your request queue is empty or on cooldown.</string>
-    <string name="settings_auto_request_unrated">Request unrated</string>
-    <string name="settings_auto_request_unrated_desc">Automatically request unrated songs when tuned-in and your request queue is empty or on cooldown.\n\"Request favorites\" will take precedence if it is enabled.</string>
-    <string name="settings_auto_request_clear">Delete requests on cooldown</string>
-    <string name="settings_auto_request_clear_desc">Automatically delete requests that are on cooldown and of another station before requesting the above.</string>
-
-    <string name="settings_auto_play">Auto play</string>
-    <string name="settings_auto_play_desc">Automatically start playing when app is opened.</string>
-
-    <string name="settings_voting_notification">Vote song notifications</string>
-    <string name="settings_voting_notification_desc">Show notifications to vote for a song when tuned in. \nThey are not shown when you have already voted or your requested song is in the list.</string>
-
-    <string name="settings_auto_song_voting">Automatic song voting</string>
-    <string name="settings_auto_song_voting_desc">Set up rules for automatic song voting.</string>
-
-    <string name="settings_ui">UI</string>
-    <string name="settings_song_voting">Song voting</string>
-    <string name="settings_btm_nav">Bottom/Side navigation bar</string>
-    <string name="settings_btm_nav_hidden">Hidden</string>
-    <string name="settings_btm_nav_hidden_desc">Bottom/side navigation bar is hidden.</string>
-    <string name="settings_btm_nav_labeled">Show labels</string>
-    <string name="settings_btm_nav_labeled_desc">Labels are shown in bottom/side navigation bar.</string>
-    <string name="settings_btm_nav_unlabeled">Hide labels</string>
-    <string name="settings_btm_nav_unlabeled_desc">Labels are not shown in bottom/side navigation bar.</string>
-
-    <string name="settings_hide_rating_until_rated">Hide global rating until rated</string>
-    <string name="settings_hide_rating_until_rated_desc">Hide song and album ratings until you have rated them.</string>
-
-    <string name="settings_swap_artist_album_metadata">Swap artist/album metadata</string>
-    <string name="settings_swap_artist_album_metadata_desc">Display artist as album and vice versa in song metadata. This affects the song info displayed in the notification area when playing.</string>
-
-    <string name="settings_in_app_playback">In-app playback</string>
-    <string name="settings_buffering">Buffer duration</string>
-    <string name="settings_buffering_min_buffer_desc">The duration of media that the player will attempt to ensure is buffered at all times, in seconds. Default is 5 seconds.</string>
-
-    <string name="settings_tv_background_play">Background play</string>
-    <string name="settings_tv_background_play_desc">Allow playback when app is in background. Disabling this will stop playback when app is in background.</string>
-
-    <string name="settings_other">Other</string>
-
-    <string name="settings_stream">Listen with Ogg</string>
-    <string name="settings_stream_desc">Enable to listen with Ogg. Otherwise, MP3 is used.</string>
-
-    <string name="settings_stream_https">Stream over HTTPS</string>
-    <string name="settings_stream_https_desc">Use HTTPS for streaming audio. API calls to Rainwave always use HTTPS.</string>
-
-    <string name="settings_other_tile_add">Add to Quick Settings</string>
-    <string name="settings_other_tile_add_summary">Add a tile to Quick Settings to start playing your last played station.</string>
-    <string name="settings_other_tile_added">Added to Quick Settings</string>
-    <string name="settings_other_tile_not_added">Not added to Quick Settings. Error code = %1$d</string>
-    <string name="settings_other_tile_already_added">Already added to Quick Settings</string>
-
-    <string name="settings_other_battery_usage">App battery usage</string>
-    <string name="settings_other_battery_usage_summary">If you are experiencing playback not starting via your hardware controls (i.e. headset play/pause buttons), then you might need to set \"App battery usage\" to \"Unrestricted\".</string>
-
-    <string name="settings_clear_cache">Clear cache</string>
-    <string name="settings_clear_cache_summary">Clear cached images and other cached data. App will restart automatically.</string>
-
-    <string name="settings_use_any_network">Use any network</string>
-    <string name="settings_use_any_network_desc">Use any network to connect to Rainwave. \nFor example, if your Wi-Fi connection has no internet access, the app will automatically use cellular data if available. \nApp will restart automatically.</string>
-
-    <string name="sleep_timer_stop">Playback will stop at %1$s %2$s.</string>
-
-    <string name="permission_notification_not_granted">No permission to post notifications.</string>
-
-    <string name="auto_vote_no_rules">No rules configured.</string>
-    <string name="auto_vote_condition_add">Add condition</string>
-    <string name="auto_vote_condition_remove">Remove condition</string>
-    <string name="auto_vote_condition_and">and</string>
-    <string name="auto_vote_condition_request_yours_short">Yours</string>
-    <string name="auto_vote_condition_request_yours">Your song request</string>
-    <string name="auto_vote_condition_request_others_short">Others</string>
-    <string name="auto_vote_condition_request_others">Others\' song request</string>
-    <string name="auto_vote_condition_request">Song request</string>
-    <string name="auto_vote_condition_rating">Song rating</string>
-    <string name="auto_vote_condition_fave_song">Favorite song</string>
-    <string name="auto_vote_condition_fave_album">Favorite album</string>
 </resources>

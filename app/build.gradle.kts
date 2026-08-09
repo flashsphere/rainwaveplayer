@@ -111,6 +111,7 @@ android {
             "NewerVersionAvailable",
             "IconDuplicates",
             "AndroidGradlePluginVersion",
+            "MissingTranslation",
         ))
         warningsAsErrors = true
         abortOnError = true
