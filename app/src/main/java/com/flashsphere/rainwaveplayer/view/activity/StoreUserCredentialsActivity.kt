@@ -37,8 +37,7 @@ class StoreUserCredentialsActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
 
         storeUserCredentialsDelegate = StoreUserCredentialsDelegate(this, viewModel,
-            stationRepository, userRepository, mediaPlayerStateObserver, playbackManager,
-            analytics, this::finish)
+            stationRepository, userRepository, mediaPlayerStateObserver, playbackManager, this::finish)
         lifecycle.addObserver(storeUserCredentialsDelegate)
     }
 

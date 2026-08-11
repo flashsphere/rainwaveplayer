@@ -2,13 +2,13 @@ package com.flashsphere.rainwaveplayer.view.activity.delegate
 
 import android.os.Bundle
 import android.support.v4.media.session.MediaControllerCompat
+import androidx.activity.compose.setContent
 import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
 import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteScaffoldDefaults
 import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteType
 import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
 import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
 import androidx.compose.runtime.CompositionLocalProvider
-import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.lifecycle.lifecycleScope
@@ -27,7 +27,6 @@ import com.flashsphere.rainwaveplayer.ui.navigation.NowPlaying
 import com.flashsphere.rainwaveplayer.ui.navigation.rememberNavigationState
 import com.flashsphere.rainwaveplayer.ui.navigation.topLevelRoutes
 import com.flashsphere.rainwaveplayer.ui.screen.MainScreen
-import com.flashsphere.rainwaveplayer.util.AnalyticsOnDestinationChangedListener
 import com.flashsphere.rainwaveplayer.util.JobUtils.cancel
 import com.flashsphere.rainwaveplayer.util.getBottomNavigationUiPref
 import com.flashsphere.rainwaveplayer.util.getLastPlayedStation
@@ -60,7 +59,6 @@ class NonTvMainActivityDelegate(
     @OptIn(ExperimentalMaterial3WindowSizeClassApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         isFirstStart = (savedInstanceState == null)
-        val analyticsOnDestinationChangedListener = AnalyticsOnDestinationChangedListener(activity.analytics)
 
         val userCredentials = activity.userRepository.getCredentials()?.also {
             activity.lifecycleScope.launchWithDefaults("Export TV Preferences") {
@@ -68,17 +66,12 @@ class NonTvMainActivityDelegate(
             }
         }
 
-        activity.setContent("MainScreen") {
+        activity.setContent {
             val navigationState = rememberNavigationState(
                 startRoute = NowPlaying,
                 topLevelRoutes = topLevelRoutes
             )
             val navigator = remember { Navigator(navigationState) }
-
-            DisposableEffect(navigator) {
-                navigator.addOnDestinationChangedListener(analyticsOnDestinationChangedListener)
-                onDispose { navigator.removeOnDestinationChangedListener(analyticsOnDestinationChangedListener) }
-            }
 
             val configuration = LocalConfiguration.current
             val windowSizeClass = calculateWindowSizeClass(activity)

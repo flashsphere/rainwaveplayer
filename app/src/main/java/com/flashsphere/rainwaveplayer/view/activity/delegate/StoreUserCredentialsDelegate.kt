@@ -13,7 +13,6 @@ import com.flashsphere.rainwaveplayer.flow.MediaPlayerStateObserver
 import com.flashsphere.rainwaveplayer.playback.PlaybackManager
 import com.flashsphere.rainwaveplayer.repository.StationRepository
 import com.flashsphere.rainwaveplayer.repository.UserRepository
-import com.flashsphere.rainwaveplayer.util.Analytics
 import com.flashsphere.rainwaveplayer.view.activity.MainActivity
 import com.flashsphere.rainwaveplayer.view.viewmodel.StoreUserCredentialsViewModel
 import kotlinx.coroutines.flow.catch
@@ -27,7 +26,6 @@ class StoreUserCredentialsDelegate(
     private val userRepository: UserRepository,
     private val mediaPlayerStateObserver: MediaPlayerStateObserver,
     private val playbackManager: PlaybackManager,
-    private val analytics: Analytics,
     private val finishActivity: () -> Unit,
 ) : DefaultLifecycleObserver {
 
@@ -63,7 +61,6 @@ class StoreUserCredentialsDelegate(
             return
         }
 
-        analytics.logEvent(Analytics.EVENT_LOGIN)
         viewModel.saveUserCredentials(userCredentials.userId, userCredentials.apiKey)
     }
 

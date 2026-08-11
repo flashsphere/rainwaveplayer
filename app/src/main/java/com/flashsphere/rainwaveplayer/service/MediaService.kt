@@ -58,7 +58,6 @@ import com.flashsphere.rainwaveplayer.receiver.VoteSongIntentHandler
 import com.flashsphere.rainwaveplayer.repository.RulesRepository
 import com.flashsphere.rainwaveplayer.repository.StationRepository
 import com.flashsphere.rainwaveplayer.repository.UserRepository
-import com.flashsphere.rainwaveplayer.util.Analytics
 import com.flashsphere.rainwaveplayer.util.CoroutineDispatchers
 import com.flashsphere.rainwaveplayer.util.ErrorUtils
 import com.flashsphere.rainwaveplayer.util.ErrorUtils.isRetryable
@@ -131,9 +130,6 @@ class MediaService : MediaBrowserServiceCompat(), Playback.Callback, LifecycleOw
     lateinit var voteSongDelegate: VoteSongDelegate
 
     @Inject
-    lateinit var analytics: Analytics
-
-    @Inject
     lateinit var rulesRepository: RulesRepository
 
     @Inject
@@ -190,7 +186,7 @@ class MediaService : MediaBrowserServiceCompat(), Playback.Callback, LifecycleOw
         voteSongNotificationHelper = VoteSongNotificationHelper(this, lifecycleScope,
             userRepository, dataStore)
         favoriteSongIntentHandler = FavoriteSongIntentHandler(lifecycleScope, faveSongDelegate)
-        voteSongIntentHandler = VoteSongIntentHandler(lifecycleScope, voteSongDelegate, analytics)
+        voteSongIntentHandler = VoteSongIntentHandler(lifecycleScope, voteSongDelegate)
 
         playback = LocalPlayback(this, lifecycleScope, stationRepository, okHttpClient,
             dataStore, networkManager)
@@ -475,7 +471,6 @@ class MediaService : MediaBrowserServiceCompat(), Playback.Callback, LifecycleOw
 
     private fun processPlayRequest() {
         Timber.d("processPlayRequest")
-        analytics.logEvent(Analytics.EVENT_PLAY_REQUEST, currentStation)
         play()
     }
 

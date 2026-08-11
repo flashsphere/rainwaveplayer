@@ -21,7 +21,6 @@ import com.flashsphere.rainwaveplayer.repository.StationRepository
 import com.flashsphere.rainwaveplayer.repository.UserRepository
 import com.flashsphere.rainwaveplayer.service.MediaServiceConnection
 import com.flashsphere.rainwaveplayer.ui.drawer.DrawerItemHandler
-import com.flashsphere.rainwaveplayer.util.Analytics
 import com.flashsphere.rainwaveplayer.util.CoroutineDispatchers
 import com.flashsphere.rainwaveplayer.util.IntentUtils
 import com.flashsphere.rainwaveplayer.util.OperationError
@@ -178,11 +177,9 @@ class MainActivity : BaseActivity() {
             }
         },
         discordClick = {
-            analytics.logEvent(Analytics.EVENT_OPEN_DISCORD)
             CustomTabsUtil.openDiscordPage(this)
         },
         patreonClick = {
-            analytics.logEvent(Analytics.EVENT_OPEN_PATREON)
             CustomTabsUtil.openPatreonPage(this)
         },
         sleepTimerClick = { mainViewModel.showSleepTimer.value = true },

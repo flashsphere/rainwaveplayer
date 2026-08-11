@@ -18,9 +18,7 @@ import com.flashsphere.rainwaveplayer.flow.MediaPlayerStateObserver
 import com.flashsphere.rainwaveplayer.media.NotificationChannelHelper
 import com.flashsphere.rainwaveplayer.playback.PlaybackManager
 import com.flashsphere.rainwaveplayer.repository.StationRepository
-import com.flashsphere.rainwaveplayer.util.Analytics
 import com.flashsphere.rainwaveplayer.util.CoroutineDispatchers
-import com.flashsphere.rainwaveplayer.util.CrashlyticsTree
 import com.flashsphere.rainwaveplayer.util.TvBackgroundPlay
 import com.jakewharton.processphoenix.ProcessPhoenix
 import dagger.hilt.android.HiltAndroidApp
@@ -44,9 +42,6 @@ class RainwaveApp : Application(), SingletonImageLoader.Factory {
 
     @Inject
     lateinit var coroutineDispatchers: CoroutineDispatchers
-
-    @Inject
-    lateinit var analytics: Analytics
 
     @Inject
     lateinit var okHttpClient: OkHttpClient
@@ -76,8 +71,6 @@ class RainwaveApp : Application(), SingletonImageLoader.Factory {
         } else {
             Composer.setDiagnosticStackTraceMode(ComposeStackTraceMode.Auto)
         }
-
-        Timber.plant(CrashlyticsTree(this, coroutineDispatchers, dataStore))
 
         NotificationChannelHelper(this).setupNotificationChannels()
 

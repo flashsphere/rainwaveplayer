@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import androidx.activity.compose.setContent
 import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
 import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
 import androidx.compose.runtime.CompositionLocalProvider
@@ -26,9 +27,7 @@ class WebViewActivity : BaseActivity() {
             return
         }
 
-        setContent("WebViewScreen", bundle = Bundle().also {
-            it.putString("url", url)
-        }) {
+        setContent {
             val configuration = LocalConfiguration.current
             val windowSizeClass = calculateWindowSizeClass(this)
 

@@ -6,7 +6,6 @@ import androidx.lifecycle.lifecycleScope
 import com.flashsphere.rainwaveplayer.coroutine.launchWithDefaults
 import com.flashsphere.rainwaveplayer.flow.MediaPlayerStateObserver
 import com.flashsphere.rainwaveplayer.playback.PlaybackManager
-import com.flashsphere.rainwaveplayer.util.Analytics
 import dagger.hilt.android.AndroidEntryPoint
 import jakarta.inject.Inject
 import timber.log.Timber
@@ -31,7 +30,6 @@ class ShortcutsActivity : BaseActivity() {
         }
 
         ShortcutManagerCompat.reportShortcutUsed(applicationContext, "rainwave.shortcut.play")
-        analytics.logEvent(Analytics.EVENT_USE_SHORTCUT)
 
         if (!mediaPlayerStateObserver.currentState.isStopped()) {
             goToHome()

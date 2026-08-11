@@ -14,6 +14,7 @@ import android.os.Looper
 import android.os.PowerManager
 import android.provider.Settings
 import androidx.activity.OnBackPressedCallback
+import androidx.activity.compose.setContent
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts.RequestPermission
 import androidx.annotation.RequiresApi
@@ -127,7 +128,7 @@ class SettingsActivity : BaseActivity() {
         val preferences = createPreferences()
 
         if (!isTv()) {
-            setContent("SettingsScreen") {
+            setContent {
                 val configuration = LocalConfiguration.current
                 val windowSizeClass = calculateWindowSizeClass(this)
 
@@ -141,7 +142,7 @@ class SettingsActivity : BaseActivity() {
                 }
             }
         } else {
-            setContent("TvSettingsScreen") {
+            setContent {
                 val configuration = LocalConfiguration.current
                 val windowSizeClass = calculateWindowSizeClass(this)
 

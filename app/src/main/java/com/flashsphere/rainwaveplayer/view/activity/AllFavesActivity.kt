@@ -3,6 +3,7 @@ package com.flashsphere.rainwaveplayer.view.activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteType
 import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
@@ -37,7 +38,7 @@ class AllFavesActivity : BaseActivity() {
             return
         }
 
-        setContent("AllFavesScreen") {
+        setContent {
             val configuration = LocalConfiguration.current
             val windowSizeClass = calculateWindowSizeClass(this)
 

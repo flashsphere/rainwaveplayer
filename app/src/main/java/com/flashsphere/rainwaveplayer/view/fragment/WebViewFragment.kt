@@ -17,7 +17,6 @@ import com.flashsphere.rainwaveplayer.okhttp.TrustedCertificateStore
 import com.flashsphere.rainwaveplayer.playback.PlaybackManager
 import com.flashsphere.rainwaveplayer.repository.StationRepository
 import com.flashsphere.rainwaveplayer.repository.UserRepository
-import com.flashsphere.rainwaveplayer.util.Analytics
 import com.flashsphere.rainwaveplayer.util.CoroutineDispatchers
 import com.flashsphere.rainwaveplayer.view.activity.delegate.StoreUserCredentialsDelegate
 import com.flashsphere.rainwaveplayer.view.autofill.Autofill
@@ -29,9 +28,6 @@ import jakarta.inject.Inject
 
 @AndroidEntryPoint
 class WebViewFragment : Fragment() {
-    @Inject
-    lateinit var analytics: Analytics
-
     @Inject
     lateinit var stationRepository: StationRepository
 
@@ -91,8 +87,7 @@ class WebViewFragment : Fragment() {
         }
 
         storeUserCredentialsDelegate = StoreUserCredentialsDelegate(requireContext(), viewModel,
-            stationRepository, userRepository, mediaPlayerStateObserver, playbackManager,
-            analytics, this::finishActivity)
+            stationRepository, userRepository, mediaPlayerStateObserver, playbackManager, this::finishActivity)
         viewLifecycleOwner.lifecycle.addObserver(storeUserCredentialsDelegate)
     }
 

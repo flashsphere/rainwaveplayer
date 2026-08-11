@@ -6,7 +6,6 @@ import android.content.Context
 import android.content.Intent
 import com.flashsphere.rainwaveplayer.model.song.Song
 import com.flashsphere.rainwaveplayer.service.MediaService
-import com.flashsphere.rainwaveplayer.util.Analytics
 import com.flashsphere.rainwaveplayer.util.JobUtils.cancel
 import com.flashsphere.rainwaveplayer.util.PendingIntentUtils.getPendingIntentFlags
 import com.flashsphere.rainwaveplayer.view.viewmodel.VoteSongDelegate
@@ -16,7 +15,6 @@ import kotlinx.coroutines.Job
 class VoteSongIntentHandler(
     private val coroutineScope: CoroutineScope,
     private val voteSongDelegate: VoteSongDelegate,
-    private val analytics: Analytics
 ) {
     private var voteSongJob: Job? = null
 
@@ -31,8 +29,6 @@ class VoteSongIntentHandler(
         if (stationId == -1 || eventId == -1 || songEntryId == -1) {
             return true
         }
-
-        analytics.logEvent(Analytics.EVENT_VOTE_SONG_NOTIFICATION)
 
         cancel(voteSongJob)
         voteSongJob = voteSongDelegate.voteSong(coroutineScope, stationId, eventId, songEntryId)

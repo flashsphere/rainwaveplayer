@@ -27,7 +27,6 @@ import com.flashsphere.rainwaveplayer.model.MediaPlayerStatus.State.Buffering
 import com.flashsphere.rainwaveplayer.model.MediaPlayerStatus.State.Playing
 import com.flashsphere.rainwaveplayer.playback.AudioFocusManager
 import com.flashsphere.rainwaveplayer.playback.PlaybackManager
-import com.flashsphere.rainwaveplayer.util.Analytics
 import com.flashsphere.rainwaveplayer.util.CoroutineDispatchers
 import com.flashsphere.rainwaveplayer.util.JobUtils.cancel
 import com.flashsphere.rainwaveplayer.view.activity.StartPlaybackActivity
@@ -45,8 +44,6 @@ import timber.log.Timber
 class MediaTileService : TileService() {
     @Inject
     lateinit var mediaPlayerStateObserver: MediaPlayerStateObserver
-    @Inject
-    lateinit var analytics: Analytics
     @Inject
     lateinit var castContextHolder: CastContextHolder
     @Inject
@@ -70,7 +67,6 @@ class MediaTileService : TileService() {
     override fun onClick() {
         Timber.d("onClick")
         super.onClick()
-        analytics.logEvent(Analytics.EVENT_USE_TILE)
 
         val castSession = castContextHolder.getCastSession()
         if (castSession != null) {
@@ -148,18 +144,6 @@ class MediaTileService : TileService() {
             .setContentTitle(getString(R.string.connecting))
             .setTicker(getString(R.string.connecting))
             .build()
-    }
-
-    override fun onTileAdded() {
-        Timber.d("onTileAdded")
-        super.onTileAdded()
-        analytics.logEvent(Analytics.EVENT_ADD_TILE)
-    }
-
-    override fun onTileRemoved() {
-        Timber.d("onTileRemoved")
-        super.onTileRemoved()
-        analytics.logEvent(Analytics.EVENT_REMOVE_TILE)
     }
 
     override fun onStartListening() {

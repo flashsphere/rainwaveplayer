@@ -3,6 +3,7 @@ package com.flashsphere.rainwaveplayer.view.activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import androidx.activity.compose.setContent
 import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
 import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
 import androidx.compose.runtime.CompositionLocalProvider
@@ -28,7 +29,7 @@ class AutoVoteRulesActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
 
         if (!isTv()) {
-            setContent("AutoVoteRulesScreen") {
+            setContent {
                 val configuration = LocalConfiguration.current
                 val windowSizeClass = calculateWindowSizeClass(this)
 
@@ -43,7 +44,7 @@ class AutoVoteRulesActivity : BaseActivity() {
                 }
             }
         } else {
-            setContent("TvAutoVoteRulesScreen") {
+            setContent {
                 val configuration = LocalConfiguration.current
                 val windowSizeClass = calculateWindowSizeClass(this)
 

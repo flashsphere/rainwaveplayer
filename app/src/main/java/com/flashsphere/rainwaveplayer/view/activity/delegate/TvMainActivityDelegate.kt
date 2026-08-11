@@ -4,10 +4,10 @@ import android.content.Intent
 import android.os.Bundle
 import android.support.v4.media.session.MediaControllerCompat
 import android.view.WindowManager
+import androidx.activity.compose.setContent
 import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
 import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
 import androidx.compose.runtime.CompositionLocalProvider
-import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.core.content.ContextCompat
@@ -32,7 +32,6 @@ import com.flashsphere.rainwaveplayer.ui.navigation.rememberNavigationState
 import com.flashsphere.rainwaveplayer.ui.navigation.topLevelRoutes
 import com.flashsphere.rainwaveplayer.ui.screen.tv.TvMainScreen
 import com.flashsphere.rainwaveplayer.ui.theme.tv.TvAppTheme
-import com.flashsphere.rainwaveplayer.util.AnalyticsOnDestinationChangedListener
 import com.flashsphere.rainwaveplayer.util.getLastPlayedStation
 import com.flashsphere.rainwaveplayer.view.activity.MainActivity
 import com.flashsphere.rainwaveplayer.view.viewmodel.MainViewModel
@@ -66,20 +65,12 @@ class TvMainActivityDelegate(
     override fun onCreate(savedInstanceState: Bundle?) {
         registerCastSenderConnectedEventCallback()
 
-        val analyticsOnDestinationChangedListener = AnalyticsOnDestinationChangedListener(activity.analytics)
-
-        activity.setContent("TvMainScreen") {
+        activity.setContent {
             val navigationState = rememberNavigationState(
                 startRoute = NowPlaying,
                 topLevelRoutes = topLevelRoutes
             )
             val navigator = remember { Navigator(navigationState) }
-
-            DisposableEffect(navigator) {
-                navigator.addOnDestinationChangedListener(analyticsOnDestinationChangedListener)
-                onDispose { navigator.removeOnDestinationChangedListener(analyticsOnDestinationChangedListener) }
-            }
-
             val configuration = LocalConfiguration.current
             val windowSizeClass = calculateWindowSizeClass(activity)
 
