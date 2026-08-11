@@ -1,8 +1,6 @@
 package com.flashsphere.rainwaveplayer.view.viewmodel
 
 import android.content.Context
-import androidx.datastore.core.DataStore
-import androidx.datastore.preferences.core.Preferences
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -19,7 +17,6 @@ import com.flashsphere.rainwaveplayer.playback.PlaybackManager
 import com.flashsphere.rainwaveplayer.repository.StationRepository
 import com.flashsphere.rainwaveplayer.repository.UserRepository
 import com.flashsphere.rainwaveplayer.ui.UiEventDelegate
-import com.flashsphere.rainwaveplayer.util.Analytics
 import com.flashsphere.rainwaveplayer.util.CoroutineDispatchers
 import com.flashsphere.rainwaveplayer.util.JobUtils.cancel
 import com.flashsphere.rainwaveplayer.util.isTv
@@ -62,7 +59,6 @@ import javax.inject.Named
 class MainViewModel @Inject constructor(
     @ApplicationContext context: Context,
     savedStateHandle: SavedStateHandle,
-    private val dataStore: DataStore<Preferences>,
     private val stationRepository: StationRepository,
     private val userRepository: UserRepository,
     private val connectivityObserver: ConnectivityObserver,
@@ -78,10 +74,9 @@ class MainViewModel @Inject constructor(
     @Named("info_error_response_converter")
     private val infoErrorResponseConverter: Converter<ResponseBody, InfoErrorResponse>,
     private val playbackManager: PlaybackManager,
-    private val analytics: Analytics,
+    private val sleepTimerDelegate: SleepTimerDelegate,
 ) : ViewModel() {
     private val isTv = context.isTv()
-    private val sleepTimerDelegate = SleepTimerDelegate(context, dataStore, analytics)
 
     val snackbarEvents = uiEventDelegate.snackbarEvents
     val castState = MutableStateFlow("")

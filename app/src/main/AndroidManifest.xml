@@ -99,10 +99,6 @@
             </intent-filter>
         </receiver>
 
-        <receiver
-            android:name=".util.SleepTimerBroadcastReceiver"
-            android:exported="false" />
-
         <activity
             android:name=".view.activity.MainActivity"
             android:exported="true"

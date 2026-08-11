@@ -1,38 +1,57 @@
 package com.flashsphere.rainwaveplayer.view.helper
 
-import android.app.AlarmManager
-import android.content.Context
-import android.os.SystemClock
 import androidx.compose.runtime.mutableStateOf
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
-import com.flashsphere.rainwaveplayer.util.Analytics
-import com.flashsphere.rainwaveplayer.util.Analytics.Companion.EVENT_REMOVE_SLEEP_TIMER
-import com.flashsphere.rainwaveplayer.util.Analytics.Companion.EVENT_SET_SLEEP_TIMER
+import com.flashsphere.rainwaveplayer.coroutine.launchWithDefaults
+import com.flashsphere.rainwaveplayer.playback.PlaybackManager
+import com.flashsphere.rainwaveplayer.util.CoroutineDispatchers
 import com.flashsphere.rainwaveplayer.util.PreferencesKeys.SLEEP_TIMER_MILLIS
-import com.flashsphere.rainwaveplayer.util.SleepTimerBroadcastReceiver.Companion.createBroadcastIntent
-import com.flashsphere.rainwaveplayer.util.SleepTimerBroadcastReceiver.Companion.getExistingBroadcast
 import com.flashsphere.rainwaveplayer.util.getBlocking
+import com.flashsphere.rainwaveplayer.util.getFlow
 import com.flashsphere.rainwaveplayer.util.removeBlocking
 import com.flashsphere.rainwaveplayer.util.updateBlocking
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.withContext
 import timber.log.Timber
 import java.time.Duration
 import java.time.ZonedDateTime
 import java.time.temporal.ChronoUnit
+import javax.inject.Inject
+import javax.inject.Singleton
+import kotlin.time.Duration.Companion.milliseconds
 
-class SleepTimerDelegate(
-    private val context: Context,
+@Singleton
+class SleepTimerDelegate @Inject constructor(
     private val dataStore: DataStore<Preferences>,
-    private val analytics: Analytics,
+    private val playbackManager: PlaybackManager,
+    coroutineDispatchers: CoroutineDispatchers,
 ) {
     val showState = mutableStateOf(false)
-    private val alarmManager = context.applicationContext.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+
+    init {
+        coroutineDispatchers.scope.launchWithDefaults("Sleep timer flow") {
+            dataStore.getFlow(SLEEP_TIMER_MILLIS)
+                .distinctUntilChanged()
+                .collectLatest { timeInMillis ->
+                    val delayDuration = timeInMillis - System.currentTimeMillis()
+                    if (delayDuration > 0L) {
+                        Timber.d("Sleep timer to run after %d ms", delayDuration)
+                        delay(delayDuration.milliseconds)
+                        withContext(coroutineDispatchers.main) {
+                            playbackManager.stop()
+                        }
+                        removeSleepTimer()
+                    }
+                }
+        }
+    }
 
     fun getExistingSleepTimer(): Long? {
         val sleepTimerMillis = dataStore.getBlocking(SLEEP_TIMER_MILLIS)
-        val pendingIntentBroadcast = getExistingBroadcast(context)
-        Timber.d("pending broadcast = %s", pendingIntentBroadcast)
-        return if (sleepTimerMillis == SLEEP_TIMER_MILLIS.defaultValue || pendingIntentBroadcast == null) {
+        return if (sleepTimerMillis < System.currentTimeMillis()) {
             removeSleepTimer()
             null
         } else {
@@ -46,7 +65,6 @@ class SleepTimerDelegate(
         val endTimeInMillis = endTime.toInstant().toEpochMilli()
         Timber.d("Creating sleep timer alarm %s", endTime)
         createSleepTimer(endTimeInMillis)
-        analytics.logEvent(EVENT_SET_SLEEP_TIMER)
         return endTimeInMillis
     }
 
@@ -65,27 +83,14 @@ class SleepTimerDelegate(
         val endTimeInMillis = endTime.toInstant().toEpochMilli()
         Timber.d("Creating sleep timer alarm %s", endTime)
         createSleepTimer(endTimeInMillis)
-        analytics.logEvent(EVENT_SET_SLEEP_TIMER)
         return endTimeInMillis
     }
 
     private fun createSleepTimer(timeInMillis: Long) {
-        val difference = timeInMillis - System.currentTimeMillis()
         dataStore.updateBlocking(SLEEP_TIMER_MILLIS, timeInMillis)
-
-        val triggerTime = SystemClock.elapsedRealtime() + difference
-        alarmManager.setAndAllowWhileIdle(AlarmManager.ELAPSED_REALTIME_WAKEUP,
-            triggerTime,
-            createBroadcastIntent(context))
     }
 
     fun removeSleepTimer() {
         dataStore.removeBlocking(SLEEP_TIMER_MILLIS)
-        getExistingBroadcast(context)?.let {
-            Timber.d("Cancelling sleep timer alarm")
-            alarmManager.cancel(it)
-            it.cancel()
-            analytics.logEvent(EVENT_REMOVE_SLEEP_TIMER)
-        }
     }
 }

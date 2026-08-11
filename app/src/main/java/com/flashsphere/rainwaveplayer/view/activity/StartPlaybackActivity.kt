@@ -13,9 +13,13 @@ import com.flashsphere.rainwaveplayer.view.helper.SleepTimerDelegate
 import dagger.hilt.android.AndroidEntryPoint
 import java.time.Duration
 import java.util.Date
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class StartPlaybackActivity : BaseActivity() {
+
+    @Inject
+    lateinit var sleepTimerDelegate: SleepTimerDelegate
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -48,7 +52,6 @@ class StartPlaybackActivity : BaseActivity() {
 
     private fun createSleepTimer() {
         val duration = (extractSleepTimerDurationFromPath() ?: extractSleepTimerDurationFromExtras()) ?: return
-        val sleepTimerDelegate = SleepTimerDelegate(this, dataStore, analytics)
 
         sleepTimerDelegate.removeSleepTimer()
         val endTimeMillis = sleepTimerDelegate.createSleepTimer(duration)
