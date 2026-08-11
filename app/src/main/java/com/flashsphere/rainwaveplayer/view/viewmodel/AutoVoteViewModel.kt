@@ -8,7 +8,7 @@ import com.flashsphere.rainwaveplayer.autovote.v1.Rule
 import com.flashsphere.rainwaveplayer.coroutine.launchWithDefaults
 import com.flashsphere.rainwaveplayer.repository.RulesRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
-import javax.inject.Inject
+import jakarta.inject.Inject
 
 @HiltViewModel
 class AutoVoteViewModel @Inject constructor(

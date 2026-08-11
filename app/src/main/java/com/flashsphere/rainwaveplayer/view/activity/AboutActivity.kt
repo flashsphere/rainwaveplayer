@@ -18,8 +18,8 @@ import com.flashsphere.rainwaveplayer.util.Strings.fromBase64
 import com.flashsphere.rainwaveplayer.view.helper.CustomTabsUtil
 import com.flashsphere.rainwaveplayer.view.helper.Urls.PRIVACY_POLICY_URL
 import dagger.hilt.android.AndroidEntryPoint
+import jakarta.inject.Inject
 import timber.log.Timber
-import javax.inject.Inject
 
 @AndroidEntryPoint
 class AboutActivity : BaseActivity() {

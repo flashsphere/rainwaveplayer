@@ -11,6 +11,8 @@ import com.flashsphere.rainwaveplayer.util.getBlocking
 import com.flashsphere.rainwaveplayer.util.getFlow
 import com.flashsphere.rainwaveplayer.util.removeBlocking
 import com.flashsphere.rainwaveplayer.util.updateBlocking
+import jakarta.inject.Inject
+import jakarta.inject.Singleton
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.distinctUntilChanged
@@ -19,8 +21,6 @@ import timber.log.Timber
 import java.time.Duration
 import java.time.ZonedDateTime
 import java.time.temporal.ChronoUnit
-import javax.inject.Inject
-import javax.inject.Singleton
 import kotlin.time.Duration.Companion.milliseconds
 
 @Singleton

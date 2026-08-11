@@ -25,7 +25,7 @@ import com.flashsphere.rainwaveplayer.view.viewmodel.StoreUserCredentialsViewMod
 import com.flashsphere.rainwaveplayer.view.webview.CustomWebChromeClient
 import com.flashsphere.rainwaveplayer.view.webview.CustomWebViewClient
 import dagger.hilt.android.AndroidEntryPoint
-import javax.inject.Inject
+import jakarta.inject.Inject
 
 @AndroidEntryPoint
 class WebViewFragment : Fragment() {

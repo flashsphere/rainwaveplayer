@@ -21,8 +21,8 @@ import com.flashsphere.rainwaveplayer.flow.MediaPlayerStateObserver
 import com.flashsphere.rainwaveplayer.service.MediaService
 import com.flashsphere.rainwaveplayer.util.PendingIntentUtils
 import dagger.hilt.android.AndroidEntryPoint
+import jakarta.inject.Inject
 import timber.log.Timber
-import javax.inject.Inject
 
 @AndroidEntryPoint
 class MediaButtonReceiver : BroadcastReceiver() {

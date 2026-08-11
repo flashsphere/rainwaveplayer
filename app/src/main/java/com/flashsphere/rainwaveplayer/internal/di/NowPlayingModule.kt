@@ -8,11 +8,11 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import jakarta.inject.Named
+import jakarta.inject.Singleton
 import okhttp3.ResponseBody
 import retrofit2.Converter
 import retrofit2.Retrofit
-import javax.inject.Named
-import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)

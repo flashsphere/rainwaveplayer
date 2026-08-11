@@ -25,6 +25,8 @@ import com.flashsphere.rainwaveplayer.util.isTv
 import com.flashsphere.rainwaveplayer.util.update
 import com.google.android.gms.cast.tv.CastReceiverContext
 import dagger.hilt.android.qualifiers.ApplicationContext
+import jakarta.inject.Inject
+import jakarta.inject.Singleton
 import kotlinx.coroutines.withContext
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonElement
@@ -34,8 +36,6 @@ import kotlinx.serialization.json.float
 import kotlinx.serialization.json.int
 import kotlinx.serialization.json.jsonPrimitive
 import timber.log.Timber
-import javax.inject.Inject
-import javax.inject.Singleton
 
 @Singleton
 class CastReceiverContextHolder @Inject constructor(

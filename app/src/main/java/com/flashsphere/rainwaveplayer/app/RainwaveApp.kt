@@ -24,13 +24,13 @@ import com.flashsphere.rainwaveplayer.util.CrashlyticsTree
 import com.flashsphere.rainwaveplayer.util.TvBackgroundPlay
 import com.jakewharton.processphoenix.ProcessPhoenix
 import dagger.hilt.android.HiltAndroidApp
+import jakarta.inject.Inject
 import kotlinx.coroutines.DEBUG_PROPERTY_NAME
 import kotlinx.coroutines.DEBUG_PROPERTY_VALUE_ON
 import okhttp3.OkHttpClient
 import okio.Path.Companion.toOkioPath
 import timber.log.Timber
 import timber.log.Timber.DebugTree
-import javax.inject.Inject
 import kotlin.time.ExperimentalTime
 
 @HiltAndroidApp

@@ -70,6 +70,8 @@ import com.flashsphere.rainwaveplayer.view.viewmodel.FaveSongState
 import com.flashsphere.rainwaveplayer.view.viewmodel.VoteSongDelegate
 import com.flashsphere.rainwaveplayer.view.viewmodel.VoteSongState
 import dagger.hilt.android.AndroidEntryPoint
+import jakarta.inject.Inject
+import jakarta.inject.Named
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.delay
@@ -92,8 +94,6 @@ import timber.log.Timber
 import java.lang.ref.WeakReference
 import java.net.ConnectException
 import java.util.concurrent.atomic.AtomicInteger
-import javax.inject.Inject
-import javax.inject.Named
 import kotlin.time.Duration.Companion.seconds
 
 @AndroidEntryPoint

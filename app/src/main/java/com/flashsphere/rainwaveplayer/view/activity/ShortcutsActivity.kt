@@ -8,8 +8,8 @@ import com.flashsphere.rainwaveplayer.flow.MediaPlayerStateObserver
 import com.flashsphere.rainwaveplayer.playback.PlaybackManager
 import com.flashsphere.rainwaveplayer.util.Analytics
 import dagger.hilt.android.AndroidEntryPoint
+import jakarta.inject.Inject
 import timber.log.Timber
-import javax.inject.Inject
 
 @AndroidEntryPoint
 class ShortcutsActivity : BaseActivity() {

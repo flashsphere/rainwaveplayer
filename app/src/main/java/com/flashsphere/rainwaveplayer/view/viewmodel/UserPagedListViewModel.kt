@@ -21,6 +21,8 @@ import com.flashsphere.rainwaveplayer.view.uistate.StationsScreenState
 import com.flashsphere.rainwaveplayer.view.uistate.event.FaveSongErrorEvent
 import com.flashsphere.rainwaveplayer.view.uistate.model.SongState
 import dagger.hilt.android.lifecycle.HiltViewModel
+import jakarta.inject.Inject
+import jakarta.inject.Named
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.Flow
@@ -36,8 +38,6 @@ import kotlinx.coroutines.flow.onEach
 import okhttp3.ResponseBody
 import retrofit2.Converter
 import timber.log.Timber
-import javax.inject.Inject
-import javax.inject.Named
 
 @HiltViewModel
 class UserPagedListViewModel @Inject constructor(

@@ -27,6 +27,8 @@ import com.flashsphere.rainwaveplayer.view.uistate.event.RequestErrorEvent
 import com.flashsphere.rainwaveplayer.view.uistate.model.RequestState
 import com.flashsphere.rainwaveplayer.view.uistate.model.UserState
 import dagger.hilt.android.lifecycle.HiltViewModel
+import jakarta.inject.Inject
+import jakarta.inject.Named
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -36,8 +38,6 @@ import kotlinx.coroutines.flow.onEach
 import okhttp3.ResponseBody
 import retrofit2.Converter
 import timber.log.Timber
-import javax.inject.Inject
-import javax.inject.Named
 
 @HiltViewModel
 class RequestsScreenViewModel @Inject constructor(

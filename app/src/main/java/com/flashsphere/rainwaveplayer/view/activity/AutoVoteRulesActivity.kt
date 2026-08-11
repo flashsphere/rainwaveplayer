@@ -16,7 +16,7 @@ import com.flashsphere.rainwaveplayer.ui.screen.AutoVoteRulesScreen
 import com.flashsphere.rainwaveplayer.ui.screen.tv.TvAutoVoteRulesScreen
 import com.flashsphere.rainwaveplayer.util.isTv
 import dagger.hilt.android.AndroidEntryPoint
-import javax.inject.Inject
+import jakarta.inject.Inject
 
 @AndroidEntryPoint
 class AutoVoteRulesActivity : BaseActivity() {

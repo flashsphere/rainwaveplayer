@@ -11,9 +11,9 @@ import com.flashsphere.rainwaveplayer.service.MediaService
 import com.flashsphere.rainwaveplayer.util.PendingIntentUtils
 import com.flashsphere.rainwaveplayer.view.helper.SleepTimerDelegate
 import dagger.hilt.android.AndroidEntryPoint
+import jakarta.inject.Inject
 import java.time.Duration
 import java.util.Date
-import javax.inject.Inject
 
 @AndroidEntryPoint
 class StartPlaybackActivity : BaseActivity() {

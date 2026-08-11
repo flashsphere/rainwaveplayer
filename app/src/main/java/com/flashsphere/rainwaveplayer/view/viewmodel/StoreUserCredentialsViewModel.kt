@@ -4,9 +4,9 @@ import androidx.lifecycle.ViewModel
 import com.flashsphere.rainwaveplayer.repository.UserRepository
 import com.flashsphere.rainwaveplayer.util.UserCredentials
 import dagger.hilt.android.lifecycle.HiltViewModel
+import jakarta.inject.Inject
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import javax.inject.Inject
 
 @HiltViewModel
 class StoreUserCredentialsViewModel @Inject constructor(

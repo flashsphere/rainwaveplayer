@@ -1,9 +1,9 @@
 package com.flashsphere.rainwaveplayer.flow
 
 import com.flashsphere.rainwaveplayer.network.NetworkManager
+import jakarta.inject.Inject
+import jakarta.inject.Singleton
 import kotlinx.coroutines.flow.Flow
-import javax.inject.Inject
-import javax.inject.Singleton
 
 @Singleton
 class ConnectivityObserver @Inject constructor(

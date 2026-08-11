@@ -69,6 +69,7 @@ import com.flashsphere.rainwaveplayer.view.uistate.model.PreferenceCategoryItem
 import com.flashsphere.rainwaveplayer.view.uistate.model.PreferenceItemValue
 import com.jakewharton.processphoenix.ProcessPhoenix
 import dagger.hilt.android.AndroidEntryPoint
+import jakarta.inject.Inject
 import kotlinx.coroutines.channels.BufferOverflow.SUSPEND
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -78,7 +79,6 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import timber.log.Timber
-import javax.inject.Inject
 
 @AndroidEntryPoint
 class SettingsActivity : BaseActivity() {

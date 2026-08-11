@@ -32,6 +32,7 @@ import com.flashsphere.rainwaveplayer.view.activity.delegate.TvMainActivityDeleg
 import com.flashsphere.rainwaveplayer.view.helper.CustomTabsUtil
 import com.flashsphere.rainwaveplayer.view.viewmodel.MainViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import jakarta.inject.Inject
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.map
@@ -39,7 +40,6 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import kotlinx.serialization.json.Json
 import timber.log.Timber
-import javax.inject.Inject
 
 @AndroidEntryPoint
 class MainActivity : BaseActivity() {

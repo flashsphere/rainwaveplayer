@@ -26,6 +26,7 @@ import com.flashsphere.rainwaveplayer.view.uistate.model.CategoryState
 import com.flashsphere.rainwaveplayer.view.uistate.model.LibraryItem
 import com.flashsphere.rainwaveplayer.view.uistate.model.RequestLineState
 import dagger.hilt.android.lifecycle.HiltViewModel
+import jakarta.inject.Inject
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -40,7 +41,6 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import timber.log.Timber
-import javax.inject.Inject
 import kotlin.text.RegexOption.IGNORE_CASE
 import kotlin.text.RegexOption.LITERAL
 import kotlin.time.Duration.Companion.milliseconds

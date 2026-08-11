@@ -7,11 +7,11 @@ import com.flashsphere.rainwaveplayer.util.CoroutineDispatchers
 import com.flashsphere.rainwaveplayer.util.PreferencesKeys.AUTO_VOTE_RULES
 import com.flashsphere.rainwaveplayer.util.get
 import com.flashsphere.rainwaveplayer.util.update
+import jakarta.inject.Inject
+import jakarta.inject.Singleton
 import kotlinx.coroutines.withContext
 import kotlinx.serialization.json.Json
 import timber.log.Timber
-import javax.inject.Inject
-import javax.inject.Singleton
 
 @Singleton
 class RulesRepository @Inject constructor(

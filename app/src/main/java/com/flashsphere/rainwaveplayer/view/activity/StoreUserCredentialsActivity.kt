@@ -12,7 +12,7 @@ import com.flashsphere.rainwaveplayer.repository.UserRepository
 import com.flashsphere.rainwaveplayer.view.activity.delegate.StoreUserCredentialsDelegate
 import com.flashsphere.rainwaveplayer.view.viewmodel.StoreUserCredentialsViewModel
 import dagger.hilt.android.AndroidEntryPoint
-import javax.inject.Inject
+import jakarta.inject.Inject
 
 @AndroidEntryPoint
 class StoreUserCredentialsActivity : BaseActivity() {

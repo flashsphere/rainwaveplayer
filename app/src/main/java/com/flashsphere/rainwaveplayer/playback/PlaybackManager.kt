@@ -13,9 +13,9 @@ import com.google.android.gms.cast.MediaLoadRequestData
 import com.google.android.gms.cast.MediaMetadata
 import com.google.android.gms.cast.MediaMetadata.MEDIA_TYPE_MUSIC_TRACK
 import com.google.android.gms.cast.framework.CastSession
+import jakarta.inject.Inject
+import jakarta.inject.Singleton
 import kotlinx.coroutines.withContext
-import javax.inject.Inject
-import javax.inject.Singleton
 
 @Singleton
 class PlaybackManager @Inject constructor(

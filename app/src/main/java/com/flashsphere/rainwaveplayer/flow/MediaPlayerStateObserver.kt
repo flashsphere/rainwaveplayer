@@ -8,6 +8,8 @@ import com.flashsphere.rainwaveplayer.model.station.Station
 import com.flashsphere.rainwaveplayer.service.MediaTileService
 import com.flashsphere.rainwaveplayer.util.CoroutineDispatchers
 import dagger.hilt.android.qualifiers.ApplicationContext
+import jakarta.inject.Inject
+import jakarta.inject.Singleton
 import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -16,8 +18,6 @@ import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.onEach
 import timber.log.Timber
-import javax.inject.Inject
-import javax.inject.Singleton
 
 @Singleton
 class MediaPlayerStateObserver @Inject constructor(

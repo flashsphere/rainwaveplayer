@@ -6,13 +6,13 @@ import com.flashsphere.rainwaveplayer.BuildConfig
 import com.flashsphere.rainwaveplayer.R
 import com.flashsphere.rainwaveplayer.repository.RainwaveService
 import dagger.hilt.android.qualifiers.ApplicationContext
+import jakarta.inject.Inject
+import jakarta.inject.Singleton
 import okhttp3.Interceptor
 import okhttp3.Request
 import okhttp3.Response
 import java.io.IOException
 import java.util.Locale
-import javax.inject.Inject
-import javax.inject.Singleton
 
 @Singleton
 class RequestHeadersInterceptor @Inject constructor(

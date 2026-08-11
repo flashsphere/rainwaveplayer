@@ -32,13 +32,13 @@ import com.flashsphere.rainwaveplayer.util.CoroutineDispatchers
 import com.flashsphere.rainwaveplayer.util.JobUtils.cancel
 import com.flashsphere.rainwaveplayer.view.activity.StartPlaybackActivity
 import dagger.hilt.android.AndroidEntryPoint
+import jakarta.inject.Inject
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.onEach
 import timber.log.Timber
-import javax.inject.Inject
 
 @RequiresApi(Build.VERSION_CODES.N)
 @AndroidEntryPoint

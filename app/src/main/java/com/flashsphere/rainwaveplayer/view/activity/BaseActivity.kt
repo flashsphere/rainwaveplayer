@@ -19,8 +19,8 @@ import com.flashsphere.rainwaveplayer.util.Analytics.Companion.SCREEN_CLASS
 import com.flashsphere.rainwaveplayer.util.Analytics.Companion.SCREEN_NAME
 import com.flashsphere.rainwaveplayer.util.ClassUtils.getSimpleClassName
 import com.jakewharton.processphoenix.ProcessPhoenix
+import jakarta.inject.Inject
 import timber.log.Timber
-import javax.inject.Inject
 
 abstract class BaseActivity : AppCompatActivity() {
     @Inject

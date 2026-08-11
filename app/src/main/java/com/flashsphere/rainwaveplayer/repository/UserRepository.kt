@@ -10,8 +10,8 @@ import com.flashsphere.rainwaveplayer.util.UserCredentials
 import com.flashsphere.rainwaveplayer.util.getBlocking
 import com.flashsphere.rainwaveplayer.util.removeBlocking
 import com.flashsphere.rainwaveplayer.util.updateBlocking
-import javax.inject.Inject
-import javax.inject.Singleton
+import jakarta.inject.Inject
+import jakarta.inject.Singleton
 
 @Singleton
 class UserRepository @Inject constructor(

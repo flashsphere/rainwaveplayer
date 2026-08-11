@@ -4,8 +4,8 @@ import android.os.Bundle
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import com.flashsphere.rainwaveplayer.model.station.Station
-import javax.inject.Inject
-import javax.inject.Singleton
+import jakarta.inject.Inject
+import jakarta.inject.Singleton
 
 @Singleton
 class Analytics @Inject constructor(
