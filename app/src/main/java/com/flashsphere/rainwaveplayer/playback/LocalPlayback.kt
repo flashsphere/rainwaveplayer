@@ -18,7 +18,6 @@ import androidx.media3.common.MediaItem
 import androidx.media3.common.PlaybackException
 import androidx.media3.common.Player
 import androidx.media3.common.TrackSelectionParameters.AudioOffloadPreferences
-import androidx.media3.common.util.StuckPlayerException
 import androidx.media3.common.util.UnstableApi
 import androidx.media3.common.util.Util
 import androidx.media3.datasource.okhttp.OkHttpDataSource
@@ -29,12 +28,10 @@ import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.exoplayer.ExoTimeoutException
 import androidx.media3.exoplayer.source.DefaultMediaSourceFactory
 import androidx.media3.exoplayer.source.ProgressiveMediaSource
-import androidx.media3.extractor.ExtractorsFactory
 import com.flashsphere.rainwaveplayer.R
 import com.flashsphere.rainwaveplayer.coroutine.launchWithDefaults
 import com.flashsphere.rainwaveplayer.flow.broadcastReceiverFlow
-import com.flashsphere.rainwaveplayer.media.Mp3ExtractorFactory
-import com.flashsphere.rainwaveplayer.media.OggExtractorFactory
+import com.flashsphere.rainwaveplayer.media.MediaExtractorsFactory
 import com.flashsphere.rainwaveplayer.model.station.Station
 import com.flashsphere.rainwaveplayer.network.NetworkChangeCallback
 import com.flashsphere.rainwaveplayer.network.NetworkManager
@@ -42,7 +39,6 @@ import com.flashsphere.rainwaveplayer.repository.StationRepository
 import com.flashsphere.rainwaveplayer.util.ClassUtils.getSimpleClassName
 import com.flashsphere.rainwaveplayer.util.JobUtils.cancel
 import com.flashsphere.rainwaveplayer.util.getBufferInMillis
-import com.flashsphere.rainwaveplayer.util.listenUsingOgg
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.filter
@@ -140,16 +136,10 @@ import kotlin.math.max
         val factory = OkHttpDataSource.Factory(okHttpClient)
         factory.setUserAgent(userAgent)
 
-        val mediaExtractorsFactory = if (dataStore.listenUsingOgg()) {
-            OggExtractorFactory()
-        } else {
-            Mp3ExtractorFactory()
-        }
-
-        val mediaSource = ProgressiveMediaSource.Factory(factory, mediaExtractorsFactory)
+        val mediaSource = ProgressiveMediaSource.Factory(factory, MediaExtractorsFactory)
             .createMediaSource(MediaItem.fromUri(uri))
 
-        val exoPlayer = createExoPlayer(mediaExtractorsFactory)
+        val exoPlayer = createExoPlayer()
         this.exoPlayer = exoPlayer
 
         exoPlayer.addListener(this)
@@ -160,7 +150,7 @@ import kotlin.math.max
         Timber.i("Start connecting to station")
     }
 
-    private fun createExoPlayer(mediaExtractorsFactory: ExtractorsFactory): ExoPlayer {
+    private fun createExoPlayer(): ExoPlayer {
         val bufferMs = dataStore.getBufferInMillis()
         val loadControl = DefaultLoadControl.Builder()
             .setBufferDurationsMs(
@@ -170,7 +160,7 @@ import kotlin.math.max
                 bufferMs)
             .build()
 
-        return ExoPlayer.Builder(context, DefaultMediaSourceFactory(context, mediaExtractorsFactory))
+        return ExoPlayer.Builder(context, DefaultMediaSourceFactory(context, MediaExtractorsFactory))
             .setUsePlatformDiagnostics(false)
             .setLoadControl(loadControl)
             .setStuckBufferingDetectionTimeoutMs(bufferMs * 2)

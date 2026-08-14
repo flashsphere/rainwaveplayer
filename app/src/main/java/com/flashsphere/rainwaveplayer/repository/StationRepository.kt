@@ -47,15 +47,17 @@ import com.flashsphere.rainwaveplayer.util.PreferencesKeys.AUTO_REQUEST_FAVE
 import com.flashsphere.rainwaveplayer.util.PreferencesKeys.AUTO_REQUEST_UNRATED
 import com.flashsphere.rainwaveplayer.util.PreferencesKeys.LAST_PLAYED
 import com.flashsphere.rainwaveplayer.util.PreferencesKeys.SSL_RELAY
-import com.flashsphere.rainwaveplayer.util.PreferencesKeys.USE_OGG
 import com.flashsphere.rainwaveplayer.util.get
 import com.flashsphere.rainwaveplayer.util.getBlocking
+import com.flashsphere.rainwaveplayer.util.listenUsingOgg
 import com.flashsphere.rainwaveplayer.util.updateBlocking
 import com.flashsphere.rainwaveplayer.view.paging.AllFavesPagingSource
 import com.flashsphere.rainwaveplayer.view.paging.RecentVotesPagingSource
 import com.flashsphere.rainwaveplayer.view.paging.RequestHistoryPagingSource
 import com.flashsphere.rainwaveplayer.view.uistate.event.RefreshStationInfo
 import dagger.hilt.android.qualifiers.ApplicationContext
+import jakarta.inject.Inject
+import jakarta.inject.Singleton
 import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.SharingStarted.Companion.WhileSubscribed
@@ -71,8 +73,6 @@ import kotlinx.coroutines.flow.shareIn
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
 import timber.log.Timber
-import jakarta.inject.Inject
-import jakarta.inject.Singleton
 import kotlin.time.Duration.Companion.milliseconds
 
 @Singleton
@@ -225,7 +225,7 @@ class StationRepository @Inject constructor(
             station.relays[0]
         } else station.stream
 
-        return if (dataStore.getBlocking(USE_OGG) && streamUrl.contains(".mp3")) {
+        return if (dataStore.listenUsingOgg() && streamUrl.contains(".mp3")) {
             streamUrl.replace(".mp3", ".ogg")
         } else {
             streamUrl
