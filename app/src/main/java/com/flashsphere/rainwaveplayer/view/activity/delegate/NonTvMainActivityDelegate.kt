@@ -3,7 +3,7 @@ package com.flashsphere.rainwaveplayer.view.activity.delegate
 import android.os.Bundle
 import android.support.v4.media.session.MediaControllerCompat
 import androidx.activity.compose.setContent
-import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
+import androidx.compose.material3.adaptive.currentWindowAdaptiveInfoV2
 import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteScaffoldDefaults
 import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteType
 import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
@@ -77,7 +77,7 @@ class NonTvMainActivityDelegate(
             val windowSizeClass = calculateWindowSizeClass(activity)
             val bottomNavUiPref = activity.dataStore.getBottomNavigationUiPref()
             val navSuiteType = if (userCredentials.isLoggedIn() && !bottomNavUiPref.isHidden()) {
-                NavigationSuiteScaffoldDefaults.calculateFromAdaptiveInfo(currentWindowAdaptiveInfo())
+                NavigationSuiteScaffoldDefaults.calculateFromAdaptiveInfo(currentWindowAdaptiveInfoV2())
             } else {
                 NavigationSuiteType.None
             }
