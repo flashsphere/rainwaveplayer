@@ -11,6 +11,7 @@ import androidx.datastore.preferences.preferencesDataStoreFile
 import com.flashsphere.rainwaveplayer.coroutine.launchWithDefaults
 import com.flashsphere.rainwaveplayer.coroutine.suspendRunCatching
 import com.flashsphere.rainwaveplayer.internal.datastore.SettingsMigration
+import com.flashsphere.rainwaveplayer.util.BlockStoreManager
 import com.flashsphere.rainwaveplayer.util.CoroutineDispatchers
 import dagger.Module
 import dagger.Provides
@@ -27,15 +28,18 @@ import kotlinx.coroutines.flow.first
 object DataStoreModule {
     @Provides
     @Singleton
-    fun provideSettingsDataStore(application: Application,
-                                 coroutineDispatchers: CoroutineDispatchers): DataStore<Preferences> {
+    fun provideSettingsDataStore(
+        application: Application,
+        coroutineDispatchers: CoroutineDispatchers,
+        blockStoreManager: BlockStoreManager,
+    ): DataStore<Preferences> {
         return PreferenceDataStoreFactory.create(
             corruptionHandler = ReplaceFileCorruptionHandler(
                 produceNewData = { emptyPreferences() }
             ),
             migrations = listOf(
                 SharedPreferencesMigration(application, application.packageName + "_preferences"),
-                SettingsMigration(application),
+                SettingsMigration(application, blockStoreManager),
             ),
             scope = CoroutineScope(Dispatchers.IO + SupervisorJob()),
             produceFile = { application.preferencesDataStoreFile("settings") }

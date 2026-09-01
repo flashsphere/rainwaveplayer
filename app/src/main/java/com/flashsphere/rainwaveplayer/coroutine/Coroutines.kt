@@ -10,6 +10,8 @@ import kotlinx.coroutines.flow.onCompletion
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.plus
 import timber.log.Timber
+import kotlin.coroutines.CoroutineContext
+import kotlin.coroutines.EmptyCoroutineContext
 import kotlin.coroutines.cancellation.CancellationException
 
 val coroutineExceptionHandler = CoroutineExceptionHandler { coroutineContext, t ->
@@ -25,8 +27,11 @@ suspend inline fun <reified T> suspendRunCatching(crossinline block: suspend () 
     Result.failure(t)
 }
 
-fun CoroutineScope.launchWithDefaults(name: String, block: suspend CoroutineScope.() -> Unit) =
-    launch(context = coroutineExceptionHandler + CoroutineName(name), block = block)
+fun CoroutineScope.launchWithDefaults(
+    name: String,
+    context: CoroutineContext = EmptyCoroutineContext,
+    block: suspend CoroutineScope.() -> Unit
+) = launch(context = context + coroutineExceptionHandler + CoroutineName(name), block = block)
 
 fun <T> Flow<T>.launchWithDefaults(scope: CoroutineScope, name: String) =
     this

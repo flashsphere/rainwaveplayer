@@ -3,10 +3,15 @@ package com.flashsphere.rainwaveplayer.internal.datastore
 import android.content.Context
 import androidx.datastore.core.DataMigration
 import androidx.datastore.preferences.core.Preferences
+import com.flashsphere.rainwaveplayer.util.BlockStoreManager
 import com.flashsphere.rainwaveplayer.util.PreferencesKeys
+import com.flashsphere.rainwaveplayer.util.UserCredentials
 import timber.log.Timber
 
-class SettingsMigration(private val context: Context) : DataMigration<Preferences> {
+class SettingsMigration(
+    private val context: Context,
+    private val blockStoreManager: BlockStoreManager,
+) : DataMigration<Preferences> {
     override suspend fun cleanUp() {
     }
 
@@ -41,6 +46,13 @@ class SettingsMigration(private val context: Context) : DataMigration<Preference
         if (version <= 9) {
             mutablePrefs.remove(PreferencesKeys.CRASH_REPORTING)
             mutablePrefs.remove(PreferencesKeys.ANALYTICS)
+        }
+        if (version <= 10) {
+            val userId = mutablePrefs[PreferencesKeys.USER_ID.key]
+            val apiKey = mutablePrefs[PreferencesKeys.API_KEY.key]
+            if (userId != null && userId != PreferencesKeys.USER_ID.defaultValue && !apiKey.isNullOrBlank()) {
+                blockStoreManager.store(UserCredentials(userId, apiKey))
+            }
         }
 
         mutablePrefs[PreferencesKeys.VERSION.key] = PreferencesKeys.VERSION.defaultValue

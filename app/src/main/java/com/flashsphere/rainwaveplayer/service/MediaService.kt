@@ -58,6 +58,7 @@ import com.flashsphere.rainwaveplayer.receiver.VoteSongIntentHandler
 import com.flashsphere.rainwaveplayer.repository.RulesRepository
 import com.flashsphere.rainwaveplayer.repository.StationRepository
 import com.flashsphere.rainwaveplayer.repository.UserRepository
+import com.flashsphere.rainwaveplayer.util.BlockStoreManager
 import com.flashsphere.rainwaveplayer.util.CoroutineDispatchers
 import com.flashsphere.rainwaveplayer.util.ErrorUtils
 import com.flashsphere.rainwaveplayer.util.ErrorUtils.isRetryable
@@ -100,43 +101,33 @@ class MediaService : MediaBrowserServiceCompat(), Playback.Callback, LifecycleOw
 
     @Inject
     lateinit var stationRepository: StationRepository
-
     @Inject
     lateinit var mediaPlayerStateObserver: MediaPlayerStateObserver
-
     @Inject
     lateinit var connectivityObserver: ConnectivityObserver
-
     @Inject
     lateinit var coroutineDispatchers: CoroutineDispatchers
-
     @Inject
     lateinit var userRepository: UserRepository
-
     @Inject
     @Named("info_error_response_converter")
     lateinit var infoErrorResponseConverter: Converter<ResponseBody, InfoErrorResponse>
-
     @Inject
     lateinit var okHttpClient: OkHttpClient
-
     @Inject
     lateinit var dataStore: DataStore<Preferences>
-
     @Inject
     lateinit var faveSongDelegate: FaveSongDelegate
-
     @Inject
     lateinit var voteSongDelegate: VoteSongDelegate
-
     @Inject
     lateinit var rulesRepository: RulesRepository
-
     @Inject
     lateinit var castReceiverContextHolder: CastReceiverContextHolder
-
     @Inject
     lateinit var networkManager: NetworkManager
+    @Inject
+    lateinit var blockStoreManager: BlockStoreManager
 
     private lateinit var notificationManager: NotificationManagerCompat
     private lateinit var playback: Playback
@@ -571,6 +562,7 @@ class MediaService : MediaBrowserServiceCompat(), Playback.Callback, LifecycleOw
                 val error = ErrorUtils.extractError(throwable, infoErrorResponseConverter)
                 if (error.type == OperationError.Unauthorized) {
                     userRepository.logout()
+                    blockStoreManager.clear()
                     stationRepository.clearCache()
                     createAndShowToast(getString(R.string.error_unauthorized, throwable.message))
                 } else {

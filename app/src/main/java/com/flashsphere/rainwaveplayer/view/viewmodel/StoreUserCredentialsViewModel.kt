@@ -2,6 +2,7 @@ package com.flashsphere.rainwaveplayer.view.viewmodel
 
 import androidx.lifecycle.ViewModel
 import com.flashsphere.rainwaveplayer.repository.UserRepository
+import com.flashsphere.rainwaveplayer.util.BlockStoreManager
 import com.flashsphere.rainwaveplayer.util.UserCredentials
 import dagger.hilt.android.lifecycle.HiltViewModel
 import jakarta.inject.Inject
@@ -11,6 +12,7 @@ import kotlinx.coroutines.flow.StateFlow
 @HiltViewModel
 class StoreUserCredentialsViewModel @Inject constructor(
     private val userRepository: UserRepository,
+    private val blockStoreManager: BlockStoreManager,
 ) : ViewModel() {
     val userCredentialsSaved: StateFlow<Boolean?>
         field = MutableStateFlow(null)
@@ -26,6 +28,7 @@ class StoreUserCredentialsViewModel @Inject constructor(
 
         if (currentUserCredentials != newUserCredentials) {
             userRepository.login(newUserCredentials)
+            blockStoreManager.store(newUserCredentials)
         }
 
         userCredentialsSaved.value = true

@@ -36,6 +36,7 @@ androidxUiautomator = "2.4.0"
 androidxBenchmarkJunit4 = "1.4.1"
 googleCast = "22.3.1"
 googleCastTv = "21.1.1"
+playServicesBlockstore = "16.4.0"
 reorderable = "3.1.0"
 retrofit = "3.0.0"
 kotlinxSerialization = "1.11.0"
@@ -103,6 +104,8 @@ androidx-benchmark-junit4 = { module = "androidx.benchmark:benchmark-macro-junit
 google-cast-framework = { module = "com.google.android.gms:play-services-cast-framework", version.ref = "googleCast" }
 google-cast = { module = "com.google.android.gms:play-services-cast", version.ref = "googleCast" }
 google-cast-tv = { module = "com.google.android.gms:play-services-cast-tv", version.ref = "googleCastTv" }
+play-services-blockstore = { module = "com.google.android.gms:play-services-auth-blockstore", version.ref = "playServicesBlockstore" }
+play-services-coroutines = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-play-services", version.ref = "kotlinxCoroutines" }
 reorderable = { module = "sh.calvin.reorderable:reorderable", version.ref = "reorderable" }
 dagger-hilt = { module = "com.google.dagger:hilt-android", version.ref = "dagger" }
 dagger-hilt-compiler = { module = "com.google.dagger:hilt-android-compiler", version.ref = "dagger" }

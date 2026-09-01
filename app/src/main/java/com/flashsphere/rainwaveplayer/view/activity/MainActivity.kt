@@ -21,6 +21,7 @@ import com.flashsphere.rainwaveplayer.repository.StationRepository
 import com.flashsphere.rainwaveplayer.repository.UserRepository
 import com.flashsphere.rainwaveplayer.service.MediaServiceConnection
 import com.flashsphere.rainwaveplayer.ui.drawer.DrawerItemHandler
+import com.flashsphere.rainwaveplayer.util.BlockStoreManager
 import com.flashsphere.rainwaveplayer.util.CoroutineDispatchers
 import com.flashsphere.rainwaveplayer.util.IntentUtils
 import com.flashsphere.rainwaveplayer.util.OperationError
@@ -33,8 +34,7 @@ import com.flashsphere.rainwaveplayer.view.viewmodel.MainViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import jakarta.inject.Inject
 import kotlinx.coroutines.flow.filter
-import kotlinx.coroutines.flow.filterNotNull
-import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.mapNotNull
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import kotlinx.serialization.json.Json
@@ -60,6 +60,8 @@ class MainActivity : BaseActivity() {
     lateinit var mediaServiceConnection: MediaServiceConnection
     @Inject
     lateinit var json: Json
+    @Inject
+    lateinit var blockStoreManager: BlockStoreManager
 
     private val mainViewModel: MainViewModel by viewModels()
 
@@ -78,6 +80,7 @@ class MainActivity : BaseActivity() {
         }
         delegate.onCreate(savedInstanceState)
 
+        subscribeToRestoredFromBlockStore()
         subscribeToStationsScreenState()
 
         mainViewModel.getStations()
@@ -135,8 +138,7 @@ class MainActivity : BaseActivity() {
                     showUnauthorized(error.message!!)
                 }
             }
-            .map { it.stations }
-            .filterNotNull()
+            .mapNotNull { it.stations }
             .filter { it.isNotEmpty() }
             .onEach { delegate.onStationsLoaded(it) }
             .launchWithDefaults(lifecycleScope, "Stations List State in Main activity")
@@ -152,6 +154,7 @@ class MainActivity : BaseActivity() {
             playbackManager.stop()
 
             userRepository.logout()
+            blockStoreManager.clear()
             stationRepository.clearCache()
 
             startActivity(this@MainActivity)
@@ -188,6 +191,16 @@ class MainActivity : BaseActivity() {
         loginClick = { CustomTabsUtil.openLoginPage(this) },
         logoutClick = this::logout,
     )
+
+    private fun subscribeToRestoredFromBlockStore() {
+        mainViewModel.restoredFromBlockStore
+            .filter { it }
+            .onEach {
+                startActivity(this)
+                finish()
+            }
+            .launchWithDefaults(lifecycleScope, "Restored from block store state")
+    }
 
     companion object {
         private const val INTENT_EXTRA_PARAM_STATION = "com.flashsphere.data.station"

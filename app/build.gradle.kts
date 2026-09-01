@@ -202,6 +202,9 @@ dependencies {
     implementation(libs.google.cast.framework)
     implementation(libs.google.cast.tv)
 
+    implementation(libs.play.services.blockstore)
+    implementation(libs.play.services.coroutines)
+
     implementation(libs.retrofit2)
     implementation(libs.retrofit2.kotlinx.serialization)
 

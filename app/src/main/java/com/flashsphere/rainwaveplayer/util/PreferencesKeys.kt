@@ -9,7 +9,7 @@ import androidx.datastore.preferences.core.stringPreferencesKey
 import com.flashsphere.rainwaveplayer.util.BottomNavPreference.Labeled
 
 object PreferencesKeys {
-    private const val SETTINGS_VERSION = 10
+    private const val SETTINGS_VERSION = 11
 
     val VERSION = PreferenceKey(intPreferencesKey("com.flashsphere.keys.version"), SETTINGS_VERSION)
     val USER_ID = PreferenceKey(intPreferencesKey("com.flashsphere.keys.userid"), -1)

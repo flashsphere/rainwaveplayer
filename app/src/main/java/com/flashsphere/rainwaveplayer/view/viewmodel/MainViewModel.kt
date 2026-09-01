@@ -17,6 +17,7 @@ import com.flashsphere.rainwaveplayer.playback.PlaybackManager
 import com.flashsphere.rainwaveplayer.repository.StationRepository
 import com.flashsphere.rainwaveplayer.repository.UserRepository
 import com.flashsphere.rainwaveplayer.ui.UiEventDelegate
+import com.flashsphere.rainwaveplayer.util.BlockStoreManager
 import com.flashsphere.rainwaveplayer.util.CoroutineDispatchers
 import com.flashsphere.rainwaveplayer.util.JobUtils.cancel
 import com.flashsphere.rainwaveplayer.util.isTv
@@ -75,6 +76,7 @@ class MainViewModel @Inject constructor(
     private val infoErrorResponseConverter: Converter<ResponseBody, InfoErrorResponse>,
     private val playbackManager: PlaybackManager,
     private val sleepTimerDelegate: SleepTimerDelegate,
+    private val blockStoreManager: BlockStoreManager,
 ) : ViewModel() {
     private val isTv = context.isTv()
 
@@ -101,6 +103,9 @@ class MainViewModel @Inject constructor(
 
     val showSleepTimer = sleepTimerDelegate.showState
 
+    val restoredFromBlockStore: StateFlow<Boolean>
+        field = MutableStateFlow(false)
+
     private var stationsJob: Job? = null
     private var stationInfoJob: Job? = null
     private var refreshStationInfoJob: Job? = null
@@ -109,6 +114,11 @@ class MainViewModel @Inject constructor(
     private var voteSongStateJob: Job? = null
     private var rateSongStateJob: Job? = null
     private var playbackStateJob: Job? = null
+    private var blockStoreJob: Job? = null
+
+    init {
+        restoreFromBlockStore()
+    }
 
     fun shouldKeepSplashScreenOn(): Boolean {
         val stationsScreenState = stationsScreenState.value
@@ -116,18 +126,34 @@ class MainViewModel @Inject constructor(
             stationsScreenState.stations == null && stationsScreenState.error == null
     }
 
+    fun restoreFromBlockStore() {
+        if (userRepository.isLoggedIn()) return
+
+        cancel(blockStoreJob)
+        blockStoreJob = viewModelScope.launchWithDefaults("Restore from block store") {
+            val userCredentials = blockStoreManager.retrieve() ?: return@launchWithDefaults
+            Timber.d("Login using credentials from block store")
+            userRepository.login(userCredentials)
+            stationRepository.clearCache()
+            restoredFromBlockStore.value = true
+        }
+    }
+
     fun getStations() {
         stationsScreenState.value = StationsScreenState.loading()
 
         cancel(stationsJob)
-        stationsJob = flow { emit(stationRepository.getStations()) }
-            .autoRetry(connectivityObserver, coroutineDispatchers) { e ->
-                stationsScreenState.value = StationsScreenState.error(e.toOperationError(stationsErrorResponseConverter))
-            }
-            .onEach { data ->
-                stationsScreenState.value = StationsScreenState.loaded(data)
-            }
-            .launchWithDefaults(viewModelScope, "Stations in Main VM")
+        stationsJob = flow {
+            blockStoreJob?.join()
+            emit(stationRepository.getStations())
+        }
+        .autoRetry(connectivityObserver, coroutineDispatchers) { e ->
+            stationsScreenState.value = StationsScreenState.error(e.toOperationError(stationsErrorResponseConverter))
+        }
+        .onEach { data ->
+            stationsScreenState.value = StationsScreenState.loaded(data)
+        }
+        .launchWithDefaults(viewModelScope, "Stations in Main VM")
     }
 
     fun station(station: Station) {
