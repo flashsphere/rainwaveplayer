@@ -1,7 +1,7 @@
 [versions]
 appVersionCode = "616"
 appVersionName = "1.37"
-androidGradlePlugin = "9.3.2"
+androidGradlePlugin = "9.4.0"
 kotlin = "2.4.10"
 dagger = "2.60.1"
 ksp = "2.3.11"
