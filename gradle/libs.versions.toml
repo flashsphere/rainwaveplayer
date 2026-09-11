@@ -2,7 +2,7 @@
 appVersionCode = "616"
 appVersionName = "1.37"
 androidGradlePlugin = "9.4.0"
-kotlin = "2.4.10"
+kotlin = "2.4.20"
 dagger = "2.60.1"
 ksp = "2.3.11"
 ideaExt = "1.4.1"
