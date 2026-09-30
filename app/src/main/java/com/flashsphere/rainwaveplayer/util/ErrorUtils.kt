@@ -1,6 +1,5 @@
 package com.flashsphere.rainwaveplayer.util
 
-import android.os.Build
 import androidx.media3.datasource.HttpDataSource
 import com.flashsphere.rainwaveplayer.flow.ConnectivityObserver
 import com.flashsphere.rainwaveplayer.model.HasResponseResult
@@ -76,9 +75,7 @@ object ErrorUtils {
         if (rootCause is CertPathValidatorException) {
             Timber.i("CertPathValidatorException index: %d", rootCause.index)
             Timber.i("CertPathValidatorException certPath: %s", rootCause.certPath)
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                Timber.i("CertPathValidatorException reason: %s", rootCause.reason)
-            }
+            Timber.i("CertPathValidatorException reason: %s", rootCause.reason)
             return false
         }
         if (rootCause is HttpDataSource.InvalidResponseCodeException && rootCause.responseCode >= 400) {

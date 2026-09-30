@@ -1,25 +1,12 @@
 package com.flashsphere.rainwaveplayer.view.webview
 
-import android.annotation.SuppressLint
 import android.graphics.Bitmap
-import android.net.http.SslError
-import android.os.Build
-import android.webkit.SslErrorHandler
 import android.webkit.WebView
 import androidx.webkit.WebViewClientCompat
-import com.flashsphere.rainwaveplayer.okhttp.TrustedCertificateStore
-import com.flashsphere.rainwaveplayer.util.Api21WebViewSslErrorHandler
-import com.flashsphere.rainwaveplayer.util.NoOpWebViewSslErrorHandler
 
 class CustomWebViewClient(
-    trustedCertificateStore: TrustedCertificateStore,
     private val callback: Callback,
 ) : WebViewClientCompat() {
-    private val sslErrorHandler = if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N) {
-        Api21WebViewSslErrorHandler(trustedCertificateStore)
-    } else {
-        NoOpWebViewSslErrorHandler()
-    }
 
     override fun onPageStarted(view: WebView, url: String, favicon: Bitmap?) {
         callback.pageTitleChanged(url)
@@ -40,15 +27,6 @@ class CustomWebViewClient(
 
     private fun shouldOverrideUrlLoading(url: String): Boolean {
         return callback.shouldOverrideUrlLoading(url)
-    }
-
-    @SuppressLint("WebViewClientOnReceivedSslError")
-    override fun onReceivedSslError(view: WebView, handler: SslErrorHandler, error: SslError) {
-        if (sslErrorHandler.validateSslCertificate(error)) {
-            handler.proceed()
-        } else {
-            handler.cancel()
-        }
     }
 
     interface Callback {

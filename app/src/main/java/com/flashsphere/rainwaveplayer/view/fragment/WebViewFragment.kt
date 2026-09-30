@@ -13,7 +13,6 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.flashsphere.rainwaveplayer.databinding.LayoutWebViewBinding
 import com.flashsphere.rainwaveplayer.flow.MediaPlayerStateObserver
-import com.flashsphere.rainwaveplayer.okhttp.TrustedCertificateStore
 import com.flashsphere.rainwaveplayer.playback.PlaybackManager
 import com.flashsphere.rainwaveplayer.repository.StationRepository
 import com.flashsphere.rainwaveplayer.repository.UserRepository
@@ -39,9 +38,6 @@ class WebViewFragment : Fragment() {
 
     @Inject
     lateinit var coroutineDispatchers: CoroutineDispatchers
-
-    @Inject
-    lateinit var trustedCertificateStore: TrustedCertificateStore
 
     @Inject
     lateinit var playbackManager: PlaybackManager
@@ -118,7 +114,6 @@ class WebViewFragment : Fragment() {
     @SuppressLint("SetJavaScriptEnabled")
     private fun setupWebView() {
         val customWebViewClient = CustomWebViewClient(
-            trustedCertificateStore = trustedCertificateStore,
             callback = object : CustomWebViewClient.Callback {
                 override fun pageTitleChanged(title: String) {
                     pageTitleChangedCallback?.invoke(title)

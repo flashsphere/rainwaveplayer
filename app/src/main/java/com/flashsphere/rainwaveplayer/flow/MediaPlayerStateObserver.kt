@@ -1,7 +1,6 @@
 package com.flashsphere.rainwaveplayer.flow
 
 import android.content.Context
-import android.os.Build
 import com.flashsphere.rainwaveplayer.coroutine.launchWithDefaults
 import com.flashsphere.rainwaveplayer.model.MediaPlayerStatus
 import com.flashsphere.rainwaveplayer.model.station.Station
@@ -36,12 +35,10 @@ class MediaPlayerStateObserver @Inject constructor(
     val currentState: MediaPlayerStatus get() = _flow.replayCache.first()
 
     init {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            flow
-                .onEach { MediaTileService.requestListeningState(context) }
-                .flowOn(coroutineDispatchers.main)
-                .launchWithDefaults(coroutineDispatchers.scope, "Media Player State for Tile")
-        }
+        flow
+            .onEach { MediaTileService.requestListeningState(context) }
+            .flowOn(coroutineDispatchers.main)
+            .launchWithDefaults(coroutineDispatchers.scope, "Media Player State for Tile")
     }
 
     fun updateState(status: MediaPlayerStatus) {

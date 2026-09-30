@@ -12,10 +12,8 @@ import android.net.NetworkCapabilities.TRANSPORT_ETHERNET
 import android.net.NetworkCapabilities.TRANSPORT_VPN
 import android.net.NetworkCapabilities.TRANSPORT_WIFI
 import android.net.NetworkRequest
-import android.os.Build
 import android.os.Handler
 import android.os.Looper
-import androidx.annotation.RequiresApi
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.LifecycleOwner
 import com.flashsphere.rainwaveplayer.network.NetworkManager.Companion.TAG
@@ -25,8 +23,7 @@ import timber.log.Timber
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.atomic.AtomicInteger
 
-@RequiresApi(Build.VERSION_CODES.N)
-class Api24AnyNetworkManager(context: Context) : NetworkManager {
+class AnyNetworkManager(context: Context) : NetworkManager {
     private val applicationContext = context.applicationContext
     private val connectivityManager = ContextCompat.getSystemService(applicationContext,
         ConnectivityManager::class.java)!!

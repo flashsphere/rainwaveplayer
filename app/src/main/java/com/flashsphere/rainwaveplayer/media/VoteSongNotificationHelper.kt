@@ -6,7 +6,6 @@ import android.app.PendingIntent
 import android.content.Context
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
-import android.os.Build
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationCompat.GROUP_ALERT_SUMMARY
 import androidx.core.app.NotificationManagerCompat
@@ -95,22 +94,20 @@ class VoteSongNotificationHelper(
     }
 
     private fun showSummaryNotification(station: Station, event: Event) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            val comingUpText = if (event.name.isNotEmpty()) {
-                context.getString(R.string.vote_now_event, event.name)
-            } else {
-                context.getString(R.string.coming_up_event, context.getString(R.string.vote_now))
-            }
-
-            val summaryNotification = createNotificationBuilder(station)
-                .setContentTitle(comingUpText)
-                .setStyle(NotificationCompat.InboxStyle()
-                    .setSummaryText(comingUpText))
-                .setGroup(VOTE_SONG_GROUP)
-                .setGroupSummary(true)
-                .build()
-            postNotification(event.id, summaryNotification)
+        val comingUpText = if (event.name.isNotEmpty()) {
+            context.getString(R.string.vote_now_event, event.name)
+        } else {
+            context.getString(R.string.coming_up_event, context.getString(R.string.vote_now))
         }
+
+        val summaryNotification = createNotificationBuilder(station)
+            .setContentTitle(comingUpText)
+            .setStyle(NotificationCompat.InboxStyle()
+                .setSummaryText(comingUpText))
+            .setGroup(VOTE_SONG_GROUP)
+            .setGroupSummary(true)
+            .build()
+        postNotification(event.id, summaryNotification)
     }
 
     private suspend fun fetchImage(song: Song): Bitmap? {

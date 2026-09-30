@@ -9,7 +9,6 @@ import android.content.pm.PackageManager
 import android.os.Build
 import android.service.quicksettings.Tile
 import android.service.quicksettings.TileService
-import androidx.annotation.RequiresApi
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationCompat.CATEGORY_TRANSPORT
 import androidx.core.app.NotificationManagerCompat
@@ -39,7 +38,6 @@ import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.onEach
 import timber.log.Timber
 
-@RequiresApi(Build.VERSION_CODES.N)
 @AndroidEntryPoint
 class MediaTileService : TileService() {
     @Inject
@@ -175,7 +173,6 @@ class MediaTileService : TileService() {
     }
 
     companion object {
-        @RequiresApi(Build.VERSION_CODES.N)
         fun requestListeningState(context: Context) {
             runCatching {
                 Timber.d("Request listening state for tile")

@@ -2,21 +2,18 @@ package com.flashsphere.rainwaveplayer.internal.di
 
 import android.app.Application
 import android.content.Context
-import android.os.Build
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.lifecycle.ProcessLifecycleOwner
 import com.flashsphere.rainwaveplayer.BuildConfig
 import com.flashsphere.rainwaveplayer.coroutine.coroutineExceptionHandler
 import com.flashsphere.rainwaveplayer.model.stationInfo.InfoErrorResponse
-import com.flashsphere.rainwaveplayer.network.Api24AnyNetworkManager
-import com.flashsphere.rainwaveplayer.network.Api24NoOpNetworkManager
+import com.flashsphere.rainwaveplayer.network.AnyNetworkManager
 import com.flashsphere.rainwaveplayer.network.NetworkManager
 import com.flashsphere.rainwaveplayer.network.NoOpNetworkManager
 import com.flashsphere.rainwaveplayer.okhttp.AuthenticatedUserInterceptor
 import com.flashsphere.rainwaveplayer.okhttp.CustomHttpLoggingInterceptor
 import com.flashsphere.rainwaveplayer.okhttp.RequestHeadersInterceptor
-import com.flashsphere.rainwaveplayer.okhttp.TrustedCertificateStore
 import com.flashsphere.rainwaveplayer.repository.RainwaveService
 import com.flashsphere.rainwaveplayer.ui.UiEventDelegate
 import com.flashsphere.rainwaveplayer.util.CoroutineDispatchers
@@ -37,11 +34,9 @@ import okhttp3.ConnectionPool
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
 import okhttp3.ResponseBody
-import okhttp3.tls.HandshakeCertificates
 import retrofit2.Converter
 import retrofit2.Retrofit
 import retrofit2.converter.kotlinx.serialization.asConverterFactory
-import java.security.cert.X509Certificate
 import java.util.concurrent.TimeUnit
 
 @Module
@@ -84,7 +79,6 @@ object ApplicationModule {
     fun provideOkHttpClient(
         authenticatedUserInterceptor: AuthenticatedUserInterceptor,
         requestHeadersInterceptor: RequestHeadersInterceptor,
-        trustedCertificateStore: TrustedCertificateStore,
     ): OkHttpClient {
         val builder = OkHttpClient.Builder()
             .retryOnConnectionFailure(true)
@@ -95,42 +89,12 @@ object ApplicationModule {
             .addInterceptor(requestHeadersInterceptor)
             .connectionPool(ConnectionPool(0, 5, TimeUnit.MINUTES))
             .apply {
-                if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N) {
-                    val clientCertificates = handshakeCertificates(trustedCertificateStore)
-
-                    sslSocketFactory(
-                        clientCertificates.sslSocketFactory(),
-                        clientCertificates.trustManager
-                    )
-                }
                 if (BuildConfig.DEBUG) {
                     addInterceptor(CustomHttpLoggingInterceptor())
                 }
             }
 
         return builder.build()
-    }
-
-    @Provides
-    @Singleton
-    fun provideTrustedCertificateStore(context: Context): TrustedCertificateStore {
-        return TrustedCertificateStore(context)
-    }
-
-    private fun handshakeCertificates(trustedCertificateStore: TrustedCertificateStore): HandshakeCertificates {
-        val builder = HandshakeCertificates.Builder()
-
-        trustedCertificateStore.rootCertificates.asSequence()
-            .map { it.certificate }
-            .forEach { cert ->
-            if (cert is X509Certificate) {
-                builder.addTrustedCertificate(cert)
-            }
-        }
-
-        return builder
-            .addPlatformTrustedCertificates()
-            .build()
     }
 
     @Provides
@@ -164,11 +128,9 @@ object ApplicationModule {
         coroutineDispatchers: CoroutineDispatchers,
         dataStore: DataStore<Preferences>,
     ): NetworkManager {
-        val isApi24AndAbove = (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N)
         val useAnyNetwork = dataStore.getBlocking(PreferencesKeys.USE_ANY_NETWORK)
         return when {
-            (isApi24AndAbove && useAnyNetwork) -> Api24AnyNetworkManager(context)
-            (isApi24AndAbove) -> Api24NoOpNetworkManager(context, coroutineDispatchers)
+            (useAnyNetwork) -> AnyNetworkManager(context)
             else -> NoOpNetworkManager(context, coroutineDispatchers)
         }.apply {
             ProcessLifecycleOwner.get().lifecycle.addObserver(this)

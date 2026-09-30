@@ -28,7 +28,7 @@ android {
     defaultConfig {
         applicationId = "com.flashsphere.rainwaveplayer"
         multiDexEnabled = true
-        minSdk = 23
+        minSdk = 24
         targetSdk = 37
         versionCode = libs.versions.appVersionCode.get().toInt()
         versionName = libs.versions.appVersionName.get()
