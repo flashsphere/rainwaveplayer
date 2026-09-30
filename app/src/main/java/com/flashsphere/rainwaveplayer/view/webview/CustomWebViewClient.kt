@@ -1,9 +1,14 @@
 package com.flashsphere.rainwaveplayer.view.webview
 
+import android.annotation.SuppressLint
 import android.graphics.Bitmap
+import android.os.Build
+import android.webkit.RenderProcessGoneDetail
 import android.webkit.WebView
+import androidx.annotation.RequiresApi
 import androidx.webkit.WebViewClientCompat
 
+@SuppressLint("MissingOnRenderProcessGone") // https://issuetracker.google.com/issues/548989591
 class CustomWebViewClient(
     private val callback: Callback,
 ) : WebViewClientCompat() {
@@ -29,9 +34,15 @@ class CustomWebViewClient(
         return callback.shouldOverrideUrlLoading(url)
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
+    override fun onRenderProcessGone(view: WebView, detail: RenderProcessGoneDetail): Boolean {
+        return callback.onRenderProcessGone(view, detail)
+    }
+
     interface Callback {
         fun pageTitleChanged(title: String) = run {}
         fun doUpdateVisitedHistory(view: WebView, url: String, isReload: Boolean) = run {}
         fun shouldOverrideUrlLoading(url: String): Boolean = run { return false }
+        fun onRenderProcessGone(view: WebView, detail: RenderProcessGoneDetail): Boolean
     }
 }

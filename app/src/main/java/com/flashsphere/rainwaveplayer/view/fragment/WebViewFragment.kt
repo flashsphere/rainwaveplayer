@@ -2,16 +2,21 @@ package com.flashsphere.rainwaveplayer.view.fragment
 
 import android.annotation.SuppressLint
 import android.graphics.Color
+import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.webkit.RenderProcessGoneDetail
 import android.webkit.WebView
 import androidx.activity.OnBackPressedCallback
+import androidx.annotation.RequiresApi
 import androidx.core.net.toUri
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
 import com.flashsphere.rainwaveplayer.databinding.LayoutWebViewBinding
+import com.flashsphere.rainwaveplayer.databinding.WebViewBinding
 import com.flashsphere.rainwaveplayer.flow.MediaPlayerStateObserver
 import com.flashsphere.rainwaveplayer.playback.PlaybackManager
 import com.flashsphere.rainwaveplayer.repository.StationRepository
@@ -24,6 +29,7 @@ import com.flashsphere.rainwaveplayer.view.webview.CustomWebChromeClient
 import com.flashsphere.rainwaveplayer.view.webview.CustomWebViewClient
 import dagger.hilt.android.AndroidEntryPoint
 import jakarta.inject.Inject
+import timber.log.Timber
 
 @AndroidEntryPoint
 class WebViewFragment : Fragment() {
@@ -51,6 +57,12 @@ class WebViewFragment : Fragment() {
     private var _binding: LayoutWebViewBinding? = null
     private val binding get() = _binding!!
 
+    private var webView: WebView? = null
+
+    private var isWebViewPendingRecovery = false
+    private var webViewStateToRestore: Bundle? = null
+    private var crashCount = 0
+
     var pageTitleChangedCallback: ((title: String) -> Unit)? = null
 
     override fun onCreateView(
@@ -65,18 +77,29 @@ class WebViewFragment : Fragment() {
         return binding.root
     }
 
+    override fun onResume() {
+        super.onResume()
+        // If a web view crash happened in the background, rebuild it now that the user can see it
+        if (isWebViewPendingRecovery) {
+            isWebViewPendingRecovery = false
+            recoverWebView()
+        }
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         val webViewState = savedInstanceState?.getBundle(BUNDLE_WEB_VIEW_STATE)
         if (webViewState != null) {
-            binding.webview.restoreState(webViewState)
-            binding.webview.scrollX = savedInstanceState.getInt(BUNDLE_WEB_VIEW_SCROLL_X)
-            binding.webview.scrollY = savedInstanceState.getInt(BUNDLE_WEB_VIEW_SCROLL_Y)
+            webView?.let {
+                it.restoreState(webViewState)
+                it.scrollX = savedInstanceState.getInt(BUNDLE_WEB_VIEW_SCROLL_X)
+                it.scrollY = savedInstanceState.getInt(BUNDLE_WEB_VIEW_SCROLL_Y)
+            }
         } else {
             val url = arguments?.getString(ARG_URL)
             if (!url.isNullOrBlank()) {
-                binding.webview.loadUrl(url)
+                webView?.loadUrl(url)
             } else {
                 finishActivity()
             }
@@ -89,11 +112,13 @@ class WebViewFragment : Fragment() {
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        val webViewState = Bundle()
-        binding.webview.saveState(webViewState)
-        outState.putBundle(BUNDLE_WEB_VIEW_STATE, webViewState)
-        outState.putInt(BUNDLE_WEB_VIEW_SCROLL_X, binding.webview.scrollX)
-        outState.putInt(BUNDLE_WEB_VIEW_SCROLL_Y, binding.webview.scrollY)
+        webView?.let {
+            val webViewState = Bundle()
+            it.saveState(webViewState)
+            outState.putBundle(BUNDLE_WEB_VIEW_STATE, webViewState)
+            outState.putInt(BUNDLE_WEB_VIEW_SCROLL_X, it.scrollX)
+            outState.putInt(BUNDLE_WEB_VIEW_SCROLL_Y, it.scrollY)
+        }
     }
 
     override fun onDestroyView() {
@@ -104,7 +129,7 @@ class WebViewFragment : Fragment() {
     private fun setupBackPressCallback() {
         backPressedCallback = object : OnBackPressedCallback(false) {
             override fun handleOnBackPressed() {
-                binding.webview.goBack()
+                webView?.goBack()
             }
         }.also {
             activity?.onBackPressedDispatcher?.addCallback(viewLifecycleOwner, it)
@@ -113,6 +138,11 @@ class WebViewFragment : Fragment() {
 
     @SuppressLint("SetJavaScriptEnabled")
     private fun setupWebView() {
+        val webView = WebViewBinding.inflate(layoutInflater, binding.webViewContainer, true).webview
+            .also {
+                this.webView = it
+            }
+
         val customWebViewClient = CustomWebViewClient(
             callback = object : CustomWebViewClient.Callback {
                 override fun pageTitleChanged(title: String) {
@@ -130,11 +160,30 @@ class WebViewFragment : Fragment() {
                     }
                     return false
                 }
+
+                @RequiresApi(Build.VERSION_CODES.O)
+                override fun onRenderProcessGone(view: WebView, detail: RenderProcessGoneDetail): Boolean {
+                    Timber.d("Render process crashed: %s", detail.didCrash())
+                    webViewStateToRestore = Bundle().apply { webView.saveState(this) }
+
+                    binding.webViewContainer.removeView(webView)
+                    webView.destroy()
+                    this@WebViewFragment.webView = null
+
+                    // Check the lifecycle state of the Activity before recovering
+                    if (lifecycle.currentState.isAtLeast(Lifecycle.State.RESUMED)) {
+                        recoverWebView()
+                    } else {
+                        // The app is in the background. Mark it for recovery later!
+                        isWebViewPendingRecovery = true
+                    }
+                    return true
+                }
             }
         )
 
         val autofill = Autofill(requireContext())
-        binding.webview.apply {
+        webView.apply {
             setBackgroundColor(Color.TRANSPARENT)
             setOnFocusChangeListener { v, hasFocus ->
                 if (hasFocus) {
@@ -151,6 +200,19 @@ class WebViewFragment : Fragment() {
                 @Suppress("DEPRECATION")
                 databaseEnabled = true
             }
+            webViewStateToRestore?.let {
+                restoreState(it)
+                webViewStateToRestore = null
+            }
+        }
+    }
+
+    private fun recoverWebView() {
+        if (crashCount < MAX_CRASHES) {
+            crashCount++
+            setupWebView()
+        } else {
+            finishActivity()
         }
     }
 
@@ -159,6 +221,7 @@ class WebViewFragment : Fragment() {
     }
 
     companion object {
+        private const val MAX_CRASHES = 3
         const val ARG_URL = "arg_url"
         private const val BUNDLE_WEB_VIEW_STATE = "bundle_web_view_state"
         private const val BUNDLE_WEB_VIEW_SCROLL_X = "bundle_web_view_scroll_x"
