@@ -40,7 +40,7 @@ class AnyNetworkManager(context: Context) : NetworkManager {
     override val connectivityFlow: StateFlow<Boolean>
         field = MutableStateFlow(false)
 
-    private var defaultNetworkCallback = object : NetworkCallback() {
+    private val defaultNetworkCallback = object : NetworkCallback() {
         private var previousNetwork = Pair<Network?, Boolean>(null, false)
 
         override fun onCapabilitiesChanged(network: Network, capabilities: NetworkCapabilities) {
@@ -85,7 +85,7 @@ class AnyNetworkManager(context: Context) : NetworkManager {
         }
 
         override fun onCapabilitiesChanged(network: Network, capabilities: NetworkCapabilities) {
-            availableNetworks.put(network, capabilities)
+            availableNetworks[network] = capabilities
             selectFromAvailableNetworks()
         }
     }
