@@ -1,0 +1,59 @@
+{
+  "project_info": {
+    "project_number": "371500632999",
+    "firebase_url": "https://player-for-rainwave-57872.firebaseio.com",
+    "project_id": "player-for-rainwave-57872",
+    "storage_bucket": "player-for-rainwave-57872.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:371500632999:android:7dce9831c0966806",
+        "android_client_info": {
+          "package_name": "com.flashsphere.rainwaveplayer"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDYpF56e51r89v9q8bQw6JHRxkTPa0KHf4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "371500632999-n0k5brtmfkc557i9p8kifg8i71e7g9aa.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:371500632999:android:f18395b3d89a4e1d",
+        "android_client_info": {
+          "package_name": "com.flashsphere.rainwaveplayer.debug"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDYpF56e51r89v9q8bQw6JHRxkTPa0KHf4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "371500632999-n0k5brtmfkc557i9p8kifg8i71e7g9aa.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

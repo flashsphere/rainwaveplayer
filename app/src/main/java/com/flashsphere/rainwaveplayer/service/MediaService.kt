@@ -69,6 +69,9 @@ import com.flashsphere.rainwaveplayer.view.viewmodel.FaveSongDelegate
 import com.flashsphere.rainwaveplayer.view.viewmodel.FaveSongState
 import com.flashsphere.rainwaveplayer.view.viewmodel.VoteSongDelegate
 import com.flashsphere.rainwaveplayer.view.viewmodel.VoteSongState
+import com.google.firebase.Firebase
+import com.google.firebase.crashlytics.crashlytics
+import com.google.firebase.crashlytics.recordException
 import dagger.hilt.android.AndroidEntryPoint
 import jakarta.inject.Inject
 import jakarta.inject.Named
@@ -755,6 +758,10 @@ class MediaService : MediaBrowserServiceCompat(), Playback.Callback, LifecycleOw
         connectivityJob = flow { emit(isRetryable(e, connectivityObserver)) }
             .flowOn(coroutineDispatchers.compute)
             .onEach { canRetry ->
+                Firebase.crashlytics.recordException(e) {
+                    key("canRetry", canRetry)
+                }
+
                 if (canRetry) {
                     connectivityObserver.connectivityFlow.filter { it }.take(1)
                         .collect {

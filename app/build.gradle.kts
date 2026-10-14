@@ -1,3 +1,5 @@
+import com.google.firebase.crashlytics.buildtools.gradle.CrashlyticsExtension
+
 plugins {
     alias(libs.plugins.idea.ext)
     alias(libs.plugins.android.application)
@@ -7,6 +9,8 @@ plugins {
     alias(libs.plugins.dagger.hilt)
     alias(libs.plugins.ksp)
     alias(libs.plugins.androidx.baselineprofile)
+    alias(libs.plugins.google.services)
+    alias(libs.plugins.firebase.crashlytics)
 }
 
 idea {
@@ -84,6 +88,10 @@ android {
             isPseudoLocalesEnabled = true
 
             buildConfigField("String", "TEST_CREDENTIALS", "\"${project.findProperty("RAINWAVE_TEST_CREDENTIALS") ?: ""}\"")
+
+            configure<CrashlyticsExtension> {
+                mappingFileUploadEnabled = false
+            }
         }
         release {
             isDebuggable = false
@@ -91,6 +99,10 @@ android {
             isShrinkResources = true
 
             buildConfigField("String", "CAST_APP_ID", "\"2E4E683E\"")
+
+            configure<CrashlyticsExtension> {
+                mappingFileUploadEnabled = true
+            }
 
             signingConfig = signingConfigs["release"]
 
@@ -225,6 +237,10 @@ dependencies {
 
     implementation(libs.timber)
     implementation(libs.process.phoenix)
+
+    implementation(platform(libs.firebase.bom))
+    implementation(libs.firebase.crashlytics)
+    implementation(libs.firebase.analytics)
 
 //    debugImplementation(libs.leakcanary)
 

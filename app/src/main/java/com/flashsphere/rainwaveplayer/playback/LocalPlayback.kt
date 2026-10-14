@@ -39,6 +39,9 @@ import com.flashsphere.rainwaveplayer.repository.StationRepository
 import com.flashsphere.rainwaveplayer.util.ClassUtils.getSimpleClassName
 import com.flashsphere.rainwaveplayer.util.JobUtils.cancel
 import com.flashsphere.rainwaveplayer.util.getBufferInMillis
+import com.google.firebase.Firebase
+import com.google.firebase.crashlytics.crashlytics
+import com.google.firebase.crashlytics.recordException
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.filter
@@ -317,6 +320,8 @@ import kotlin.math.max
     }
 
     override fun onPlayerError(e: PlaybackException) {
+        Firebase.crashlytics.recordException(e)
+
         val cause = e.cause
         if (cause != null &&
             cause is ExoTimeoutException &&
