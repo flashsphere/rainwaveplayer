@@ -305,7 +305,7 @@ import kotlin.math.max
             }
             Player.STATE_ENDED -> {
                 text += "ended"
-                play(this.streamUrl)
+                setupExoPlayer(this.streamUrl)
             }
             Player.STATE_IDLE -> text += "idle"
             Player.STATE_READY -> {
