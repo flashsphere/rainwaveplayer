@@ -3,7 +3,6 @@ package com.flashsphere.rainwaveplayer.ui.screen
 import android.Manifest.permission.ACCESS_LOCAL_NETWORK
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.net.Uri
 import android.os.Build
 import android.provider.Settings
 import android.widget.Toast
@@ -41,6 +40,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.core.net.toUri
 import androidx.lifecycle.compose.LifecycleResumeEffect
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.mediarouter.app.MediaRouteButton
@@ -50,7 +50,6 @@ import com.flashsphere.rainwaveplayer.ui.theme.AppTypography
 import com.google.android.gms.cast.framework.CastButtonFactory
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlin.math.min
-import androidx.core.net.toUri
 
 @Composable
 fun CastButton() {

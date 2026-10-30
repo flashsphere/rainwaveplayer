@@ -2,7 +2,6 @@ package com.flashsphere.rainwaveplayer.cast
 
 import android.content.Context
 import com.flashsphere.rainwaveplayer.BuildConfig
-import com.flashsphere.rainwaveplayer.R
 import com.flashsphere.rainwaveplayer.util.ClassUtils.getClassName
 import com.flashsphere.rainwaveplayer.view.activity.MainActivity
 import com.google.android.gms.cast.LaunchOptions

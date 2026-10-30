@@ -29,7 +29,6 @@ import okhttp3.OkHttpClient
 import okio.Path.Companion.toOkioPath
 import timber.log.Timber
 import timber.log.Timber.DebugTree
-import kotlin.time.ExperimentalTime
 
 @HiltAndroidApp
 class RainwaveApp : Application(), SingletonImageLoader.Factory {
@@ -84,7 +83,7 @@ class RainwaveApp : Application(), SingletonImageLoader.Factory {
         }
     }
 
-    @OptIn(ExperimentalCoilApi::class, ExperimentalTime::class)
+    @OptIn(ExperimentalCoilApi::class)
     override fun newImageLoader(context: PlatformContext): ImageLoader {
         return ImageLoader.Builder(this)
             .components {

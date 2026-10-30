@@ -5,7 +5,7 @@ import androidx.paging.PagingState
 import com.flashsphere.rainwaveplayer.model.song.Song
 import timber.log.Timber
 
-abstract class SongsPagingSource() : PagingSource<Int, Song>() {
+abstract class SongsPagingSource : PagingSource<Int, Song>() {
     override fun getRefreshKey(state: PagingState<Int, Song>): Int? {
         return null
     }

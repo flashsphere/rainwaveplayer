@@ -4,7 +4,6 @@ import androidx.compose.foundation.focusGroup
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -27,7 +26,6 @@ import com.flashsphere.rainwaveplayer.view.uistate.model.StationInfoSongItem
 
 var longPressHintShown = false
 
-@OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun TvComingUp(
     index: Int,

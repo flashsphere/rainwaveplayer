@@ -4,7 +4,6 @@ import androidx.compose.foundation.focusGroup
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -22,7 +21,6 @@ import com.flashsphere.rainwaveplayer.util.isLoggedIn
 import com.flashsphere.rainwaveplayer.view.uistate.model.PreviouslyPlayedSongItem
 import com.flashsphere.rainwaveplayer.view.uistate.model.StationInfoSongItem
 
-@OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun TvPreviouslyPlayed(
     items: List<PreviouslyPlayedSongItem>,

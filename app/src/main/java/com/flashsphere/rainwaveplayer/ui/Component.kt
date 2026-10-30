@@ -5,7 +5,6 @@ import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.LazyGridItemSpanScope
 import androidx.compose.foundation.lazy.grid.LazyGridState
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.SwipeToDismissBoxDefaults
 import androidx.compose.material3.SwipeToDismissBoxState
 import androidx.compose.material3.SwipeToDismissBoxState.Companion.Saver
@@ -87,7 +86,6 @@ fun rememberNoFlingSwipeToDismissBoxState(
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PullToRefreshBox(
     modifier: Modifier = Modifier,

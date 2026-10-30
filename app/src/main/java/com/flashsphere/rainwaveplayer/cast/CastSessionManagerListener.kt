@@ -49,7 +49,7 @@ class CastSessionManagerListener(
     override fun onStart(owner: LifecycleOwner) {
         Timber.d("onStart")
         val castSession = sessionManager.currentCastSession
-        if (castSession != null && castSession.remoteMediaClient != null) {
+        if (castSession?.remoteMediaClient != null) {
             onSessionResumed(castSession, false)
         }
     }
