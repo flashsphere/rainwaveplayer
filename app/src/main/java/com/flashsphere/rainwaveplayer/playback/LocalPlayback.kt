@@ -14,6 +14,8 @@ import androidx.annotation.OptIn
 import androidx.core.net.toUri
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
+import androidx.media3.common.AudioAttributes
+import androidx.media3.common.C
 import androidx.media3.common.MediaItem
 import androidx.media3.common.PlaybackException
 import androidx.media3.common.Player
@@ -160,10 +162,17 @@ import kotlin.math.max
                 bufferMs)
             .build()
 
+        val audioAttributes = AudioAttributes.Builder()
+            .setUsage(C.USAGE_MEDIA)
+            .setContentType(C.AUDIO_CONTENT_TYPE_MUSIC)
+            .build()
+
         return ExoPlayer.Builder(context, DefaultMediaSourceFactory(context, MediaExtractorsFactory))
             .setUsePlatformDiagnostics(false)
             .setLoadControl(loadControl)
             .setStuckBufferingDetectionTimeoutMs(bufferMs * 2)
+            .setWakeMode(C.WAKE_MODE_NONE)
+            .setAudioAttributes(audioAttributes, false)
             .build()
             .apply {
                 val audioOffloadPrefs = AudioOffloadPreferences.Builder()
