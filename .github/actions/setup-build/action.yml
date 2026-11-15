@@ -28,10 +28,7 @@ runs:
       with:
         java-version: 21
         distribution: 'zulu'
-    - uses: gradle/actions/setup-gradle@v6
-      with:
-        cache-overwrite-existing: true
-        cache-provider: basic
+    - uses: burrunan/gradle-cache-action@v3
     - uses: android-actions/setup-android@v4
       with:
         log-accepted-android-sdk-licenses: false
