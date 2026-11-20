@@ -19,7 +19,6 @@ import androidx.media3.common.C
 import androidx.media3.common.MediaItem
 import androidx.media3.common.PlaybackException
 import androidx.media3.common.Player
-import androidx.media3.common.TrackSelectionParameters.AudioOffloadPreferences
 import androidx.media3.common.util.UnstableApi
 import androidx.media3.common.util.Util
 import androidx.media3.datasource.okhttp.OkHttpDataSource
@@ -174,14 +173,6 @@ import kotlin.math.max
             .setWakeMode(C.WAKE_MODE_NONE)
             .setAudioAttributes(audioAttributes, false)
             .build()
-            .apply {
-                val audioOffloadPrefs = AudioOffloadPreferences.Builder()
-                    .setAudioOffloadMode(AudioOffloadPreferences.AUDIO_OFFLOAD_MODE_ENABLED)
-                    .build()
-                trackSelectionParameters = trackSelectionParameters.buildUpon()
-                    .setAudioOffloadPreferences(audioOffloadPrefs)
-                    .build()
-            }
     }
 
     private fun observeHeadsets() {
