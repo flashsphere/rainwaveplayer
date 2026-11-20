@@ -605,9 +605,7 @@ class MediaService : MediaBrowserServiceCompat(), Playback.Callback, LifecycleOw
                     }
 
                     val ruleParams = RuleParams(userCredentials.userId)
-                    val song = rules.asSequence().map { it.apply(event, ruleParams) }
-                        .filterNotNull()
-                        .firstOrNull() ?: return@withContext
+                    val song = rules.firstNotNullOfOrNull { it.apply(event, ruleParams) } ?: return@withContext
 
                     if (!song.voted) {
                         Timber.d("voting for song id: %d", song.id)

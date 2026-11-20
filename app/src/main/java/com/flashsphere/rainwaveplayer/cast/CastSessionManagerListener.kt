@@ -127,8 +127,8 @@ class CastSessionManagerListener(
         Timber.d("onSessionStarted")
         stopPlayback()
 
-        castSession.castDevice?.let {
-            val deviceName = it.friendlyName
+        castSession.castDevice?.let { device ->
+            val deviceName = device.friendlyName
             castState.value = context.getString(CastR.string.cast_casting_to_device, deviceName)
             castSession.remoteMediaClient?.let { subscribeToPlayerState(it, deviceName) }
         }

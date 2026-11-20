@@ -12,9 +12,6 @@ import com.flashsphere.rainwaveplayer.model.song.Song
 import kotlinx.parcelize.IgnoredOnParcel
 import kotlinx.parcelize.Parcelize
 import kotlinx.serialization.Serializable
-import kotlin.collections.component1
-import kotlin.collections.component2
-import kotlin.collections.set
 
 @Parcelize
 @Serializable
@@ -131,8 +128,7 @@ data class RatingCondition(
     override fun apply(songs: List<Song>, params: RuleParams): Map<Song, Int> {
         val filteredSongs = songs.asSequence()
             .filter { song -> operator.apply(getRating(song), rating) }
-            .map { song -> song to getRating(song) }
-            .toMap()
+            .associateWith { song -> getRating(song) }
 
         val weights = filteredSongs.values.asSequence()
             .distinct()
@@ -151,9 +147,9 @@ data class RatingCondition(
             .mapIndexed { index, rating -> rating to index + 1 }
             .toMap(HashMap())
 
-        return filteredSongs.asSequence()
-            .map { (k, v) -> k to weights.getOrDefault(v, 0) }
-            .toMap()
+        return filteredSongs.mapValues { (_, v) ->
+            weights.getOrDefault(v, 0)
+        }
     }
     enum class Operator(val value: String) {
         GreaterEqual(">="),

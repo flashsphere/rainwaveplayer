@@ -188,9 +188,7 @@ class RuleTest {
         )
 
         val ruleParams = RuleParams(2)
-        val song = rules.asSequence().map { it.apply(event, ruleParams) }
-            .filterNotNull()
-            .firstOrNull()
+        val song = rules.firstNotNullOfOrNull { it.apply(event, ruleParams) }
         assertThat(song?.id).isEqualTo(event.songs[0].id)
     }
 

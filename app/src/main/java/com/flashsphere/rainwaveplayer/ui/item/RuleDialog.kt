@@ -91,8 +91,8 @@ fun RuleDialog(
     val scrollState = rememberScrollState()
 
     LaunchedEffect(updatedConditions) {
-        snapshotFlow { updatedConditions.toList() }.collect {
-            usedConditionTypes.value = it.asSequence().map { it.conditionType }.toSet()
+        snapshotFlow { updatedConditions.toList() }.collect { conditions ->
+            usedConditionTypes.value = conditions.asSequence().map { it.conditionType }.toSet()
         }
     }
 

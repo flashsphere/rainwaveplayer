@@ -263,22 +263,6 @@ private fun PagedSongList(
 @Composable
 private fun PagedSongsError(
     data: LazyPagingItems<SongState>,
-    snackbarHostState: SnackbarHostState,
-    onRetry: () -> Unit
-) {
-    val refreshLoadState = data.loadState.refresh
-    if (refreshLoadState !is LoadState.Error) return
-    AppError(
-        showAsSnackbar = data.itemCount > 0,
-        snackbarHostState = snackbarHostState,
-        error = refreshLoadState.error.toOperationError(),
-        onRetry = onRetry
-    )
-}
-
-@Composable
-private fun PagedSongsError(
-    data: LazyPagingItems<SongState>,
     stationsScreenState: StationsScreenState,
     snackbarHostState: SnackbarHostState,
     onRetry: () -> Unit
