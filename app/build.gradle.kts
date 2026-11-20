@@ -24,6 +24,7 @@ kotlin {
 android {
     namespace = "com.flashsphere.rainwaveplayer"
     compileSdk = 37
+    compileSdkMinor = 2
 
     defaultConfig {
         applicationId = "com.flashsphere.rainwaveplayer"

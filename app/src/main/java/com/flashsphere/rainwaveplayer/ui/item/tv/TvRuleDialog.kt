@@ -21,9 +21,10 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.text.input.TextFieldLineLimits
 import androidx.compose.foundation.text.input.rememberTextFieldState
 import androidx.compose.foundation.text.input.selectAll
+import androidx.compose.foundation.text.input.setTextAndPlaceCursorAtEnd
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.DropdownMenuItem
-import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExposedDropdownMenu
 import androidx.compose.material3.ExposedDropdownMenuAnchorType
 import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.runtime.Composable
@@ -39,6 +40,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.focusRestorer
 import androidx.compose.ui.graphics.SolidColor
+import androidx.compose.ui.platform.LocalResources
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
@@ -218,44 +220,45 @@ private fun RuleDialogItem(
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun <T> DropDownSelect(
     modifier: Modifier = Modifier,
     item: T,
     items: List<T>,
-    toText: @Composable (item: T) -> String,
+    toText: (item: T) -> String,
     onChange: (T) -> Unit,
 ) {
+    val textFieldState = rememberTextFieldState(initialText = toText(item))
     val textStyle = LocalTextStyle.current.merge(TvAppTypography.bodyLarge.copy(color = MaterialTheme.colorScheme.onSurface))
     var expanded by remember { mutableStateOf(false) }
     ExposedDropdownMenuBox(modifier = modifier, expanded = expanded, onExpandedChange = { expanded = it }) {
         BasicTextField(
             modifier = Modifier.clickable { expanded = true }
                 .menuAnchor(ExposedDropdownMenuAnchorType.PrimaryNotEditable),
-            value = toText(item), onValueChange = {},
-            singleLine = true,
+            state = textFieldState,
+            lineLimits = TextFieldLineLimits.SingleLine,
             readOnly = true,
             enabled = false,
             textStyle = textStyle,
-        ) { innerTextField ->
-            Row(
-                modifier = Modifier
-                    .heightIn(min = 36.dp)
-                    .width(IntrinsicSize.Max),
-                verticalAlignment = Alignment.CenterVertically,
-            ) {
-                Spacer(Modifier.width(4.dp))
-                Box(Modifier.weight(1F)) {
-                    innerTextField()
+            decorator = { innerTextField ->
+                Row(
+                    modifier = Modifier
+                        .heightIn(min = 36.dp)
+                        .width(IntrinsicSize.Max),
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    Spacer(Modifier.width(4.dp))
+                    Box(Modifier.weight(1F)) {
+                        innerTextField()
+                    }
+                    Spacer(Modifier.width(4.dp))
+                    Icon(
+                        painter = painterResource(id = R.drawable.ic_arrow_drop_down),
+                        contentDescription = null
+                    )
                 }
-                Spacer(Modifier.width(4.dp))
-                Icon(
-                    painter = painterResource(id = R.drawable.ic_arrow_drop_down),
-                    contentDescription = null
-                )
-            }
-        }
+            },
+        )
         ExposedDropdownMenu(
             expanded = expanded,
             onDismissRequest = { expanded = false },
@@ -265,6 +268,7 @@ private fun <T> DropDownSelect(
                 DropdownMenuItem(
                     text = { Text(text = toText(it), style = textStyle) },
                     onClick = {
+                        textFieldState.setTextAndPlaceCursorAtEnd(toText(it))
                         onChange(it)
                         expanded = false
                     })
@@ -279,13 +283,14 @@ private fun ConditionTypeSelect(
     conditionType: ConditionType,
     onChange: (ConditionType) -> Unit,
 ) {
+    val resources = LocalResources.current
     Row(modifier = Modifier.width(IntrinsicSize.Max), verticalAlignment = Alignment.CenterVertically) {
         Text(text = "Type: ", style = TvAppTypography.bodyLarge)
         DropDownSelect(
             modifier = Modifier.weight(1F),
             item = conditionType,
             items = conditionTypes,
-            toText = { stringResource(it.stringResId) },
+            toText = { resources.getString(it.stringResId) },
             onChange = onChange,
         )
     }

@@ -21,8 +21,11 @@ import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.foundation.text.BasicTextField
+import androidx.compose.foundation.text.input.TextFieldLineLimits
+import androidx.compose.foundation.text.input.rememberTextFieldState
+import androidx.compose.foundation.text.input.setTextAndPlaceCursorAtEnd
 import androidx.compose.material3.DropdownMenuItem
-import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExposedDropdownMenu
 import androidx.compose.material3.ExposedDropdownMenuAnchorType
 import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.Icon
@@ -78,7 +81,6 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.launch
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PagedSongsWithStationSelector(
     flow: Flow<PagingData<SongState>>,
@@ -151,7 +153,6 @@ fun PagedSongsWithStationSelector(
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun StationsSelector(
     stationsScreenState: StationsScreenState,
@@ -160,6 +161,7 @@ fun StationsSelector(
 ) {
     val stations = stationsScreenState.stations ?: return
     val station = stationFlow.collectAsStateWithLifecycle().value ?: return
+    val textFieldState = rememberTextFieldState(initialText = station.name)
 
     Box {
         var expanded by remember { mutableStateOf(false) }
@@ -167,23 +169,24 @@ fun StationsSelector(
             BasicTextField(
                 modifier = Modifier.clickable { expanded = true }
                     .menuAnchor(ExposedDropdownMenuAnchorType.PrimaryNotEditable),
-                value = station.name, onValueChange = {},
-                singleLine = true,
+                state = textFieldState,
+                lineLimits = TextFieldLineLimits.SingleLine,
                 readOnly = true,
                 enabled = false,
                 textStyle = LocalTextStyle.current.merge(AppTypography.bodyMedium.copy(color = MaterialTheme.colorScheme.onSurface)),
-            ) { innerTextField ->
-                Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.heightIn(min = 36.dp)) {
-                    Spacer(Modifier.size(4.dp))
-                    Box(Modifier.width(68.dp)) {
-                        innerTextField()
+                decorator = { innerTextField ->
+                    Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.heightIn(min = 36.dp)) {
+                        Spacer(Modifier.size(4.dp))
+                        Box(Modifier.width(68.dp)) {
+                            innerTextField()
+                        }
+                        Icon(
+                            painter = painterResource(id = R.drawable.ic_arrow_drop_down),
+                            contentDescription = null
+                        )
                     }
-                    Icon(
-                        painter = painterResource(id = R.drawable.ic_arrow_drop_down),
-                        contentDescription = null
-                    )
-                }
-            }
+                },
+            )
             ExposedDropdownMenu(
                 expanded = expanded,
                 onDismissRequest = { expanded = false },
@@ -192,6 +195,7 @@ fun StationsSelector(
                     DropdownMenuItem(
                         text = { Text(text = it.name, style = AppTypography.bodyMedium) },
                         onClick = {
+                            textFieldState.setTextAndPlaceCursorAtEnd(it.name)
                             onStationSelected(it)
                             expanded = false
                         })

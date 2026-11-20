@@ -13,7 +13,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.systemBars
 import androidx.compose.foundation.layout.union
 import androidx.compose.foundation.text.input.rememberTextFieldState
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FabPosition
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -53,7 +52,6 @@ import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.launch
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AppScaffold(
     modifier: Modifier = Modifier,
@@ -161,7 +159,6 @@ fun AppError(
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun enterAlwaysScrollBehavior(scrollToTop: MutableState<Boolean>, canScroll: () -> Boolean = { true }): TopAppBarScrollBehavior {
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior(canScroll = canScroll)
@@ -209,7 +206,6 @@ fun CloseIcon(onCloseClick: () -> Unit) {
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Preview
 @Composable
 private fun ScaffoldWithAppBarPreview() {

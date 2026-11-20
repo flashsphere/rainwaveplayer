@@ -11,7 +11,6 @@ import androidx.compose.foundation.layout.union
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBarDefaults
@@ -32,7 +31,6 @@ import com.flashsphere.rainwaveplayer.ui.item.OneLineWithSubtitleParams
 import com.flashsphere.rainwaveplayer.ui.item.OneLineWithSubtitleText
 import com.flashsphere.rainwaveplayer.ui.theme.AppTheme
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AboutScreen(
     onFeedbackItemClick: () -> Unit,
