@@ -285,7 +285,8 @@ private fun StationInfoScreen(
             enabled = false,
             isRefreshing = screenState.loading,
             onRefresh = {},
-            contentAlignment = Alignment.TopCenter) {
+            contentAlignment = Alignment.TopCenter
+        ) {
             if (screenState.stationInfo != null) {
                 StationInfoList(
                     stationInfo = screenState.stationInfo,

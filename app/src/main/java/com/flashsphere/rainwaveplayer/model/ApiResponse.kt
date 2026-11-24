@@ -1,5 +1,6 @@
 package com.flashsphere.rainwaveplayer.model
 
+import androidx.compose.runtime.Immutable
 import com.flashsphere.rainwaveplayer.util.OperationError
 import com.flashsphere.rainwaveplayer.util.OperationError.Companion.Connectivity
 import com.flashsphere.rainwaveplayer.util.OperationError.Companion.Server
@@ -11,21 +12,18 @@ import retrofit2.HttpException
 import java.io.IOException
 
 sealed interface ApiResponse<out T> {
-    fun isSuccess() = this is SuccessApiResponse<*>
+    data object Loading : ApiResponse<Nothing>
 
-    companion object {
-        fun <T> ofSuccess(data: T): ApiResponse<T> = SuccessApiResponse(data)
-        fun ofFailure(throwable: Throwable): ApiResponse<Nothing> = FailureApiResponse(throwable)
-    }
+    @Immutable
+    class Success<out T>(
+        val data: T,
+    ) : ApiResponse<T>
+
+    @Immutable
+    class Failure(
+        val exception: Throwable,
+    ) : ApiResponse<Nothing>
 }
-
-internal class SuccessApiResponse<out T>(
-    val data: T,
-) : ApiResponse<T>
-
-internal class FailureApiResponse(
-    val exception: Throwable,
-) : ApiResponse<Nothing>
 
 fun Throwable.toOperationError(): OperationError {
     return if (this is IOException) {

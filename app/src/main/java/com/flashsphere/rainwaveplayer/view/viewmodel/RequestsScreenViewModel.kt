@@ -33,7 +33,6 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.flowOn
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
 import okhttp3.ResponseBody
 import retrofit2.Converter
@@ -86,15 +85,21 @@ class RequestsScreenViewModel @Inject constructor(
 
         cancel(requestsJob)
         requestsJob = stationRepository.getStationInfoFlow(station.id, refresh)
-            .map { infoResponse ->
-                RequestsScreenState.loaded(infoResponse.requests, infoResponse.user)
+            .onEach { infoResponseState ->
+                requestsScreenState.value = if (infoResponseState.loading) {
+                    RequestsScreenState.loading(requestsScreenState.value)
+                } else if (infoResponseState.data != null) {
+                    val infoResponse = infoResponseState.data
+                    RequestsScreenState.loaded(infoResponse.requests, infoResponse.user)
+                } else {
+                    requestsScreenState.value
+                }
             }
             .flowOn(coroutineDispatchers.compute)
             .autoRetry(connectivityObserver, coroutineDispatchers) {
                 requestsScreenState.value = RequestsScreenState.error(requestsScreenState.value,
                     OperationError(OperationError.Server))
             }
-            .onEach { requestsScreenState.value = it }
             .launchWithDefaults(viewModelScope, "Requests List")
     }
 

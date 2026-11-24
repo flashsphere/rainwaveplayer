@@ -10,8 +10,7 @@ import com.flashsphere.rainwaveplayer.model.stationInfo.InfoResponse
 import com.flashsphere.rainwaveplayer.util.readFile
 import io.mockk.every
 import io.mockk.mockk
-import io.mockk.verify
-import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.take
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.runTest
 import okhttp3.mockwebserver.MockResponse
@@ -46,8 +45,14 @@ class StationInfoProviderTest : BaseTest() {
         val stationInfoProvider = createStationInfoProvider()
 
         stationInfoProvider.flow
-            .catch { errors += it }
-            .collect { results += it }
+            .take(4) // loading -> data -> loading -> http error
+            .collect { state ->
+                if (state.error != null) {
+                    errors += state.error
+                } else if (state.data != null && !state.loading) {
+                    results += state.data
+                }
+            }
 
         assertThat(mockWebServer.requestCount).isEqualTo(2)
 
@@ -96,8 +101,14 @@ class StationInfoProviderTest : BaseTest() {
         val stationInfoProvider = createStationInfoProvider()
 
         stationInfoProvider.flow
-            .catch { errors += it }
-            .collect { results += it }
+            .take(4) // loading -> data -> loading -> http error
+            .collect { state ->
+                if (state.error != null) {
+                    errors += state.error
+                } else if (state.data != null && !state.loading) {
+                    results += state.data
+                }
+            }
 
         assertThat(mockWebServer.requestCount).isEqualTo(2)
         assertThat(errors).hasSize(1)
@@ -106,12 +117,17 @@ class StationInfoProviderTest : BaseTest() {
         errors.clear()
         results.clear()
 
-        stationInfoProvider.refreshAtNextSubscription(5, func)?.join()
-        verify(exactly = 1) { func() }
+        stationInfoProvider.refreshWithDelay(5)?.join()
 
         stationInfoProvider.flow
-            .catch { errors += it }
-            .collect { results += it }
+            .take(5) // cached -> loading -> data -> loading -> http error
+            .collect { state ->
+                if (state.error != null) {
+                    errors += state.error
+                } else if (state.data != null && !state.loading) {
+                    results += state.data
+                }
+            }
 
         assertThat(mockWebServer.requestCount).isEqualTo(4)
         assertThat(errors).hasSize(1)
@@ -146,13 +162,25 @@ class StationInfoProviderTest : BaseTest() {
 
         val job1 = launch {
             stationInfoProvider.flow
-                .catch { errors += it }
-                .collect { results += it }
+                .take(4) // loading -> data -> loading -> http error
+                .collect { state ->
+                    if (state.error != null) {
+                        errors += state.error
+                    } else if (state.data != null && !state.loading) {
+                        results += state.data
+                    }
+                }
         }
         val job2 = launch {
             stationInfoProvider.flow
-                .catch { errors += it }
-                .collect { results += it }
+                .take(4) // loading -> data -> loading -> http error
+                .collect { state ->
+                    if (state.error != null) {
+                        errors += state.error
+                    } else if (state.data != null && !state.loading) {
+                        results += state.data
+                    }
+                }
         }
 
         job1.join()

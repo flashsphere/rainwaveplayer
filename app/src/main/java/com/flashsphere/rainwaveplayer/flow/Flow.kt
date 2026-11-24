@@ -13,9 +13,7 @@ import com.google.android.gms.cast.framework.media.RemoteMediaClient
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.currentCoroutineContext
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.ensureActive
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.FlowCollector
 import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.first
@@ -68,26 +66,6 @@ fun <T> Flow<T>.autoRetry(connectivityObserver: ConnectivityObserver,
     } else {
         throw it
     }
-}
-
-fun <T> Flow<T>.repeatWhen(predicate: suspend FlowCollector<T>.(value: T?) -> Boolean): Flow<T> = flow {
-    var shallRepeat: Boolean
-    do {
-        val value = collectImpl(this)
-        shallRepeat = currentCoroutineContext().isActive && predicate(value)
-    } while (shallRepeat)
-}
-
-internal suspend fun <T> Flow<T>.collectImpl(
-    collector: FlowCollector<T>
-): T? {
-    var value: T? = null
-    collect {
-        currentCoroutineContext().ensureActive()
-        collector.emit(it)
-        value = it
-    }
-    return value
 }
 
 fun broadcastReceiverFlow(context: Context, intentFilter: IntentFilter) = callbackFlow {

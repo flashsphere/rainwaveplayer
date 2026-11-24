@@ -30,7 +30,6 @@ import com.flashsphere.rainwaveplayer.view.uistate.event.FaveAlbumErrorEvent
 import com.flashsphere.rainwaveplayer.view.uistate.event.FaveSongErrorEvent
 import com.flashsphere.rainwaveplayer.view.uistate.event.RateSongErrorEvent
 import com.flashsphere.rainwaveplayer.view.uistate.event.RateSongSuccessEvent
-import com.flashsphere.rainwaveplayer.view.uistate.event.RefreshStationInfo
 import com.flashsphere.rainwaveplayer.view.uistate.event.UserNotLoggedInEvent
 import com.flashsphere.rainwaveplayer.view.uistate.event.VoteSongErrorEvent
 import com.flashsphere.rainwaveplayer.view.uistate.model.AlbumState
@@ -47,8 +46,6 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.filter
-import kotlinx.coroutines.flow.filterIsInstance
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.onEach
@@ -178,10 +175,17 @@ class MainViewModel @Inject constructor(
                 stationInfoScreenState.value =
                     StationInfoScreenState.error(e.toOperationError(infoErrorResponseConverter))
             }
-            .combine(showPreviouslyPlayed) { infoResponse, showPreviouslyPlayed ->
-                stationInfoScreenState.value = StationInfoScreenState.loaded(
-                    StationInfo(infoResponse, showPreviouslyPlayed, isTv))
-                user.value = UserState(infoResponse.user)
+            .combine(showPreviouslyPlayed) { infoResponseState, showPreviouslyPlayed ->
+                if (infoResponseState.loading) {
+                    stationInfoScreenState.value = StationInfoScreenState.loading(
+                        stationInfoScreenState.value)
+                } else if (infoResponseState.data != null) {
+                    val infoResponse = infoResponseState.data
+
+                    stationInfoScreenState.value = StationInfoScreenState.loaded(
+                        StationInfo(infoResponse, showPreviouslyPlayed, isTv))
+                    user.value = UserState(infoResponse.user)
+                }
             }
             .flowOn(coroutineDispatchers.compute)
             .launchWithDefaults(viewModelScope, "Station Info in Main VM")
@@ -335,12 +339,6 @@ class MainViewModel @Inject constructor(
                 playbackState.value = it
             }
             .launchWithDefaults(viewModelScope, "Media Player State for in Station Info")
-
-        cancel(refreshStationInfoJob)
-        refreshStationInfoJob = uiEventDelegate.events.filterIsInstance<RefreshStationInfo>()
-            .filter { it.stationId == this.station.value?.id }
-            .onEach { subscribeStationInfo(refresh = true) }
-            .launchWithDefaults(viewModelScope, "Refresh Station Info event in Station Info")
     }
 
     fun unsubscribeStateChangeEvents() {

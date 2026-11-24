@@ -195,11 +195,17 @@ class LibraryScreenViewModel @Inject constructor(
                 requestLineLibraryState.value = LibraryScreenState.error(requestLineLibraryState.value,
                     OperationError(OperationError.Server))
             }
-            .combine(debounceFilterFlow) { response, filterQuery ->
-                val data = response.requestLine.asSequence()
-                    .map { item -> RequestLineState(item) }
-                    .toCollection(mutableStateListOf())
-                LibraryScreenState.loaded(station, data, filterData(filterQuery, data))
+            .combine(debounceFilterFlow) { infoResponseState, filterQuery ->
+                if (infoResponseState.loading) {
+                    LibraryScreenState.loading(requestLineLibraryState.value, station)
+                } else if (infoResponseState.data != null) {
+                    val data = infoResponseState.data.requestLine.asSequence()
+                        .map { item -> RequestLineState(item) }
+                        .toCollection(mutableStateListOf())
+                    LibraryScreenState.loaded(station, data, filterData(filterQuery, data))
+                } else {
+                    requestLineLibraryState.value
+                }
             }
             .flowOn(coroutineDispatchers.compute)
             .onEach { requestLineLibraryState.value = it }

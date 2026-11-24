@@ -81,6 +81,7 @@ import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.mapNotNull
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.retry
 import kotlinx.coroutines.flow.take
@@ -538,6 +539,7 @@ class MediaService : MediaBrowserServiceCompat(), Playback.Callback, LifecycleOw
         Timber.d("setupNotificationSubscription")
         cancel(notificationJob)
         notificationJob = stationRepository.getStationInfoFlow(station.id, true)
+            .mapNotNull { it.data }
             .distinctUntilChangedBy { it.currentEvent.id }
             .catch { e ->
                 Timber.w("Error getting song info for notification")
@@ -596,6 +598,9 @@ class MediaService : MediaBrowserServiceCompat(), Playback.Callback, LifecycleOw
         cancel(autoVoteJob)
 
         val event = infoResponse.futureEvents.getOrNull(0) ?: return
+        if (event.hasEnded) {
+            return
+        }
         autoVoteJob = lifecycleScope.launchWithDefaults("Auto Vote") {
             suspendRunCatching {
                 withContext(coroutineDispatchers.compute) {

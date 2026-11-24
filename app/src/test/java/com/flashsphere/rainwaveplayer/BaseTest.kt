@@ -10,7 +10,6 @@ import com.flashsphere.rainwaveplayer.junit4.TimberRule
 import com.flashsphere.rainwaveplayer.repository.RainwaveService
 import com.flashsphere.rainwaveplayer.repository.StationRepository
 import com.flashsphere.rainwaveplayer.repository.UserRepository
-import com.flashsphere.rainwaveplayer.ui.UiEventDelegate
 import com.flashsphere.rainwaveplayer.util.CoroutineDispatchers
 import com.flashsphere.rainwaveplayer.util.buildRetrofit
 import io.mockk.MockKAnnotations
@@ -47,8 +46,6 @@ abstract class BaseTest {
     lateinit var savedStationsStore: SavedStationsStore
     @MockK
     lateinit var userRepositoryMock: UserRepository
-    @MockK
-    lateinit var uiEventDelegate: UiEventDelegate
 
     @Before
     @CallSuper
@@ -94,7 +91,6 @@ abstract class BaseTest {
         savedStationsStore = savedStationsStore,
         userRepository = userRepositoryMock,
         coroutineDispatchers = coroutineDispatchers,
-        uiEventDelegate = uiEventDelegate,
     )
 
     fun setupSavedStationsStoreMock() {

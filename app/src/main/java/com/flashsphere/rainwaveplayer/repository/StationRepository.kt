@@ -13,8 +13,7 @@ import com.flashsphere.rainwaveplayer.coroutine.suspendRunCatching
 import com.flashsphere.rainwaveplayer.flow.StationInfoProvider
 import com.flashsphere.rainwaveplayer.internal.datastore.SavedStationsStore
 import com.flashsphere.rainwaveplayer.model.ApiResponse
-import com.flashsphere.rainwaveplayer.model.FailureApiResponse
-import com.flashsphere.rainwaveplayer.model.SuccessApiResponse
+import com.flashsphere.rainwaveplayer.model.InfoResponseState
 import com.flashsphere.rainwaveplayer.model.album.AlbumResponse
 import com.flashsphere.rainwaveplayer.model.album.AllAlbums
 import com.flashsphere.rainwaveplayer.model.artist.AllArtists
@@ -39,7 +38,6 @@ import com.flashsphere.rainwaveplayer.model.station.Station
 import com.flashsphere.rainwaveplayer.model.stationInfo.InfoResponse
 import com.flashsphere.rainwaveplayer.model.user.User
 import com.flashsphere.rainwaveplayer.model.vote.VoteResponse
-import com.flashsphere.rainwaveplayer.ui.UiEventDelegate
 import com.flashsphere.rainwaveplayer.util.CoroutineDispatchers
 import com.flashsphere.rainwaveplayer.util.PreferencesKeys.ADD_REQUEST_TO_TOP
 import com.flashsphere.rainwaveplayer.util.PreferencesKeys.AUTO_REQUEST_CLEAR
@@ -54,10 +52,10 @@ import com.flashsphere.rainwaveplayer.util.updateBlocking
 import com.flashsphere.rainwaveplayer.view.paging.AllFavesPagingSource
 import com.flashsphere.rainwaveplayer.view.paging.RecentVotesPagingSource
 import com.flashsphere.rainwaveplayer.view.paging.RequestHistoryPagingSource
-import com.flashsphere.rainwaveplayer.view.uistate.event.RefreshStationInfo
 import dagger.hilt.android.qualifiers.ApplicationContext
 import jakarta.inject.Inject
 import jakarta.inject.Singleton
+import kotlinx.coroutines.CoroutineName
 import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.SharingStarted.Companion.WhileSubscribed
@@ -66,10 +64,11 @@ import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
-import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.mapNotNull
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.onEmpty
 import kotlinx.coroutines.flow.shareIn
+import kotlinx.coroutines.plus
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
 import timber.log.Timber
@@ -83,7 +82,6 @@ class StationRepository @Inject constructor(
     private val savedStationsStore: SavedStationsStore,
     private val userRepository: UserRepository,
     private val coroutineDispatchers: CoroutineDispatchers,
-    private val uiEventDelegate: UiEventDelegate,
 ) {
     private var stationsCache: List<Station>? = null
 
@@ -186,18 +184,18 @@ class StationRepository @Inject constructor(
     fun hasLocalCachedStations(): Boolean = runBlocking { savedStationsStore.exists() }
 
     private val stationsFlow =
-        flow {
+        flow<ApiResponse<List<Station>>> {
             val stations = stationsCache
             if (!stations.isNullOrEmpty()) {
                 Timber.d("Got stations from in-mem cache")
-                emit(ApiResponse.ofSuccess(stations))
+                emit(ApiResponse.Success(stations))
             }
         }.onEmpty {
             val stations = fetchStationsFromLocalCache()
             if (!stations.isNullOrEmpty()) {
                 Timber.d("Got stations from local cache")
                 stationsCache = stations
-                emit(ApiResponse.ofSuccess(stations))
+                emit(ApiResponse.Success(stations))
             }
         }.onEmpty {
             // fetch from network if empty
@@ -205,17 +203,22 @@ class StationRepository @Inject constructor(
             Timber.d("Got stations from API")
             savedStationsStore.save(stations)
             stationsCache = stations
-            emit(ApiResponse.ofSuccess(stations))
+            emit(ApiResponse.Success(stations))
         }
-        .catch { emit(ApiResponse.ofFailure(it)) }
+        .catch { emit(ApiResponse.Failure(it)) }
         .buffer(0)
-        .shareIn(scope = coroutineDispatchers.scope, started = WhileSubscribed(replayExpirationMillis = 0), replay = 0)
+        .shareIn(
+            scope = coroutineDispatchers.scope + CoroutineName("Stations shared flow"),
+            started = WhileSubscribed(),
+            replay = 0,
+        )
 
     suspend fun getStations(): List<Station> = stationsFlow
-        .map { apiResponse ->
+        .mapNotNull { apiResponse ->
             when (apiResponse) {
-                is SuccessApiResponse -> apiResponse.data
-                is FailureApiResponse -> throw apiResponse.exception
+                is ApiResponse.Loading -> null
+                is ApiResponse.Success -> apiResponse.data
+                is ApiResponse.Failure -> throw apiResponse.exception
             }
         }
         .first()
@@ -326,8 +329,7 @@ class StationRepository @Inject constructor(
         return stationInfoProviderCache[stationId]?.getCachedInfoResponse()
     }
 
-
-    fun getStationInfoFlow(stationId: Int, refresh: Boolean = false): Flow<InfoResponse> {
+    fun getStationInfoFlow(stationId: Int, refresh: Boolean = false): Flow<InfoResponseState> {
         Timber.d("getStationInfoFlow stationId = %d, refresh = %s", stationId, refresh)
         var provider = stationInfoProviderCache[stationId]
         if (provider == null) {
@@ -336,19 +338,24 @@ class StationRepository @Inject constructor(
         }
 
         if (refresh) {
-            provider.refreshAtNextSubscription()
+            provider.refresh()
         }
 
         return provider.flow
-            .onEach { populateStationName(it.requests) }
+            .onEach {
+                if (it.error != null) {
+                    throw it.error
+                }
+                it.data?.let { infoResponse ->
+                    populateStationName(infoResponse.requests)
+                }
+            }
             .flowOn(coroutineDispatchers.compute)
     }
 
     fun refreshStationInfo(stationId: Int, delayInSeconds: Int = 0) {
         Timber.d("refreshStationInfo stationId = %d, delay = %d", stationId, delayInSeconds)
-        stationInfoProviderCache[stationId]?.refreshAtNextSubscription(delayInSeconds) {
-            uiEventDelegate.send(RefreshStationInfo(stationId))
-        }
+        stationInfoProviderCache[stationId]?.refreshWithDelay(delayInSeconds)
     }
 
     suspend fun vote(stationId: Int, entryId: Int): VoteResponse = withContext(coroutineDispatchers.io) {

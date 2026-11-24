@@ -76,6 +76,10 @@ class VoteSongNotificationHelper(
             return
         }
 
+        if (event.hasEnded) {
+            return
+        }
+
         val hasRequestedSongOrVoted = event.songs.any { it.userIdRequested == userCredentials.userId || it.voted }
         if (hasRequestedSongOrVoted) {
             return

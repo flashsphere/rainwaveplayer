@@ -7,6 +7,7 @@ import kotlinx.serialization.Serializable
 import kotlinx.serialization.descriptors.SerialDescriptor
 import kotlinx.serialization.encoding.Decoder
 import kotlinx.serialization.encoding.Encoder
+import kotlin.time.Duration.Companion.milliseconds
 
 @Serializable(with = EventSerializer::class)
 class Event(
@@ -18,7 +19,10 @@ class Event(
     val endTime: Long,
     val votingAllowed: Boolean,
     var songs: List<Song> = emptyList(),
-)
+) {
+    val hasEnded: Boolean
+        get() = System.currentTimeMillis().milliseconds.inWholeSeconds >= endTime
+}
 
 @Serializable
 private class EventSurrogate(
