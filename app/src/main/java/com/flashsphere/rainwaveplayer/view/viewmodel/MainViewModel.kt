@@ -176,7 +176,7 @@ class MainViewModel @Inject constructor(
                     StationInfoScreenState.error(e.toOperationError(infoErrorResponseConverter))
             }
             .combine(showPreviouslyPlayed) { infoResponseState, showPreviouslyPlayed ->
-                if (infoResponseState.loading) {
+                if (infoResponseState.loading && !isTv) {
                     stationInfoScreenState.value = StationInfoScreenState.loading(
                         stationInfoScreenState.value)
                 } else if (infoResponseState.data != null) {

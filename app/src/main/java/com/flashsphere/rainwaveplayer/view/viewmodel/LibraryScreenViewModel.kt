@@ -1,5 +1,6 @@
 package com.flashsphere.rainwaveplayer.view.viewmodel
 
+import android.content.Context
 import androidx.compose.foundation.text.input.TextFieldState
 import androidx.compose.foundation.text.input.clearText
 import androidx.compose.runtime.mutableStateListOf
@@ -17,6 +18,7 @@ import com.flashsphere.rainwaveplayer.ui.UiEventDelegate
 import com.flashsphere.rainwaveplayer.util.CoroutineDispatchers
 import com.flashsphere.rainwaveplayer.util.JobUtils.cancel
 import com.flashsphere.rainwaveplayer.util.OperationError
+import com.flashsphere.rainwaveplayer.util.isTv
 import com.flashsphere.rainwaveplayer.view.uistate.LibraryScreenState
 import com.flashsphere.rainwaveplayer.view.uistate.event.DismissSnackbarEvent
 import com.flashsphere.rainwaveplayer.view.uistate.event.FaveAlbumErrorEvent
@@ -26,6 +28,7 @@ import com.flashsphere.rainwaveplayer.view.uistate.model.CategoryState
 import com.flashsphere.rainwaveplayer.view.uistate.model.LibraryItem
 import com.flashsphere.rainwaveplayer.view.uistate.model.RequestLineState
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
 import jakarta.inject.Inject
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.Job
@@ -47,6 +50,7 @@ import kotlin.time.Duration.Companion.milliseconds
 
 @HiltViewModel
 class LibraryScreenViewModel @Inject constructor(
+    @ApplicationContext context: Context,
     private val savedStateHandle: SavedStateHandle,
     private val stationRepository: StationRepository,
     private val connectivityObserver: ConnectivityObserver,
@@ -54,6 +58,8 @@ class LibraryScreenViewModel @Inject constructor(
     private val uiEventDelegate: UiEventDelegate,
     private val faveAlbumDelegate: FaveAlbumDelegate,
 ) : ViewModel() {
+    private val isTv = context.isTv()
+
     val snackbarEvents = uiEventDelegate.snackbarEvents
 
     val filterTextFieldState = TextFieldState(savedStateHandle[FILTER_QUERY_KEY] ?: "")
@@ -205,7 +211,7 @@ class LibraryScreenViewModel @Inject constructor(
                     OperationError(OperationError.Server))
             }
             .combine(debounceFilterFlow) { infoResponseState, filterQuery ->
-                requestLineLibraryState.value = if (infoResponseState.loading) {
+                requestLineLibraryState.value = if (infoResponseState.loading && !isTv) {
                     LibraryScreenState.loading(requestLineLibraryState.value, station)
                 } else if (infoResponseState.data != null) {
                     val data = infoResponseState.data.requestLine.asSequence()

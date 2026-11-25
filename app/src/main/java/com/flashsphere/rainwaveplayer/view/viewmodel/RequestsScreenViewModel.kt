@@ -1,5 +1,6 @@
 package com.flashsphere.rainwaveplayer.view.viewmodel
 
+import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.flashsphere.rainwaveplayer.R
@@ -21,12 +22,14 @@ import com.flashsphere.rainwaveplayer.ui.UiEventDelegate
 import com.flashsphere.rainwaveplayer.util.CoroutineDispatchers
 import com.flashsphere.rainwaveplayer.util.JobUtils.cancel
 import com.flashsphere.rainwaveplayer.util.OperationError
+import com.flashsphere.rainwaveplayer.util.isTv
 import com.flashsphere.rainwaveplayer.view.uistate.RequestsScreenState
 import com.flashsphere.rainwaveplayer.view.uistate.event.DismissSnackbarEvent
 import com.flashsphere.rainwaveplayer.view.uistate.event.RequestErrorEvent
 import com.flashsphere.rainwaveplayer.view.uistate.model.RequestState
 import com.flashsphere.rainwaveplayer.view.uistate.model.UserState
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
 import jakarta.inject.Inject
 import jakarta.inject.Named
 import kotlinx.coroutines.Job
@@ -40,6 +43,7 @@ import timber.log.Timber
 
 @HiltViewModel
 class RequestsScreenViewModel @Inject constructor(
+    @ApplicationContext context: Context,
     private val stationRepository: StationRepository,
     private val connectivityObserver: ConnectivityObserver,
     private val coroutineDispatchers: CoroutineDispatchers,
@@ -59,6 +63,8 @@ class RequestsScreenViewModel @Inject constructor(
     @Named("request_unrated_converter")
     private val requestUnratedResponseConverter: Converter<ResponseBody, RequestUnratedResponse>,
 ) : ViewModel() {
+    private val isTv = context.isTv()
+
     val snackbarEvents = uiEventDelegate.snackbarEvents
 
     private var station: Station? = null
@@ -86,7 +92,7 @@ class RequestsScreenViewModel @Inject constructor(
         cancel(requestsJob)
         requestsJob = stationRepository.getStationInfoFlow(station.id, refresh)
             .onEach { infoResponseState ->
-                requestsScreenState.value = if (infoResponseState.loading) {
+                requestsScreenState.value = if (infoResponseState.loading && !isTv) {
                     RequestsScreenState.loading(requestsScreenState.value)
                 } else if (infoResponseState.data != null) {
                     val infoResponse = infoResponseState.data
