@@ -66,7 +66,7 @@ fun TvLibraryScreen(
                 onLibrarySelected = { selectedLibrary.value = it },
             )
 
-            when(selectedLibrary.value) {
+            when (selectedLibrary.value) {
                 LibraryType.Albums -> TvAlbumLibraryTab(
                     navigator = navigator,
                     viewModel = viewModel,

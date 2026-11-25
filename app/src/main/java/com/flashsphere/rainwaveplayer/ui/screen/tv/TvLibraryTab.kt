@@ -11,11 +11,8 @@ import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.itemsIndexed
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -43,13 +40,11 @@ import com.flashsphere.rainwaveplayer.ui.saveLastFocused
 import com.flashsphere.rainwaveplayer.ui.screen.PreviewTv
 import com.flashsphere.rainwaveplayer.ui.screen.PreviewTvTheme
 import com.flashsphere.rainwaveplayer.ui.screen.stations
-import com.flashsphere.rainwaveplayer.util.JobUtils.cancel
 import com.flashsphere.rainwaveplayer.util.OperationError
 import com.flashsphere.rainwaveplayer.view.uistate.LibraryScreenState
 import com.flashsphere.rainwaveplayer.view.uistate.model.ArtistState
 import com.flashsphere.rainwaveplayer.view.uistate.model.LibraryItem
 import com.flashsphere.rainwaveplayer.view.viewmodel.LibraryScreenViewModel
-import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 
@@ -59,18 +54,17 @@ fun TvAlbumLibraryTab(
     viewModel: LibraryScreenViewModel,
     station: Station,
 ) {
-    var job by remember { mutableStateOf<Job?>(null) }
     LifecycleStartEffect(Unit) {
         viewModel.subscribeStateChangeEvents()
         onStopOrDispose { viewModel.unsubscribeStateChangeEvents() }
     }
     LifecycleStartEffect(station) {
-        job = viewModel.getAllAlbums(station, false)
-        onStopOrDispose { cancel(job) }
+        viewModel.getAllAlbums(station, false)
+        onStopOrDispose { viewModel.unsubscribeAllAlbums() }
     }
     TvLibraryTab(
         libraryStateFlow = viewModel.albumLibraryState,
-        onRetry = { job = viewModel.getAllAlbums(station, true) }
+        onRetry = { viewModel.getAllAlbums(station, true) }
     ) { modifier, _, item ->
         TvAlbumListItem(
             modifier = modifier.saveLastFocused(item.key),
@@ -87,14 +81,13 @@ fun TvArtistLibraryTab(
     viewModel: LibraryScreenViewModel,
     station: Station,
 ) {
-    var job by remember { mutableStateOf<Job?>(null) }
     LifecycleStartEffect(station) {
-        job = viewModel.getAllArtists(station, false)
-        onStopOrDispose { cancel(job) }
+        viewModel.getAllArtists(station, false)
+        onStopOrDispose { viewModel.unsubscribeAllArtists() }
     }
     TvLibraryTab(
         libraryStateFlow = viewModel.artistLibraryState,
-        onRetry = { job = viewModel.getAllArtists(station, true) }
+        onRetry = { viewModel.getAllArtists(station, true) }
     ) { modifier, _, item ->
         TvListItem(
             modifier = modifier.fillMaxWidth().saveLastFocused(item.key),
@@ -110,14 +103,13 @@ fun TvCategoryLibraryTab(
     viewModel: LibraryScreenViewModel,
     station: Station,
 ) {
-    var job by remember { mutableStateOf<Job?>(null) }
     LifecycleStartEffect(station) {
-        job = viewModel.getAllCategories(station, false)
-        onStopOrDispose { cancel(job) }
+        viewModel.getAllCategories(station, false)
+        onStopOrDispose { viewModel.unsubscribeAllCategories() }
     }
     TvLibraryTab(
         libraryStateFlow = viewModel.categoryLibraryState,
-        onRetry = { job = viewModel.getAllCategories(station, true) }
+        onRetry = { viewModel.getAllCategories(station, true) }
     ) { modifier, _, item ->
         TvListItem(
             modifier = modifier.fillMaxWidth().saveLastFocused(item.key),

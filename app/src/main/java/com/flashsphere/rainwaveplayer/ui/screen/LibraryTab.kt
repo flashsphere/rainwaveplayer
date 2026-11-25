@@ -41,7 +41,6 @@ import com.flashsphere.rainwaveplayer.ui.navigation.ArtistDetail
 import com.flashsphere.rainwaveplayer.ui.navigation.CategoryDetail
 import com.flashsphere.rainwaveplayer.ui.navigation.Navigator
 import com.flashsphere.rainwaveplayer.ui.scrollToItem
-import com.flashsphere.rainwaveplayer.util.JobUtils.cancel
 import com.flashsphere.rainwaveplayer.util.OperationError
 import com.flashsphere.rainwaveplayer.view.uistate.LibraryScreenState
 import com.flashsphere.rainwaveplayer.view.uistate.model.AlbumState
@@ -50,7 +49,6 @@ import com.flashsphere.rainwaveplayer.view.uistate.model.CategoryState
 import com.flashsphere.rainwaveplayer.view.uistate.model.LibraryItem
 import com.flashsphere.rainwaveplayer.view.uistate.model.RequestLineState
 import com.flashsphere.rainwaveplayer.view.viewmodel.LibraryScreenViewModel
-import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.filter
@@ -62,20 +60,18 @@ fun AlbumLibraryTab(
     viewModel: LibraryScreenViewModel,
     scrollToTop: MutableState<Boolean>,
 ) {
-    val job = remember { mutableStateOf<Job?>(null) }
-
     LifecycleStartEffect(Unit) {
         viewModel.subscribeStateChangeEvents()
         onStopOrDispose { viewModel.unsubscribeStateChangeEvents() }
     }
     LifecycleStartEffect(station) {
-        job.value = viewModel.getAllAlbums(station, false)
-        onStopOrDispose { cancel(job.value) }
+        viewModel.getAllAlbums(station, false)
+        onStopOrDispose { viewModel.unsubscribeAllAlbums() }
     }
     LibraryTab(libraryStateFlow = viewModel.albumLibraryState,
         scrollToTop = scrollToTop,
-        onRefresh = { job.value = viewModel.getAllAlbums(station, true) },
-        itemContent = { i, item: AlbumState ->
+        onRefresh = { viewModel.getAllAlbums(station, true) },
+        itemContent = { _, item: AlbumState ->
             AlbumItem(
                 album = item,
                 showGlobalRating = !LocalUiSettings.current.hideRatingsUntilRated,
@@ -94,15 +90,13 @@ fun ArtistLibraryTab(
     viewModel: LibraryScreenViewModel,
     scrollToTop: MutableState<Boolean>,
 ) {
-    val job = remember { mutableStateOf<Job?>(null) }
-
     LifecycleStartEffect(station) {
-        job.value = viewModel.getAllArtists(station, false)
-        onStopOrDispose { cancel(job.value) }
+        viewModel.getAllArtists(station, false)
+        onStopOrDispose { viewModel.unsubscribeAllArtists() }
     }
     LibraryTab(libraryStateFlow = viewModel.artistLibraryState,
         scrollToTop = scrollToTop,
-        onRefresh = { job.value = viewModel.getAllArtists(station, true) },
+        onRefresh = { viewModel.getAllArtists(station, true) },
         itemContent = { _, item: ArtistState ->
             LibraryItem(title = item.name, onClick = {
                 navigator.navigate(ArtistDetail(item.id, item.name))
@@ -117,15 +111,13 @@ fun CategoryLibraryTab(
     viewModel: LibraryScreenViewModel,
     scrollToTop: MutableState<Boolean>,
 ) {
-    val job = remember { mutableStateOf<Job?>(null) }
-
     LifecycleStartEffect(station) {
-        job.value = viewModel.getAllCategories(station, false)
-        onStopOrDispose { cancel(job.value) }
+        viewModel.getAllCategories(station, false)
+        onStopOrDispose { viewModel.unsubscribeAllCategories() }
     }
     LibraryTab(libraryStateFlow = viewModel.categoryLibraryState,
         scrollToTop = scrollToTop,
-        onRefresh = { job.value = viewModel.getAllCategories(station, true) },
+        onRefresh = { viewModel.getAllCategories(station, true) },
         itemContent = { _, item: CategoryState ->
             LibraryItem(title = item.name, onClick = {
                 navigator.navigate(CategoryDetail(item.id, item.name))

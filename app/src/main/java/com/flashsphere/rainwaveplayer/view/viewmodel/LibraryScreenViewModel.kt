@@ -109,14 +109,14 @@ class LibraryScreenViewModel @Inject constructor(
         _filterQueryEvent.value = FilterQueryEvent(filterQuery.trim(), submitted)
     }
 
-    fun getAllAlbums(station: Station, force: Boolean = false): Job {
+    fun getAllAlbums(station: Station, force: Boolean = false) {
         if (force || albumLibraryState.value.station != station) {
             albumLibraryState.value = LibraryScreenState.loading(albumLibraryState.value, station)
             uiEventDelegate.send(DismissSnackbarEvent)
         }
 
         cancel(allAlbumsJob)
-        return flow { emit(stationRepository.getAllAlbums(station.id, force)) }
+        allAlbumsJob = flow { emit(stationRepository.getAllAlbums(station.id, force)) }
             .autoRetry(connectivityObserver, coroutineDispatchers) {
                 albumLibraryState.value = LibraryScreenState.error(albumLibraryState.value,
                     OperationError(OperationError.Server))
@@ -125,22 +125,25 @@ class LibraryScreenViewModel @Inject constructor(
                 val data = response.albums.asSequence()
                     .map { item -> AlbumState(item) }
                     .toCollection(mutableStateListOf())
-                LibraryScreenState.loaded(station, data, filterData(filterQuery, data))
+                albumLibraryState.value = LibraryScreenState.loaded(station, data,
+                    filterData(filterQuery, data))
             }
             .flowOn(coroutineDispatchers.compute)
-            .onEach { albumLibraryState.value = it }
             .launchWithDefaults(viewModelScope, "All Albums")
-            .also { allAlbumsJob = it }
     }
 
-    fun getAllArtists(station: Station, force: Boolean = false): Job {
+    fun unsubscribeAllAlbums() {
+        cancel(allAlbumsJob)
+    }
+
+    fun getAllArtists(station: Station, force: Boolean = false) {
         if (force || artistLibraryState.value.station != station) {
             artistLibraryState.value = LibraryScreenState.loading(artistLibraryState.value, station)
             uiEventDelegate.send(DismissSnackbarEvent)
         }
 
         cancel(allArtistsJob)
-        return flow { emit(stationRepository.getAllArtists(station.id, force)) }
+        allArtistsJob = flow { emit(stationRepository.getAllArtists(station.id, force)) }
             .autoRetry(connectivityObserver, coroutineDispatchers) {
                 artistLibraryState.value = LibraryScreenState.error(artistLibraryState.value,
                     OperationError(OperationError.Server))
@@ -149,15 +152,18 @@ class LibraryScreenViewModel @Inject constructor(
                 val data = response.artists.asSequence()
                     .map { item -> ArtistState(item.id, item.name) }
                     .toCollection(mutableStateListOf())
-                LibraryScreenState.loaded(station, data, filterData(filterQuery, data))
+                artistLibraryState.value = LibraryScreenState.loaded(station, data,
+                    filterData(filterQuery, data))
             }
             .flowOn(coroutineDispatchers.compute)
-            .onEach { artistLibraryState.value = it }
             .launchWithDefaults(viewModelScope, "All Artists")
-            .also { allArtistsJob = it }
     }
 
-    fun getAllCategories(station: Station, force: Boolean = false): Job {
+    fun unsubscribeAllArtists() {
+        cancel(allArtistsJob)
+    }
+
+    fun getAllCategories(station: Station, force: Boolean = false) {
         if (force || categoryLibraryState.value.station != station) {
             categoryLibraryState.value = LibraryScreenState.loading(categoryLibraryState.value,
                 station)
@@ -165,7 +171,7 @@ class LibraryScreenViewModel @Inject constructor(
         }
 
         cancel(allCategoriesJob)
-        return flow { emit(stationRepository.getAllCategories(station.id, force)) }
+        allCategoriesJob = flow { emit(stationRepository.getAllCategories(station.id, force)) }
             .autoRetry(connectivityObserver, coroutineDispatchers) {
                 categoryLibraryState.value = LibraryScreenState.error(categoryLibraryState.value,
                     OperationError(OperationError.Server))
@@ -174,15 +180,18 @@ class LibraryScreenViewModel @Inject constructor(
                 val data = response.categories.asSequence()
                     .map { item -> CategoryState(item.id, item.name) }
                     .toCollection(mutableStateListOf())
-                LibraryScreenState.loaded(station, data, filterData(filterQuery, data))
+                categoryLibraryState.value = LibraryScreenState.loaded(station, data,
+                    filterData(filterQuery, data))
             }
             .flowOn(coroutineDispatchers.compute)
-            .onEach { categoryLibraryState.value = it }
             .launchWithDefaults(viewModelScope, "All Categories")
-            .also { allCategoriesJob = it }
     }
 
-    fun subscribeStationInfo(station: Station, force: Boolean = false): Job {
+    fun unsubscribeAllCategories() {
+        cancel(allCategoriesJob)
+    }
+
+    fun subscribeStationInfo(station: Station, force: Boolean = false) {
         if (force || requestLineLibraryState.value.station != station) {
             requestLineLibraryState.value = LibraryScreenState.loading(
                 requestLineLibraryState.value, station)
@@ -190,13 +199,13 @@ class LibraryScreenViewModel @Inject constructor(
         }
 
         cancel(requestLineJob)
-        return stationRepository.getStationInfoFlow(station.id, force)
+        requestLineJob = stationRepository.getStationInfoFlow(station.id, force)
             .autoRetry(connectivityObserver, coroutineDispatchers) {
                 requestLineLibraryState.value = LibraryScreenState.error(requestLineLibraryState.value,
                     OperationError(OperationError.Server))
             }
             .combine(debounceFilterFlow) { infoResponseState, filterQuery ->
-                if (infoResponseState.loading) {
+                requestLineLibraryState.value = if (infoResponseState.loading) {
                     LibraryScreenState.loading(requestLineLibraryState.value, station)
                 } else if (infoResponseState.data != null) {
                     val data = infoResponseState.data.requestLine.asSequence()
@@ -208,9 +217,7 @@ class LibraryScreenViewModel @Inject constructor(
                 }
             }
             .flowOn(coroutineDispatchers.compute)
-            .onEach { requestLineLibraryState.value = it }
             .launchWithDefaults(viewModelScope, "Request Line")
-            .also { requestLineJob = it }
     }
 
     fun unsubscribeStationInfo() {

@@ -172,10 +172,11 @@ fun LibraryScreen(
                 }
             }
 
-            HorizontalPager(state = pagerState, key = { tabs[it] },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .weight(1f)) { index ->
+            HorizontalPager(
+                state = pagerState,
+                key = { tabs[it] },
+                modifier = Modifier.fillMaxWidth().weight(1f)
+            ) { index ->
                 when (tabs[index]) {
                     LibraryType.Albums -> {
                         AlbumLibraryTab(
