@@ -77,6 +77,7 @@ object ApplicationModule {
     @Provides
     @Singleton
     fun provideOkHttpClient(
+        connectionPool: ConnectionPool,
         authenticatedUserInterceptor: AuthenticatedUserInterceptor,
         requestHeadersInterceptor: RequestHeadersInterceptor,
     ): OkHttpClient {
@@ -87,7 +88,7 @@ object ApplicationModule {
             .writeTimeout(20, TimeUnit.SECONDS)
             .addInterceptor(authenticatedUserInterceptor)
             .addInterceptor(requestHeadersInterceptor)
-            .connectionPool(ConnectionPool(0, 5, TimeUnit.MINUTES))
+            .connectionPool(connectionPool)
             .apply {
                 if (BuildConfig.DEBUG) {
                     addInterceptor(CustomHttpLoggingInterceptor())
@@ -95,6 +96,12 @@ object ApplicationModule {
             }
 
         return builder.build()
+    }
+
+    @Provides
+    @Singleton
+    fun provideConnectionPool(): ConnectionPool {
+        return ConnectionPool()
     }
 
     @Provides
@@ -127,11 +134,12 @@ object ApplicationModule {
         context: Context,
         coroutineDispatchers: CoroutineDispatchers,
         dataStore: DataStore<Preferences>,
+        connectionPool: ConnectionPool,
     ): NetworkManager {
         val useAnyNetwork = dataStore.getBlocking(PreferencesKeys.USE_ANY_NETWORK)
         return when {
-            (useAnyNetwork) -> AnyNetworkManager(context)
-            else -> NoOpNetworkManager(context, coroutineDispatchers)
+            (useAnyNetwork) -> AnyNetworkManager(context, connectionPool)
+            else -> NoOpNetworkManager(context, coroutineDispatchers, connectionPool)
         }.apply {
             ProcessLifecycleOwner.get().lifecycle.addObserver(this)
         }

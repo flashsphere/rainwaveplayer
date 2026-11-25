@@ -19,11 +19,15 @@ import androidx.lifecycle.LifecycleOwner
 import com.flashsphere.rainwaveplayer.network.NetworkManager.Companion.TAG
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import okhttp3.ConnectionPool
 import timber.log.Timber
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.atomic.AtomicInteger
 
-class AnyNetworkManager(context: Context) : NetworkManager {
+class AnyNetworkManager(
+    context: Context,
+    private val connectionPool: ConnectionPool,
+) : NetworkManager {
     private val applicationContext = context.applicationContext
     private val connectivityManager = ContextCompat.getSystemService(applicationContext,
         ConnectivityManager::class.java)!!
@@ -139,11 +143,7 @@ class AnyNetworkManager(context: Context) : NetworkManager {
                 connectivityManager.bindProcessToNetwork(null)
             }
             usingDefaultNetwork = true
-            connectivityFlow.value = true
-            if (currentNetwork != network) {
-                currentNetwork = network
-                runNetworkChangeCallbacks(network)
-            }
+            updateCurrentNetwork(network)
         } else {
             Timber.tag(TAG).d("Default network %s has no internet", network)
             availableNetworks.remove(network)
@@ -166,10 +166,18 @@ class AnyNetworkManager(context: Context) : NetworkManager {
             connectivityManager.bindProcessToNetwork(selectedNetwork)
             logNetworkCapabilities(selectedNetwork)
         }
+        updateCurrentNetwork(selectedNetwork)
+    }
+
+    private fun updateCurrentNetwork(selectedNetwork: Network?) {
         connectivityFlow.value = selectedNetwork != null
         if (currentNetwork != selectedNetwork) {
             currentNetwork = selectedNetwork
-            selectedNetwork?.let { runNetworkChangeCallbacks(it) }
+            selectedNetwork?.let {
+                Timber.d("evicting connection pool")
+                connectionPool.evictAll()
+                runNetworkChangeCallbacks(it)
+            }
         }
     }
 

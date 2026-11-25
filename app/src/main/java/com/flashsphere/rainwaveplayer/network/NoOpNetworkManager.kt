@@ -20,9 +20,14 @@ import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.shareIn
 import kotlinx.coroutines.isActive
+import okhttp3.ConnectionPool
 import timber.log.Timber
 
-class NoOpNetworkManager(context: Context, coroutineDispatchers: CoroutineDispatchers) : NetworkManager {
+class NoOpNetworkManager(
+    context: Context,
+    coroutineDispatchers: CoroutineDispatchers,
+    connectionPool: ConnectionPool,
+) : NetworkManager {
     private val scope = CoroutineScope(coroutineDispatchers.main + SupervisorJob() + coroutineExceptionHandler)
     private val applicationContext = context.applicationContext
     private val connectivityManager = ContextCompat.getSystemService(applicationContext,
@@ -42,6 +47,11 @@ class NoOpNetworkManager(context: Context, coroutineDispatchers: CoroutineDispat
 
     override val connectivityFlow = callbackFlow {
         val networkCallback = object : NetworkCallback() {
+            override fun onAvailable(network: Network) {
+                Timber.d("evicting connection pool")
+                connectionPool.evictAll()
+            }
+
             override fun onCapabilitiesChanged(network: Network, capabilities: NetworkCapabilities) {
                 if (isActive) {
                     val hasInternet = hasInternetNetworkCapability(capabilities)
@@ -70,5 +80,5 @@ class NoOpNetworkManager(context: Context, coroutineDispatchers: CoroutineDispat
     }
     .distinctUntilChanged()
     .buffer(0)
-    .shareIn(scope = scope, started = WhileSubscribed(replayExpirationMillis = 0), replay = 0)
+    .shareIn(scope = scope, started = WhileSubscribed(), replay = 0)
 }
