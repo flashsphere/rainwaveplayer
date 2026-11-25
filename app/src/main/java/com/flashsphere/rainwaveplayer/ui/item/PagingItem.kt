@@ -5,10 +5,12 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.material3.Button
-import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
+import androidx.compose.material3.LoadingIndicator
+import androidx.compose.material3.LoadingIndicatorDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -18,6 +20,7 @@ import androidx.compose.ui.unit.dp
 import com.flashsphere.rainwaveplayer.R
 import com.flashsphere.rainwaveplayer.ui.theme.AppTypography
 
+@OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 fun LoadingItem() {
     Box(
@@ -26,7 +29,10 @@ fun LoadingItem() {
             .padding(8.dp),
         contentAlignment = Alignment.TopCenter
     ) {
-        CircularProgressIndicator(Modifier.width(48.dp))
+        LoadingIndicator(
+            modifier = Modifier.size(48.dp),
+            polygons = LoadingIndicatorDefaults.IndeterminateIndicatorPolygons
+        )
     }
 }
 

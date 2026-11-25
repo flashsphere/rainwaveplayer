@@ -6,7 +6,9 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
+import androidx.compose.material3.LoadingIndicator
+import androidx.compose.material3.LoadingIndicatorDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
@@ -17,19 +19,21 @@ import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.tv.material3.Button
-import androidx.tv.material3.MaterialTheme
 import androidx.tv.material3.Text
 import com.flashsphere.rainwaveplayer.R
 import com.flashsphere.rainwaveplayer.ui.theme.AppTypography
 
+@OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 fun TvLoading() {
     Box(
         modifier = Modifier.fillMaxSize(),
         contentAlignment = Alignment.Center
     ) {
-        CircularProgressIndicator(modifier = Modifier.size(76.dp),
-            color = MaterialTheme.colorScheme.border)
+        LoadingIndicator(
+            modifier = Modifier.size(76.dp),
+            polygons = LoadingIndicatorDefaults.IndeterminateIndicatorPolygons
+        )
     }
 }
 

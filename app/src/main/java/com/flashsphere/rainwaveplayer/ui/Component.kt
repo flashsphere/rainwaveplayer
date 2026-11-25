@@ -5,11 +5,13 @@ import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.LazyGridItemSpanScope
 import androidx.compose.foundation.lazy.grid.LazyGridState
+import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SwipeToDismissBoxDefaults
 import androidx.compose.material3.SwipeToDismissBoxState
 import androidx.compose.material3.SwipeToDismissBoxState.Companion.Saver
 import androidx.compose.material3.SwipeToDismissBoxValue
-import androidx.compose.material3.pulltorefresh.PullToRefreshDefaults.Indicator
+import androidx.compose.material3.pulltorefresh.PullToRefreshDefaults
 import androidx.compose.material3.pulltorefresh.PullToRefreshState
 import androidx.compose.material3.pulltorefresh.pullToRefresh
 import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
@@ -86,6 +88,7 @@ fun rememberNoFlingSwipeToDismissBoxState(
     }
 }
 
+@OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 fun PullToRefreshBox(
     modifier: Modifier = Modifier,
@@ -95,11 +98,12 @@ fun PullToRefreshBox(
     state: PullToRefreshState = rememberPullToRefreshState(),
     contentAlignment: Alignment = Alignment.TopStart,
     indicator: @Composable BoxScope.() -> Unit = {
-        Indicator(
+        PullToRefreshDefaults.LoadingIndicator(
             modifier = Modifier.align(Alignment.TopCenter),
             isRefreshing = isRefreshing,
             state = state,
             maxDistance = 60.dp,
+            containerColor = MaterialTheme.colorScheme.surfaceContainerHigh,
         )
     },
     content: @Composable BoxScope.() -> Unit

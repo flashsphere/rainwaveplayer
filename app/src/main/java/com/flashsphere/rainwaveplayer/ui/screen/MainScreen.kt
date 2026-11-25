@@ -9,8 +9,10 @@ import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.systemBars
 import androidx.compose.foundation.layout.union
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.DrawerValue
+import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
+import androidx.compose.material3.LoadingIndicator
+import androidx.compose.material3.LoadingIndicatorDefaults
 import androidx.compose.material3.ModalNavigationDrawer
 import androidx.compose.material3.Surface
 import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteType
@@ -68,6 +70,7 @@ fun MainScreen(
     }
 }
 
+@OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 private fun MainScreenLoading() {
     Surface {
@@ -75,7 +78,10 @@ private fun MainScreenLoading() {
             modifier = Modifier.fillMaxSize(),
             contentAlignment = Alignment.Center
         ) {
-            CircularProgressIndicator(Modifier.size(76.dp))
+            LoadingIndicator(
+                modifier = Modifier.size(76.dp),
+                polygons = LoadingIndicatorDefaults.IndeterminateIndicatorPolygons
+            )
         }
     }
 }
