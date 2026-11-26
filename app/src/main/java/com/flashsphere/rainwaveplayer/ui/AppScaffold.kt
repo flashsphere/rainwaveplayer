@@ -1,6 +1,7 @@
 package com.flashsphere.rainwaveplayer.ui
 
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.WindowInsetsSides
@@ -108,7 +109,9 @@ fun AppScaffold(
                 .fillMaxSize(),
             contentAlignment = Alignment.TopCenter,
         ) {
-            val scope = remember(snackbarHostState) { AppScaffoldScopeImpl(snackbarHostState) }
+            val scope = remember(snackbarHostState) {
+                AppScaffoldScopeImpl( boxScope = this, snackbarHostState = snackbarHostState)
+            }
             scope.content()
 
             EventsSnackbar(snackbarHostState, snackbarEvents)
@@ -117,14 +120,15 @@ fun AppScaffold(
 }
 
 @Stable
-interface AppScaffoldScope {
+interface AppScaffoldScope : BoxScope {
     val snackbarHostState: SnackbarHostState
 }
 
 @Stable
 internal class AppScaffoldScopeImpl(
+    boxScope: BoxScope,
     override val snackbarHostState: SnackbarHostState
-) : AppScaffoldScope
+) : AppScaffoldScope, BoxScope by boxScope
 
 @Composable
 fun AppError(error: OperationError?, onRetry: () -> Unit) {

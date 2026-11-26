@@ -2,15 +2,11 @@ package com.flashsphere.rainwaveplayer.ui.screen
 
 import android.widget.Toast
 import androidx.activity.compose.BackHandler
-import androidx.annotation.DrawableRes
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.foundation.LocalIndication
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.combinedClickable
-import androidx.compose.foundation.interaction.MutableInteractionSource
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -20,28 +16,28 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.itemsIndexed
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.ExtendedFloatingActionButton
+import androidx.compose.material3.FloatingActionButtonMenu
+import androidx.compose.material3.FloatingActionButtonMenuItem
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.SmallFloatingActionButton
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Surface
 import androidx.compose.material3.SwipeToDismissBox
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
+import androidx.compose.material3.ToggleFloatingActionButton
+import androidx.compose.material3.ToggleFloatingActionButtonDefaults
+import androidx.compose.material3.ToggleFloatingActionButtonDefaults.animateIcon
 import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteType
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.computedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
@@ -49,12 +45,13 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.runtime.toMutableStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.focus.focusProperties
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
+import androidx.compose.ui.layout.layout
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.res.colorResource
@@ -64,6 +61,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
+import androidx.compose.ui.unit.constrainHeight
+import androidx.compose.ui.unit.constrainWidth
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.LifecycleStartEffect
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -77,8 +76,6 @@ import com.flashsphere.rainwaveplayer.ui.MenuIcon
 import com.flashsphere.rainwaveplayer.ui.PullToRefreshBox
 import com.flashsphere.rainwaveplayer.ui.ToastHandler
 import com.flashsphere.rainwaveplayer.ui.animateScrollToItem
-import com.flashsphere.rainwaveplayer.ui.animation.fadeIn
-import com.flashsphere.rainwaveplayer.ui.animation.fadeOut
 import com.flashsphere.rainwaveplayer.ui.appbar.AppBarActions
 import com.flashsphere.rainwaveplayer.ui.appbar.toAppBarAction
 import com.flashsphere.rainwaveplayer.ui.composition.LocalUiScreenConfig
@@ -224,12 +221,14 @@ private fun RequestsScreen(
             }
         },
         floatingActionButton = {
-            ExtendedFloatingActionButton(
-                onClick = { showActionsMenu.value = !showActionsMenu.value },
-                containerColor = MaterialTheme.colorScheme.secondaryContainer,
-                contentColor = MaterialTheme.colorScheme.onSecondaryContainer) {
-                Text(text = stringResource(id = R.string.actions))
-            }
+            ActionsMenu(
+                userState = requestsScreenState.user,
+                onClearClick = onClearClick,
+                onRequestUnratedClick = onRequestUnratedClick,
+                onRequestFavesClick = onRequestFavesClick,
+                onResumeClick = onResumeClick,
+                onPauseClick = onSuspendClick
+            )
         },
         appBarActions = {
             if (LocalUiSettings.current.navigationSuiteType == NavigationSuiteType.None) {
@@ -287,22 +286,10 @@ private fun RequestsScreen(
 
                 RequestsError(
                     requestsScreenState = requestsScreenState,
-                    snackbarHostState = snackbarHostState,
-                    onRetry = onRefresh
+                    snackbarHostState = this@AppScaffold.snackbarHostState,
+                    onRetry = onRefresh,
                 )
             }
-        }
-
-        Box(modifier = Modifier.fillMaxSize()) {
-            ActionsMenu(visible = showActionsMenu,
-                snackbarHostState = snackbarHostState,
-                userState = requestsScreenState.user,
-                onHide = { showActionsMenu.value = false},
-                onClearClick = onClearClick,
-                onRequestUnratedClick = onRequestUnratedClick,
-                onRequestFavesClick = onRequestFavesClick,
-                onResumeClick = onResumeClick,
-                onPauseClick = onSuspendClick)
         }
     }
 }
@@ -439,126 +426,131 @@ private fun RequestItem(
 
 @Composable
 private fun ActionsMenu(
-    visible: MutableState<Boolean>,
     userState: UserState?,
-    snackbarHostState: SnackbarHostState,
-    onHide: () -> Unit,
     onClearClick: () -> Unit,
     onRequestUnratedClick: () -> Unit,
     onRequestFavesClick: () -> Unit,
     onResumeClick: () -> Unit,
     onPauseClick: () -> Unit,
 ) {
-    val scope = rememberCoroutineScope()
-    val scrollState = rememberScrollState()
+    var fabMenuExpanded by rememberSaveable { mutableStateOf(false) }
 
-    LaunchedEffect(visible.value) {
-        if (visible.value) {
-            scope.launch {
-                scrollState.scrollTo(scrollState.maxValue)
-                snackbarHostState.currentSnackbarData?.dismiss()
+    BackHandler(fabMenuExpanded) {
+        fabMenuExpanded = false
+    }
+
+    FloatingActionButtonMenu(
+        modifier = Modifier.layout { measurable, constraints ->
+            val placeable = measurable.measure(constraints)
+            val spacing = 16.dp.roundToPx()
+
+            layout(
+                width = constraints.constrainWidth(placeable.width - spacing),
+                height = constraints.constrainHeight(placeable.height - spacing),
+            ) {
+                placeable.placeRelative(0, 0)
             }
-        }
-    }
-
-    BackHandler(visible.value) {
-        visible.value = false
-    }
-
-    AnimatedVisibility(
-        visible = visible.value,
-        enter = fadeIn(),
-        exit = fadeOut(),
-    ) {
-        Box(contentAlignment = Alignment.BottomEnd,
-            modifier = Modifier
-                .fillMaxSize()
-                .focusProperties { canFocus = false }
-                .clickable(interactionSource = null, indication = null, onClick = onHide)
-                .background(color = colorResource(id = R.color.requests_fab_container_bg))) {
-
-            Column(horizontalAlignment = Alignment.End,
-                verticalArrangement = Arrangement.Bottom,
-                modifier = Modifier
-                    .verticalScroll(scrollState)
-                    .wrapContentSize()
-                    .padding(end = 16.dp, bottom = 80.dp)) {
-                Action(
-                    action = stringResource(id = R.string.action_clear_requests),
-                    actionIcon = R.drawable.ic_request_clear) {
-                    onHide()
-                    onClearClick()
+        },
+        expanded = fabMenuExpanded,
+        button = {
+            ToggleFloatingActionButton(
+                checked = fabMenuExpanded,
+                onCheckedChange = { fabMenuExpanded = !fabMenuExpanded },
+                containerColor = ToggleFloatingActionButtonDefaults.containerColor(
+                    initialColor = MaterialTheme.colorScheme.secondaryContainer,
+                    finalColor = MaterialTheme.colorScheme.secondary,
+                ),
+            ) {
+                val drawable by remember {
+                    computedStateOf { if (checkedProgress > 0.5f) R.drawable.ic_close else R.drawable.ic_actions }
                 }
-                Action(
-                    action = stringResource(id = R.string.action_request_unrated),
-                    actionIcon = R.drawable.ic_request_unrated) {
-                    onHide()
-                    onRequestUnratedClick()
-                }
-                Action(
-                    action = stringResource(id = R.string.action_request_faves),
-                    actionIcon = R.drawable.ic_request_faves) {
-                    onHide()
-                    onRequestFavesClick()
-                }
-                if (userState != null) {
-                    if (userState.requestsPaused) {
-                        Action(
-                            action = stringResource(id = R.string.action_resume),
-                            actionIcon = R.drawable.ic_request_resume) {
-                            onHide()
-                            onResumeClick()
-                        }
-                    } else {
-                        Action(
-                            action = stringResource(id = R.string.action_suspend),
-                            actionIcon = R.drawable.ic_request_suspend) {
-                            onHide()
-                            onPauseClick()
-                        }
-                    }
-                }
-            }
-        }
-    }
-}
-
-@Composable
-private fun Action(
-    modifier: Modifier = Modifier,
-    action: String, @DrawableRes actionIcon: Int,
-    onClick: () -> Unit,
-) {
-    val interactionSource = remember { MutableInteractionSource() }
-    Row(verticalAlignment = Alignment.CenterVertically,
-        modifier = modifier
-            .padding(bottom = 16.dp)
-            .focusProperties { canFocus = false }
-            .clickable(interactionSource = interactionSource, indication = null, onClick = onClick)
-    ) {
-        Text(text = action,
-            style = AppTypography.labelLarge,
-            modifier = Modifier
-                .padding(end = 8.dp)
-                .focusProperties { canFocus = false }
-                .clickable(
-                    interactionSource = interactionSource,
-                    indication = LocalIndication.current,
-                    onClick = onClick)
-                .background(
-                    color = MaterialTheme.colorScheme.surfaceVariant,
-                    shape = RoundedCornerShape(5.dp)
+                Icon(
+                    painter = painterResource(drawable),
+                    contentDescription = stringResource(R.string.actions),
+                    modifier = Modifier.animateIcon({ checkedProgress }),
                 )
-                .padding(8.dp)
-        )
-
-        SmallFloatingActionButton(onClick = onClick,
+            }
+        },
+    ) {
+        FloatingActionButtonMenuItem(
+            onClick = {
+                fabMenuExpanded = false
+                onClearClick()
+            },
+            icon = {
+                Icon(
+                    painter = painterResource(R.drawable.ic_request_clear),
+                    contentDescription = stringResource(id = R.string.action_clear_requests)
+                )
+            },
+            text = { Text(text = stringResource(id = R.string.action_clear_requests)) },
             containerColor = MaterialTheme.colorScheme.secondaryContainer,
             contentColor = MaterialTheme.colorScheme.onSecondaryContainer,
-            interactionSource = interactionSource,
-        ) {
-            Icon(painter = painterResource(id = actionIcon),
-                contentDescription = action)
+        )
+        FloatingActionButtonMenuItem(
+            onClick = {
+                fabMenuExpanded = false
+                onRequestUnratedClick()
+            },
+            icon = {
+                Icon(
+                    painter = painterResource(R.drawable.ic_request_unrated),
+                    contentDescription = stringResource(id = R.string.action_request_unrated)
+                )
+            },
+            text = { Text(text = stringResource(id = R.string.action_request_unrated)) },
+            containerColor = MaterialTheme.colorScheme.secondaryContainer,
+            contentColor = MaterialTheme.colorScheme.onSecondaryContainer,
+        )
+        FloatingActionButtonMenuItem(
+            onClick = {
+                fabMenuExpanded = false
+                onRequestFavesClick()
+            },
+            icon = {
+                Icon(
+                    painter = painterResource(R.drawable.ic_request_faves),
+                    contentDescription = stringResource(id = R.string.action_request_faves)
+                )
+            },
+            text = { Text(text = stringResource(id = R.string.action_request_faves)) },
+            containerColor = MaterialTheme.colorScheme.secondaryContainer,
+            contentColor = MaterialTheme.colorScheme.onSecondaryContainer,
+        )
+        if (userState != null) {
+            if (userState.requestsPaused) {
+                FloatingActionButtonMenuItem(
+                    onClick = {
+                        fabMenuExpanded = false
+                        onResumeClick()
+                    },
+                    icon = {
+                        Icon(
+                            painter = painterResource(R.drawable.ic_request_resume),
+                            contentDescription = stringResource(id = R.string.action_resume)
+                        )
+                    },
+                    text = { Text(text = stringResource(id = R.string.action_resume)) },
+                    containerColor = MaterialTheme.colorScheme.secondaryContainer,
+                    contentColor = MaterialTheme.colorScheme.onSecondaryContainer,
+                )
+            } else {
+                FloatingActionButtonMenuItem(
+                    onClick = {
+                        fabMenuExpanded = false
+                        onPauseClick()
+                    },
+                    icon = {
+                        Icon(
+                            painter = painterResource(R.drawable.ic_request_suspend),
+                            contentDescription = stringResource(id = R.string.action_suspend)
+                        )
+                    },
+                    text = { Text(text = stringResource(id = R.string.action_suspend)) },
+                    containerColor = MaterialTheme.colorScheme.secondaryContainer,
+                    contentColor = MaterialTheme.colorScheme.onSecondaryContainer,
+                )
+            }
         }
     }
 }
