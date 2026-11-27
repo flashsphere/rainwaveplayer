@@ -7,9 +7,11 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TimeInput
+import androidx.compose.material3.TimeInputDefaults
 import androidx.compose.material3.TimePicker
 import androidx.compose.material3.TimePickerDefaults
 import androidx.compose.material3.TimePickerLayoutType
@@ -95,17 +97,26 @@ private fun TimePickerDialog(
                 val layoutType = TimePickerDefaults.layoutType()
                 if (layoutType == TimePickerLayoutType.Horizontal) {
                     title()
-                    TimePicker(state = timePickerState, layoutType = layoutType)
+                    TimePicker(state = timePickerState, layoutType = layoutType,
+                        colors = TimePickerDefaults.colors(
+                            periodSelectorContainerColor = MaterialTheme.colorScheme.surfaceContainerHighest,
+                        ))
                 } else {
                     Column {
                         title()
-                        TimePicker(state = timePickerState, layoutType = layoutType)
+                        TimePicker(state = timePickerState, layoutType = layoutType,
+                            colors = TimePickerDefaults.colors(
+                                periodSelectorContainerColor = MaterialTheme.colorScheme.surfaceContainerHighest,
+                            ))
                     }
                 }
             } else {
                 Column {
                     title()
-                    TimeInput(state = timePickerState)
+                    TimeInput(state = timePickerState,
+                        colors = TimeInputDefaults.colors(
+                            periodSelectorContainerColor = MaterialTheme.colorScheme.surfaceContainerHighest,
+                        ))
                 }
             }
         },
